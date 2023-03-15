@@ -18,5 +18,21 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+;
 }
+
+.table {
+    background-color: transparent;
+   /* border: none;
+    border-collapse: collapse;*/
+   border: 0px white;
+}
+    .table td,
+    .table th {
+        margin: 0px;
+        /* border:none;*/
+        font-size: 16px;
+        color: #000000;
+        background-color: transparent;
+    }

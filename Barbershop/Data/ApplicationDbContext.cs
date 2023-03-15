@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Barbershop.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Barbershop.Data
@@ -9,5 +10,7 @@ namespace Barbershop.Data
         {
 
         }
+
+        public DbSet<Services> Services { get; set; }
     }
 }
