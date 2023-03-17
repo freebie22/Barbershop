@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Barbershop.Models.Specializations>
+
+
+<h2 class="text-dark">Спеціалізації</h2>
+<div class="container p-5">
+    <div class="row pt-4">
+        <div class="col-6">
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Specializations" asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> &nbsp; Додати нову спеціалізацію
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Count() > 0)
+    {
+        <table class="table table-bordered" style="width:100%; font-size:16px">
+            <thead>
+                <tr>
+                    <th>
+                        Назва спеціалізації
+                    </th>
+                    <th class="text-center">
+                        Редагування
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <td width="40%"><strong>@obj.SpecName</strong></td>
+                        <td wdith="30%" class="text-center">
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-controller="Specializations" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
+                                    <i class="fas fa-edit"></i> &nbsp;
+                                </a>
+                                <a asp-controller="Specializations" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
+                                    <i class="fas fa-trash-alt"></i>
+
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Спеціалізації тимчасово відсутні.</p>
+    }
+</div>
+
