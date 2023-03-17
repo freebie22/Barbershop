@@ -1,0 +1,53 @@
+﻿@model Barbershop.Models.WorkPositions
+
+<form method="post">
+    <input asp-for="Id" hidden />
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info pl-3">Змінити інформацію про посаду</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="PositionName"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="PositionName" class="form-control" />
+                        <span asp-validation-for="PositionName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row pt-2">
+                    <div class="col-4">
+                        <label asp-for="StandardPay"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="StandardPay" class="form-control" />
+                        <span asp-validation-for="StandardPay" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row pt-3">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                            <input type="submit" class="btn btn-info w-100" value="Оновити" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100">
+                                <i class="fas fa-sign-out-alt"></i> До послуг
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial"></partial>
+    }
+}
