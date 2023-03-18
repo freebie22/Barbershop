@@ -1,0 +1,111 @@
+﻿@model Barbershop.Models.ViewModels.BarbersVM
+
+<form method="post" enctype="multipart/form-data">
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info pl-3">Додати барбера</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Barber.FullName"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Barber.FullName" class="form-control mb-2" />
+                        <span asp-validation-for="Barber.FullName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Barber.PhoneNumber"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Barber.PhoneNumber" class="form-control mb-2" />
+                        <span asp-validation-for="Barber.PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Barber.Exprerience"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Barber.Exprerience" class="form-control mb-2" />
+                        <span asp-validation-for="Barber.Exprerience" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Barber.Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Barber.Description" class="form-control summernote"></textarea>
+                        <span asp-validation-for="Barber.Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        Фото барбера
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files" id="uploadBox" multiple class="form-control mb-2" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Barber.WorkPositionId"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="Barber.WorkPositionId" asp-items="@Model.WorkPostionsSelectList" class="form-control mb-2">
+                            @*<select asp-for="CategoryId" asp-items="@ViewData["CategoryDropDown"] as IEnumerable<SelectListItem>" class="form-control mb-2">*@
+                            <option disabled selected>--Оберіть посаду--</option>
+                        </select>
+                        <span asp-validation-for="Barber.WorkPositionId" class="text-danger"></span>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="SpecializationIds">Спеціалізація</label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="SpecializationIds" asp-items="@(Model.Specializations.Select(s => new SelectListItem { Text = s.SpecName, Value = s.Id.ToString() }))" class="form-control" multiple></select>
+                        <span asp-validation-for="SpecializationIds" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100 text-white" value="Create" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote({
+                height: 250
+            });
+        });
+        function validateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                Swal.fire(
+                    'Error!',
+                    'Please, upload the image!',
+                    'error'
+                )
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

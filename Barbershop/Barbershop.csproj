@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\ViewModels\" />
     <Folder Include="wwwroot\images\barber_images\" />
     <Folder Include="wwwroot\images\spec_images\" />
   </ItemGroup>

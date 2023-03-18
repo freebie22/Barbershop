@@ -12,5 +12,7 @@ namespace Barbershop.Models
         public string SpecName { get; set; }
         [Required, DisplayName("Зображення спеціалазації")]
         public string SpecImage { get; set; }
+        [Required, DisplayName("Спеціалізація")]
+        public ICollection<Barbers> Barbers { get; set; }
     }
 }
