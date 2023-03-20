@@ -1,0 +1,82 @@
+﻿@model Barbershop.Models.ViewModels.BarbersVM
+
+<form method="post">
+    <input asp-for="Barber.Id" hidden />
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info pl-3">Звільнити барбера</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Barber.FullName"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Barber.FullName" disabled class="form-control mb-2" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Barber.PhoneNumber"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Barber.PhoneNumber" disabled class="form-control mb-2" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Barber.Exprerience"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Barber.Exprerience" disabled class="form-control mb-2" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Barber.Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Barber.Description" disabled class="form-control summernote"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row pt-2">
+                    <div class="col-4">
+                       <label asp-for="SpecializationIds">Спеціалізація</label>
+                    </div>
+                    <div class="col-8">
+                        <select disabled asp-for="SpecializationIds" asp-items="@(Model.Specializations.Select(s => new SelectListItem { Text = s.SpecName, Value = s.Id.ToString() }))" class="form-control" multiple></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row pt-2">
+                        <div class="col">
+                            <button type="submit" class="btn btn-danger w-100" value="Delete">Delete</button>
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <img src="@WC.BarberPath@Model.Barber.BarberImage" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote({
+                height: 250
+                        disabled: true;
+            });
+        });
+    </script>
+}
