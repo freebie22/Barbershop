@@ -1,13 +1,16 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
 using Barbershop.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Threading;
 
 namespace Barbershop.Controllers
 {
+    [Authorize(Roles = WC.AdminRole)]
     public class BarbersController : Controller
     {
         private readonly ApplicationDbContext _db;

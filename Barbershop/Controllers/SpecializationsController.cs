@@ -1,11 +1,14 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Data;
 
 namespace Barbershop.Controllers
 {
+    [Authorize(Roles = WC.AdminRole)]
     public class SpecializationsController : Controller
     {
         private readonly ApplicationDbContext _db;

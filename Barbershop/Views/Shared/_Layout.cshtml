@@ -24,16 +24,22 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Services" asp-action="Index">Прайс-ліст</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Адміністрування
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Specializations" asp-action="Index">Спеціалізації</a>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="WorkPositions" asp-action="Index">Посади</a>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Barbers" asp-action="Index">Барбери</a>
-                            </div>
-                        </li>
+                        @if(User.IsInRole(WC.AdminRole))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Адміністрування
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Specializations" asp-action="Index">Спеціалізації</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="WorkPositions" asp-action="Index">Посади</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Barbers" asp-action="Index">Барбери</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Створити адміністратора</a>
+                                </div>
+                            </li>
+                        }
+                    
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Наші барбери</a>
                         </li>
@@ -41,6 +47,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    <partial name="_LoginPartial"></partial>
                 </div>
             </div>
         </nav>

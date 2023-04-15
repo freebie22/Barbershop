@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Barbershop.Data;
 using Barbershop.Models;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Barbershop.Controllers
 {
+    [Authorize(Roles = WC.AdminRole)]
     public class WorkPositionsController : Controller
     {
         private readonly ApplicationDbContext _db;

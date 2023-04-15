@@ -2,7 +2,13 @@
 {
     public static class WC
     {
-        public const string BarberPath = @"\images\barber_images\";
-        public const string SpecPath = @"\images\spec_images\";
+        public static string BarberPath = @"\images\barber_images\";
+        public static string SpecPath = @"\images\spec_images\";
+
+        public const string AdminRole = "Admin";
+        public const string BarberRole = "Barber";
+        public const string ClientRole = "Client";
+
+
     }
 }

@@ -17,6 +17,7 @@ namespace Barbershop.Data
         public DbSet<Specializations> Specializations { get; set; }
         public DbSet<WorkPositions> WorkPositions { get; set; }
         public DbSet<Barbers> Barbers { get; set; }
+        public DbSet<BarbershopUser> BarbershopUser { get; set; }
 
     }
 }
