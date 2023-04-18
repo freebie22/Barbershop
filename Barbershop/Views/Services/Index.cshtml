@@ -1,5 +1,21 @@
 ﻿@model IEnumerable<Barbershop.Models.Services>
+@using Microsoft.AspNetCore.Identity
 
+@inject UserManager<BarbershopUser> userManager
+
+    @{
+    var today = DateTime.Today;
+    var userDiscount = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        var user = await userManager.GetUserAsync(User);
+        if (user != null && user.DateOfBirth.Day == today.Day && user.DateOfBirth.Month == today.Month)
+        {
+            // якщо сьогодні день народження користувача, то встановлюємо йому знижку
+            userDiscount = 10; // знижка 10%
+        }
+    }
+}
 
 <h2 class="text-dark">Ціни на послуги</h2>
 <div class="container p-5">

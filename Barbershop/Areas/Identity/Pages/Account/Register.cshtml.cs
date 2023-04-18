@@ -105,6 +105,8 @@ namespace Barbershop.Areas.Identity.Pages.Account
             public string FullName { get; set; }
 
             public string PhoneNumber { get; set; }
+
+            public DateTime DateOfBirth { get; set; }
         }
 
 
@@ -128,7 +130,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
 
-                var user = new BarbershopUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FullName = Input.FullName };
+                var user = new BarbershopUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FullName = Input.FullName, DateOfBirth = Input.DateOfBirth };
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

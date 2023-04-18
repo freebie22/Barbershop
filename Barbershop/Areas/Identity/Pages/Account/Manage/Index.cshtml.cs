@@ -65,6 +65,9 @@ namespace Barbershop.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Номер телефону")]
             public string PhoneNumber { get; set; }
+            [Display(Name = "Вказана дата народження")]
+            [DataType(DataType.Date)]
+            public DateTime DateOfBirth { get; set; }
         }
 
         private async Task LoadAsync(BarbershopUser user)
@@ -72,12 +75,14 @@ namespace Barbershop.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var fullName = user.FullName;
+            var dateofbirth= user.DateOfBirth;
 
             Input = new InputModel
             {
                 UserName = userName,
                 PhoneNumber = phoneNumber,
-                FullName = fullName
+                FullName = fullName,
+                DateOfBirth = dateofbirth
             };
         }
 
@@ -139,8 +144,6 @@ namespace Barbershop.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
-
-
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Дані вашого профіля було успішно оновлено!";

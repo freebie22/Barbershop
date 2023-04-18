@@ -1,5 +1,6 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Barbershop.Controllers
@@ -7,6 +8,7 @@ namespace Barbershop.Controllers
     public class ServicesController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<BarbershopUser> _userManager;
 
         public ServicesController(ApplicationDbContext db)
         {
