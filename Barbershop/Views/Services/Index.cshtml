@@ -1,23 +1,35 @@
 ﻿@model IEnumerable<Barbershop.Models.Services>
 @using Microsoft.AspNetCore.Identity
 
-@inject UserManager<BarbershopUser> userManager
+@inject UserManager<IdentityUser> userManager
 
-    @{
+@{
     var today = DateTime.Today;
-    var userDiscount = 0;
+    var userDiscount = 0.0;
     if (User.Identity.IsAuthenticated)
     {
         var user = await userManager.GetUserAsync(User);
-        if (user != null && user.DateOfBirth.Day == today.Day && user.DateOfBirth.Month == today.Month)
+        var barbershopUser = (BarbershopUser)user;
+        if (barbershopUser != null && barbershopUser.DateOfBirth.Day == today.Day && barbershopUser.DateOfBirth.Month == today.Month)
         {
-            // якщо сьогодні день народження користувача, то встановлюємо йому знижку
-            userDiscount = 10; // знижка 10%
+            userDiscount = 0.2; 
         }
     }
 }
 
 <h2 class="text-dark">Ціни на послуги</h2>
+<div class="row pt-4">
+    @if(User.Identity.IsAuthenticated)
+    {
+        var user = await userManager.GetUserAsync(User);
+        var barbershopUser = (BarbershopUser)user;
+        if (barbershopUser != null && barbershopUser.DateOfBirth.Day == today.Day && barbershopUser.DateOfBirth.Month == today.Month)
+        {
+            <p class="text-danger">Вітаємо Вас з днем народження! З цього приводу ви отримуєте знижку 20% на всі типи послуг!</p>
+        }
+    }
+
+</div>
 <div class="container p-5">
     <div class="row pt-4">
         <div class="col-6">
@@ -59,7 +71,35 @@
                 </tr>
             </thead>
             <tbody >
-                @foreach (var obj in Model)
+                @if(User.Identity.IsAuthenticated)
+                {
+                    @foreach (var obj in Model)
+                    {
+                        <tr>
+                            <td width="35%"><strong>@obj.serviceName</strong></td>
+                            <td width="10%"><strong>@(obj.traineePrice - (obj.traineePrice * userDiscount))</strong></td>
+                            <td width="10%"><strong>@(obj.barberPrice - (obj.barberPrice * userDiscount))</strong></td>
+                            <td width="10%"><strong>@(obj.seniorPrice - (obj.seniorPrice * userDiscount))</strong></td>
+                            @if (User.IsInRole(WC.AdminRole))
+                            {
+                                <td wdith="35%" class="text-center">
+                                    <div class="w-75 btn-group" role="group">
+                                        <a asp-controller="Services" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
+                                            <i class="fas fa-edit"></i> &nbsp;
+                                        </a>
+                                        <a asp-controller="Services" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
+                                            <i class="fas fa-trash-alt"></i>
+
+                                        </a>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+                else
+                {
+                     @foreach (var obj in Model)
                 {
                     <tr>
                         <td width="35%"><strong>@obj.serviceName</strong></td>
@@ -82,6 +122,8 @@
                         }          
                     </tr>
                 }
+                }
+               
             </tbody>
         </table>
     }
