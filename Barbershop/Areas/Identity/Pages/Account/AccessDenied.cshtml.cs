@@ -18,6 +18,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
         /// </summary>
         public void OnGet()
         {
+            
         }
     }
 }

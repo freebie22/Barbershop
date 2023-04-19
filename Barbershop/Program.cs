@@ -13,9 +13,17 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProvid
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(Options =>
 {
-    Options.IdleTimeout = TimeSpan.FromMinutes(30);
+    Options.IdleTimeout = TimeSpan.FromMinutes(15);
     Options.Cookie.HttpOnly = true;
     Options.Cookie.IsEssential = true;
+});
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Lockout settings
+    options.Lockout.AllowedForNewUsers = true;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+    options.Lockout.MaxFailedAccessAttempts = 3;
 });
 
 var app = builder.Build();
