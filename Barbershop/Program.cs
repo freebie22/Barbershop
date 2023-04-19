@@ -13,7 +13,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProvid
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(Options =>
 {
-    Options.IdleTimeout = TimeSpan.FromMinutes(10);
+    Options.IdleTimeout = TimeSpan.FromMinutes(30);
     Options.Cookie.HttpOnly = true;
     Options.Cookie.IsEssential = true;
 });
