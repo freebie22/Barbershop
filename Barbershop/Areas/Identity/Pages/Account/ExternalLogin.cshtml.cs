@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Barbershop.Models;
 
 namespace Barbershop.Areas.Identity.Pages.Account
 {
@@ -83,7 +84,18 @@ namespace Barbershop.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [EmailAddress]
+            [Display(Name = "Email")]
             public string Email { get; set; }
+            [Required]
+            [Display(Name = "User Name")]
+            public string UserName { get; set; }           
+            [Required]
+            public string FullName { get; set; }
+            [Required]
+            public string PhoneNumber { get; set; }
+            [Required]
+            public DateTime DateOfBirth { get; set; }
+
         }
         
         public IActionResult OnGet() => RedirectToPage("./Login");
@@ -131,7 +143,9 @@ namespace Barbershop.Areas.Identity.Pages.Account
                 {
                     Input = new InputModel
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                        FullName = info.Principal.FindFirstValue(ClaimTypes.Name),
+                        UserName = info.Principal.FindFirstValue(ClaimTypes.Name)
                     };
                 }
                 return Page();
@@ -151,14 +165,17 @@ namespace Barbershop.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
+                var user = new BarbershopUser { Email = Input.Email, FullName = Input.FullName, UserName = Input.UserName, DateOfBirth = Input.DateOfBirth, PhoneNumber = Input.PhoneNumber};
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
+                
+
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, WC.ClientRole);
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {

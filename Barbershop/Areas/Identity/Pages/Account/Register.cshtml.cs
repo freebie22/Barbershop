@@ -165,7 +165,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Підтвердіть Вашу електронну адресу",
+                    await _emailSender.SendEmailAsync(Input.Email, "Реєстрація на веб-сайті Барбершоп 'Оазис'!",
                        @"<!DOCTYPE html>
                             <html>
                             <head>
