@@ -12,6 +12,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders().AddDefaultUI().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddAuthentication().AddFacebook(Options =>
+{
+    Options.AppId = "779058353446737";
+    Options.AppSecret = "608376fbe0c3d9af9021e4468aa395d7";
+
+} );
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(Options =>
 {

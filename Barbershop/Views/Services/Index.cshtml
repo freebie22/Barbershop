@@ -77,9 +77,9 @@
                     {
                         <tr>
                             <td width="35%"><strong>@obj.serviceName</strong></td>
-                            <td width="10%"><strong>@(obj.traineePrice - (obj.traineePrice * userDiscount))</strong></td>
-                            <td width="10%"><strong>@(obj.barberPrice - (obj.barberPrice * userDiscount))</strong></td>
-                            <td width="10%"><strong>@(obj.seniorPrice - (obj.seniorPrice * userDiscount))</strong></td>
+                            <td width="10%"><span style="text-decoration: line-through;">@obj.traineePrice&nbsp;</span><strong>@(obj.traineePrice - (obj.traineePrice * userDiscount))</strong></td>
+                            <td width="10%"><span style="text-decoration: line-through;">@obj.barberPrice&nbsp;</span><strong>@(obj.barberPrice - (obj.barberPrice * userDiscount))</strong> </td>
+                            <td width="10%"><span style="text-decoration: line-through;">@obj.seniorPrice&nbsp;</span><strong>@(obj.seniorPrice - (obj.seniorPrice * userDiscount))</strong></td>
                             @if (User.IsInRole(WC.AdminRole))
                             {
                                 <td wdith="35%" class="text-center">
