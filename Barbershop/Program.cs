@@ -21,7 +21,7 @@ builder.Services.AddAuthentication().AddFacebook(Options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(Options =>
 {
-    Options.IdleTimeout = TimeSpan.FromMinutes(15);
+    Options.IdleTimeout = TimeSpan.FromDays(30);
     Options.Cookie.HttpOnly = true;
     Options.Cookie.IsEssential = true;
 });
