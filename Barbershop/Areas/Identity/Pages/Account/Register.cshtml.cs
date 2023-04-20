@@ -286,7 +286,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
                                         <table border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px;'>
                                             <tr>
                                                 <td bgcolor='#ffffff' align='center' valign='top' style='padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;'>
-                                                    <h1 style='font-size: 24px; font-weight: 400; margin: 2;'>Вас вітає Барбершоп 'Оазис'!</h1> <img src='~/images/Oasis-logos_transparent.jpeg' width='125' height='120' style='display: block; border: 0px;' />
+                                                    <h1 style='font-size: 24px; font-weight: 400; margin: 2;'>Вас вітає Барбершоп 'Оазис'!</h1> <img src=""https://i.ibb.co/tDWZZnD/Oasis.jpg"" width = '325' height = '220' alt=""Oasis"" border=""0"" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -298,7 +298,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td bgcolor='#f4f4f4' align=''center'' style='padding: 0px 10px 0px 10px;'>
+                                    <td bgcolor='#f4f4f4' align='center' style='padding: 0px 10px 0px 10px;'>
                                         <table border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px;'>
                                            <!-- <tr>
                                                 <td bgcolor='#ffffff' align='left' style='padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
@@ -321,7 +321,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
                                                 </td>
                                             </tr> <!-- COPY -->
                                             <tr>
-                                                <td bgcolor='#ffffff' align='left' style='padding: 0px 30px 20px 30px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
+                                                <td bgcolor='#ffffff' align='center' style='padding: 0px 30px 20px 30px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
                                                     <p style='margin: 0;'>Якщо ви не вказували даний E-Mail при реєстрації, або вказали інший - не переходьте за цим посиланням.</p>
                                                 </td>
                                             </tr>
@@ -329,8 +329,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
                                                 <td bgcolor='#ffffff' align='left' style='padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
                                                     <p style='margin: 0;'>Наші соціальні мережі:</p>
                                                     <div>
-                                                        <a style='padding-right:10px' href='https://instagram.com/suraj_vsk'><img src='https://cdn-icons-png.flaticon.com/512/2111/2111463.png' width='25'></a>
-                                                        <a href='https://twitter.com/suraj_vsk'><img src='https://cdn-icons-png.flaticon.com/512/733/733579.png' width='25'></a>
+                                                        <a style='padding-right:10px' href='https://www.instagram.com/boykov_artem'><img src='https://cdn-icons-png.flaticon.com/512/2111/2111463.png' width='25'></a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -343,8 +342,8 @@ namespace Barbershop.Areas.Identity.Pages.Account
                                             <tr>
                                                 <td bgcolor='#000000' align='center' style='padding: 30px 30px 30px 30px; border-radius: 4px 4px 4px 4px; color: #fff; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
                                                     <h2 style='font-size: 20px; font-weight: 400; color: #fff; margin: 0;'>Наші контакти</h2>
-                                                    <p style='margin: 0;'><a href='mailto:portal_app_team@svkm.ac.in' target='_blank' style='color: #fff;'>Тел: +380-93-737-51-31</a></p>
-                                                    <p style='margin: 0;'><a href='mailto:portal_app_team@svkm.ac.in' target='_blank' style='color: #fff;'>Email: barbershop.oasis@urk.net</a></p>
+                                                    <p style='margin: 0;'><a href='tel:+380685034088' target='_blank' style='color: #fff;'>Тел: +380-68-503-40-88</a></p>
+                                                        <p style='margin: 0;'><a href='mailto:barbershop.oasis@ukr.net' target='_blank' style='color: #fff;'>Email: barbershop.oasis@ukr.net</a></p>
                                                 </td>
                                             </tr>
                                         </table>
