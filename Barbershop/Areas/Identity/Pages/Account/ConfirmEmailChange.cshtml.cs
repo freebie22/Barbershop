@@ -62,7 +62,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Thank you for confirming your email change.";
+            StatusMessage = "Дякуємо Вам за підтвердження електронної пошти.";
             return Page();
         }
     }
