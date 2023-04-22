@@ -28,9 +28,6 @@ namespace Barbershop.Models
         public int ProductCategoryId { get; set; }
         [ForeignKey("ProductCategoryId")]
         public virtual ProductCategory ProductCategory { get; set; }
-
-
-
-
+        public virtual ICollection<ProductImages> ProductImages { get; set; }
     }
 }
