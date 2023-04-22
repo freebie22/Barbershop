@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Barbershop.Models
@@ -9,10 +10,7 @@ namespace Barbershop.Models
         public int Id { get; set; }
         [Required]
         public string Image { get; set; }
-
-        public int ProductId { get; set; }
-
-        [ForeignKey("ProductId")]
+        [Required]
         public virtual ICollection<Products> Products { get; set; }
     }
 }

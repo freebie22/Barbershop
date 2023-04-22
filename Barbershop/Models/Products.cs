@@ -10,7 +10,7 @@ namespace Barbershop.Models
         public int Id { get; set; }
         [Required, DisplayName("Назва товару")]
         public string ProductName { get; set; }
-        [Required, Range(1, 15000)]
+        [Required, Range(1, 15000), DisplayName("Ціна")]
         public double Price { get; set; }
         [Required, DisplayName("Виробник")]
         public string Producer { get; set; }
@@ -28,6 +28,7 @@ namespace Barbershop.Models
         public int ProductCategoryId { get; set; }
         [ForeignKey("ProductCategoryId")]
         public virtual ProductCategory ProductCategory { get; set; }
+        [Required, Display(Name = "Галерея")]
         public virtual ICollection<ProductImages> ProductImages { get; set; }
     }
 }

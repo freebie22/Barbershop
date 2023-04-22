@@ -29,7 +29,7 @@ namespace Barbershop.Controllers
         }
 
         //GET - Create
-        public IActionResult Create(int? id)
+        public IActionResult Create()
         {
             BarbersVM barberVM = new BarbersVM()
             {
