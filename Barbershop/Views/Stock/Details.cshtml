@@ -1,0 +1,49 @@
+﻿@model Barbershop.Models.ViewModels.ProductsDetailsVM
+<div class="">
+    <form method="post">
+        <input asp-for="@Model.Product.Id" hidden></input>
+        <div class="container pt-4">
+                <div class="d-flex justify-content-between p-3" style="border-radius: 0px;">
+                    <div class="col-12 col-lg-4 text-center">
+                                <img src="@WC.ProductPath@Model.Product.ProductImage" width="100%"  />
+                            </div>
+                    <div class="col-12 col-md-6">
+                        <h3 class="text-black">@Model.Product.ProductName</h3>
+                    <h5 class="text-black">@Model.Product.Price грн</h5>
+                    </div>
+                </div>
+                    <div class="container p-3">
+                        <div class="row">          
+                            <div class="col-12">
+                                <div class="pl-3">
+                                    <div class="col-12">
+                                        <span class="badge p-3 border" style="color:black">@Model.Product.ProductCategory.Name</span>
+                                        <h3 class="text-success"></h3>
+                                        <p class="text-secondary"><strong>Опис товару:</strong> @Html.Raw(Model.Product.Description)</p>
+                                        <p class="text-secondary"><strong>Виробник:</strong> @Html.Raw(Model.Product.Producer)</p>
+                                        <p class="text-secondary"><strong>Об'єм:</strong> @Html.Raw(Model.Product.Volume)</p>
+                                        <p class="text-secondary"><strong>Склад:</strong> @Html.Raw(Model.Product.Consist)</p>
+                                        <p class="text-secondary"><strong>Застосування:</strong> @Html.Raw(Model.Product.Usage)</p>
+                                    </div>
+                                    <hr>
+                                    <div class="row-cols-4 justify-content-center">
+                                            @foreach (var image in Model.Product.ProductImages)
+                                            {
+                                        <img src="@WC.GalleryPath@image.Image" width="100%" />
+                                            }
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="">
+                    <div class="row">
+                        <div class="col-12 col-md-6 pb-1 ">
+                            <a asp-action="Index" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Назад до переліку</a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </form>
+</div>
