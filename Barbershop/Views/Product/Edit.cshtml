@@ -1,9 +1,10 @@
 ﻿@model Barbershop.Models.ViewModels.ProductsVM
 
 <form method="post" enctype="multipart/form-data">
+    <input asp-for="Product.Id" hidden />
     <div class="border p-3">
         <div class="form-group row">
-            <h2 class="text-info pl-3">Додати товар</h2>
+            <h2 class="text-info pl-3">Редагування товару</h2>
         </div>
         <div class="row">
             <div class="col-8">
@@ -12,7 +13,7 @@
                         <label asp-for="Product.ProductName"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.ProductName" class="form-control mb-2" />
+                        <input asp-for="Product.ProductName"  class="form-control mb-2" />
                         <span asp-validation-for="Product.ProductName" class="text-danger"></span>
                     </div>
                 </div>
@@ -21,7 +22,7 @@
                         <label asp-for="Product.Price"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Price" class="form-control mb-2" />
+                        <input asp-for="Product.Price"  class="form-control mb-2" />
                         <span asp-validation-for="Product.Price" class="text-danger"></span>
                     </div>
                 </div>
@@ -33,13 +34,13 @@
                         <input asp-for="Product.Producer" class="form-control mb-2" />
                         <span asp-validation-for="Product.Producer" class="text-danger"></span>
                     </div>
-                </div>               
+                </div>
                 <div class="form-group row">
                     <div class="col-4">
                         <label asp-for="Product.Volume"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Volume" class="form-control"/>
+                        <input asp-for="Product.Volume" class="form-control mb-2" />
                         <span asp-validation-for="Product.Volume" class="text-danger"></span>
                     </div>
                 </div>
@@ -48,7 +49,7 @@
                         <label asp-for="Product.Consist"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Consist" class="form-control" />
+                        <input asp-for="Product.Consist"  class="form-control " />
                         <span asp-validation-for="Product.Consist" class="text-danger"></span>
                     </div>
                 </div>
@@ -57,7 +58,7 @@
                         <label asp-for="Product.Description"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Description" class="form-control" />
+                        <input asp-for="Product.Description"  class="form-control " />
                         <span asp-validation-for="Product.Description" class="text-danger"></span>
                     </div>
                 </div>
@@ -66,8 +67,18 @@
                         <label asp-for="Product.Usage"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Usage" class="form-control" />
+                        <input asp-for="Product.Usage" class="form-control " />
                         <span asp-validation-for="Product.Usage" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row pt-2">
+                        <div class="col">
+                            <button type="submit" class="btn btn-danger w-100" value="Edit">Edit</button>
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Назад</a>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -75,7 +86,7 @@
                         Основне фото товару
                     </div>
                     <div class="col-8">
-                        <input type="file" name="files1" id="uploadBox"  accept=".png, .jpg, .jpeg" class="form-control mb-2" />
+                        <input type="file" name="files1" id="uploadBox" accept=".png, .jpg, .jpeg" class="form-control mb-2" />
                     </div>
                 </div>
                 <div class="form-group row">
@@ -96,21 +107,20 @@
                             <option disabled selected>--Оберіть категорію товару--</option>
                         </select>
                         <span asp-validation-for="Product.ProductCategoryId" class="text-danger"></span>
-                    </div>                   
-                </div>
-                <div class="form-group row">
-                    <div class="col-8 offset-4 row">
-                        <div class="col">
-                            <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100 text-white" value="Create" />
-                        </div>
-                        <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Back</a>
-                        </div>
                     </div>
                 </div>
             </div>
+           
+            <div class="col-4">
+                <img src="@WC.ProductPath@Model.Product.ProductImage" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+            </div>
+            @foreach (var image in Model.Images)
+            {
+                <div class="col-4">
+                    <img src="@WC.GalleryPath@image.Image" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+                </div>
+            }
         </div>
     </div>
+    </div>
 </form>
-
-
