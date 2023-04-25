@@ -7,6 +7,8 @@
         public static string ProductPath = @"\images\prod_images\";
         public static string GalleryPath = @"\images\prod_gallery\";
 
+        public const string SessionCart = "ShoppingCartSession";
+
         public const string AdminRole = "Admin";
         public const string BarberRole = "Barber";
         public const string ClientRole = "Client";

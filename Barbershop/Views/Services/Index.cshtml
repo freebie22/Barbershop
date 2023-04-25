@@ -73,55 +73,60 @@
             <tbody >
                 @if(User.Identity.IsAuthenticated)
                 {
-                    @foreach (var obj in Model)
+                    var user = await userManager.GetUserAsync(User);
+                    var barbershopUser = (BarbershopUser)user;
+                    if (barbershopUser != null && barbershopUser.DateOfBirth.Day == today.Day && barbershopUser.DateOfBirth.Month == today.Month)
                     {
-                        <tr>
-                            <td width="35%"><strong>@obj.serviceName</strong></td>
-                            <td width="10%"><span style="text-decoration: line-through;">@obj.traineePrice&nbsp;</span><strong>@(obj.traineePrice - (obj.traineePrice * userDiscount))</strong></td>
-                            <td width="10%"><span style="text-decoration: line-through;">@obj.barberPrice&nbsp;</span><strong>@(obj.barberPrice - (obj.barberPrice * userDiscount))</strong> </td>
-                            <td width="10%"><span style="text-decoration: line-through;">@obj.seniorPrice&nbsp;</span><strong>@(obj.seniorPrice - (obj.seniorPrice * userDiscount))</strong></td>
-                            @if (User.IsInRole(WC.AdminRole))
-                            {
-                                <td wdith="35%" class="text-center">
-                                    <div class="w-75 btn-group" role="group">
-                                        <a asp-controller="Services" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
-                                            <i class="fas fa-edit"></i> &nbsp;
-                                        </a>
-                                        <a asp-controller="Services" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
-                                            <i class="fas fa-trash-alt"></i>
-
-                                        </a>
-                                    </div>
-                                </td>
-                            }
-                        </tr>
-                    }
-                }
-                else
-                {
-                     @foreach (var obj in Model)
-                {
-                    <tr>
-                        <td width="35%"><strong>@obj.serviceName</strong></td>
-                        <td width="10%"><strong>@obj.traineePrice</strong></td>
-                        <td width="10%"><strong>@obj.barberPrice</strong></td>
-                        <td width="10%"><strong>@obj.seniorPrice</strong></td>
-                        @if(User.IsInRole(WC.AdminRole))
+                        @foreach (var obj in Model)
                         {
-                            <td wdith="35%" class="text-center">
-                                <div class="w-75 btn-group" role="group">
-                                    <a asp-controller="Services" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
-                                        <i class="fas fa-edit"></i> &nbsp;
-                                    </a>
-                                    <a asp-controller="Services" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
-                                        <i class="fas fa-trash-alt"></i>
+                            <tr>
+                                <td width="35%"><strong>@obj.serviceName</strong></td>
+                                <td width="10%"><span style="text-decoration: line-through;">@obj.traineePrice&nbsp;</span><strong>@(obj.traineePrice - (obj.traineePrice * userDiscount))</strong></td>
+                                <td width="10%"><span style="text-decoration: line-through;">@obj.barberPrice&nbsp;</span><strong>@(obj.barberPrice - (obj.barberPrice * userDiscount))</strong> </td>
+                                <td width="10%"><span style="text-decoration: line-through;">@obj.seniorPrice&nbsp;</span><strong>@(obj.seniorPrice - (obj.seniorPrice * userDiscount))</strong></td>
+                                @if (User.IsInRole(WC.AdminRole))
+                                {
+                                    <td wdith="35%" class="text-center">
+                                        <div class="w-75 btn-group" role="group">
+                                            <a asp-controller="Services" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
+                                                <i class="fas fa-edit"></i> &nbsp;
+                                            </a>
+                                            <a asp-controller="Services" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
+                                                <i class="fas fa-trash-alt"></i>
 
-                                    </a>
-                                </div>
-                            </td>
-                        }          
-                    </tr>
-                }
+                                            </a>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <td width="35%"><strong>@obj.serviceName</strong></td>
+                                <td width="10%"><strong>@obj.traineePrice</strong></td>
+                                <td width="10%"><strong>@obj.barberPrice</strong></td>
+                                <td width="10%"><strong>@obj.seniorPrice</strong></td>
+                                @if (User.IsInRole(WC.AdminRole))
+                                {
+                                    <td wdith="35%" class="text-center">
+                                        <div class="w-75 btn-group" role="group">
+                                            <a asp-controller="Services" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
+                                                <i class="fas fa-edit"></i> &nbsp;
+                                            </a>
+                                            <a asp-controller="Services" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
+                                                <i class="fas fa-trash-alt"></i>
+
+                                            </a>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
                 }
                
             </tbody>

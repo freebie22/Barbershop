@@ -8,5 +8,7 @@
         }
 
         public Products Product { get; set; }
+
+        public bool ExistsInCart { get; set; }
     }
 }

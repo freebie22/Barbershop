@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@using Barbershop.Utility
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -11,10 +14,21 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 </head>
 <body>
+    <style>
+        footer{
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Barbershop</a>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3">
+            <div  class="container-fluid">
+                <a style="color:white" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Barbershop</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -22,20 +36,20 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Services" asp-action="Index">Прайс-ліст</a>
+                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Services" asp-action="Index">Прайс-ліст</a>
                         </li>
                         @if(User.IsInRole(WC.AdminRole))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a style="color:white" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Адміністрування
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Specializations" asp-action="Index">Спеціалізації</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="WorkPositions" asp-action="Index">Посади</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Barbers" asp-action="Index">Барбери</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="ProductCategory" asp-action="Index">Категорії товарів</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Товари</a>
+                                    <a  class="nav-link text-dark" asp-area="" asp-controller="Specializations" asp-action="Index">Спеціалізації</a>
+                                    <a  class="nav-link text-dark" asp-area="" asp-controller="WorkPositions" asp-action="Index">Посади</a>
+                                    <a  class="nav-link text-dark" asp-area="" asp-controller="Barbers" asp-action="Index">Барбери</a>
+                                    <a  class="nav-link text-dark" asp-area="" asp-controller="ProductCategory" asp-action="Index">Категорії товарів</a>
+                                    <a  class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Товари</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Створити адміністратора</a>
                                 </div>
@@ -43,13 +57,27 @@
                         }
                     
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Наші барбери</a>
+                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Employees" asp-action="Index">Наші барбери</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Stock" asp-action="Index">Наші товари</a>
+                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Stock" asp-action="Index">Наші товари</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li>
+                            @if (HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null)
+                            {
+                                <a style="color:white" asp-action="Index" asp-controller="Cart" class="nav-link">
+                                    @{
+                                        var count = HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart).Count;
+                                    }
+                                    <i class="fas fa-shopping-cart"></i> &nbsp; (@count)
+                                </a>
+                            }
+                            else
+                            {
+                                <a style="color:white" href="#" class="nav-link">
+                                    <i  class="fas fa-shopping-cart"></i> &nbsp; (0)
+                                </a>
+                            }
                         </li>
                     </ul>
                     <partial name="_LoginPartial"></partial>
@@ -64,43 +92,46 @@
     </div>
 
     <footer class="footer text-muted">
-        <div class="container">
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-1">
-                <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Barbershop</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Services" asp-action="Index">Прайс-ліст</a>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm">
+            <div class="container-fluid">
+                <a style="color:white" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Barbershop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Services" asp-action="Index">Прайс-ліст</a>
+                        </li>
+                        @if (User.IsInRole(WC.AdminRole))
+                        {
+                            <li class="nav-item dropdown">
+                                <a style="color:white" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Адміністрування
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Specializations" asp-action="Index">Спеціалізації</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="WorkPositions" asp-action="Index">Посади</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Barbers" asp-action="Index">Барбери</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="ProductCategory" asp-action="Index">Категорії товарів</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Товари</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Створити адміністратора</a>
+                                </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Наші барбери</a>
-                            </li>
-                            @if (User.IsInRole(WC.AdminRole))
-                            {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Адміністрування
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Specializations" asp-action="Index">Спеціалізації</a>
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="WorkPositions" asp-action="Index">Посади</a>
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Barbers" asp-action="Index">Барбери</a>
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="ProductCategory" asp-action="Index">Категорії товарів</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Створити адміністратора</a>
-                                    </div>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+                        }
+
+                        <li class="nav-item">
+                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Employees" asp-action="Index">Наші барбери</a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Stock" asp-action="Index">Наші товари</a>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
-        </div>
+            </div>
+        </nav>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
