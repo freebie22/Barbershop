@@ -101,11 +101,15 @@ namespace Barbershop.Controllers
                     Text = i.Name,
                     Value = i.Id.ToString()
                 }
-                ),
-                Images = db.ProductImages.ToList()
+                )
             };
 
-            productVM.Product = db.Products.Find(id);
+
+            productVM.Product = db.Products.Include(p => p.ProductImages).FirstOrDefault(p => p.Id == id);
+
+            productVM.Images = productVM.Product.ProductImages.ToList();
+
+
             if (productVM.Product == null)
             {
                 return NotFound();

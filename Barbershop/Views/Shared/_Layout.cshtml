@@ -19,14 +19,20 @@
             text-align: center;
             background-color: #333;
             color: #fff;
-            padding: 10px;
+            padding: 0px 0;
             position: absolute;
             bottom: 0;
             width: 100%;
         }
+        #footer-nav
+        {
+            padding-top: 0px;
+            padding-bottom: 0px;
+            line-height: 40px;
+        }
     </style>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3">
             <div  class="container-fluid">
                 <a style="color:white" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Barbershop</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -92,7 +98,7 @@
     </div>
 
     <footer class="footer text-muted">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm" id="footer-nav">
             <div class="container-fluid">
                 <a style="color:white" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Barbershop</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
