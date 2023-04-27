@@ -35,7 +35,16 @@ namespace Barbershop.Controllers
                 shoppingCartList = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).ToList();
             }
             List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
-            IEnumerable<Products> prodList = _db.Products.Where(u => prodInCart.Contains(u.Id));
+            IEnumerable<Products> prodListTemp = _db.Products.Where(u => prodInCart.Contains(u.Id));
+            IList<Products> prodList = new List<Products>();
+
+            foreach(var cartObj in shoppingCartList)
+            {
+                Products prodTemp = prodListTemp.FirstOrDefault(u => u.Id == cartObj.ProductId);
+                prodTemp.TempCount = cartObj.ProductCount;
+                prodList.Add(prodTemp);
+            }
+
             return View(prodList);
         }
 

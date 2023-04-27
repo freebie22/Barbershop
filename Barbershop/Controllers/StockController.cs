@@ -56,7 +56,7 @@ namespace Barbershop.Controllers
         }
 
         [HttpPost, ActionName("Details")]
-        public IActionResult DetailsPost(int id)
+        public IActionResult DetailsPost(int id, ProductsDetailsVM productsDetailsVM)
         {
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
             if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null
@@ -67,7 +67,7 @@ namespace Barbershop.Controllers
 
             var product = _db.Products.FirstOrDefault(p => p.Id == id);
 
-            shoppingCartList.Add(new ShoppingCart { ProductId = id });
+            shoppingCartList.Add(new ShoppingCart { ProductId = id, ProductCount = productsDetailsVM.Product.TempCount });
 
             HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
 

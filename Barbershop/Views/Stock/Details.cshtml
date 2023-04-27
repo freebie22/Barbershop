@@ -11,6 +11,53 @@
         font-size: 26px;
         font-weight: 700;
     }
+
+    #product-header-modal {
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    #product-price-modal {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .quantity-input {
+        display: flex;
+        align-items: center;
+    }
+
+        .quantity-input input {
+            border: none;
+            background: none;
+            width: 50px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+    .quantity-controls {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .quantity-control {
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+        .quantity-control:hover {
+            color: #333;
+        }
+
+    .quantity-increase {
+        margin-top: 3px;
+    }
+
+    .quantity-decrease {
+        margin-bottom: 3px;
+    }
+
+
 </style>
 <div class="">
     <form method="post">
@@ -39,38 +86,94 @@
                                         <p class="text-secondary"><strong>Застосування:</strong> @Html.Raw(Model.Product.Usage)</p>
                                     </div>
                                     <hr>
-                            <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-center text-center">
                                 <div class="row-cols-4 justify-content-center">
                                     @foreach (var image in Model.Product.ProductImages)
                                     {
                                         <img src="@WC.GalleryPath@image.Image" width="100%" />
                                     }
+                                    
                                 </div>
                             </div>
                                     
                                 </div>
+                        <div class="row p-3 justify-content-center text-center ">
+                            <div class="col-12 col-md-6 pb-1">
+                                
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-dark form-control btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        Додати в кошик
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content" style="border-radius: 0rem">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">@Model.Product.ProductName</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="d-flex flex-column flex-md-row justify-content-between p-3" style="border-radius: 0px;">
+                                                        <div class="col-md-3 text-center mb-3 mb-md-0">
+                                                            <img src="@WC.ProductPath@Model.Product.ProductImage" width="100%" />
+                                                        </div>
+                                                        <div class="col-md-8 d-flex flex-column justify-content align-items-md-start">
+                                                            <p id="product-header-modal" class="text-black mb-0">@Model.Product.ProductName</p>
+                                                            <p id="product-price-modal" class="text-black">@Model.Product.Price грн</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="quantity-input justify-content-center">
+                                                    <div class="quantity-controls" style="display: inline-block;">
+                                                            <h6>Кількість товару для замовлення:</h6>
+                                                            <span class="quantity-control quantity-decrease" onclick="decreaseQuantity()" >-</span>
+                                                            <input readonly asp-for=@Model.Product.TempCount type="number" min="1" value="1" id="quantity" style="width: 50px;">                                                            
+                                                            <span class="quantity-control quantity-increase" onclick="increaseQuantity()" >+</span>
+                                                            <span asp-validation-for="@Model.Product.TempCount" class="text-danger"></span>
+                                                            <h6>Обрано товару на суму:</h6>
+                                                            <h6 id="total-price" class="text-black">@Model.Product.Price грн</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="submit" asp-route-id="@Model.Product.Id" class="btn btn-dark form-control btn-lg" style="height:50px;">Додати в кошик</button>
+                                                <button type="button" class="btn btn-secondary form-control btn-lg" data-bs-dismiss="modal">Продовжити покупки</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                                    
+                            </div>
+                        </div>
                             </div>
                         </div>
                     </div>
-                <div class="">
-                    <div class="row">
-                        <div class="col-12 col-md-6 pb-1 ">
-                        @if (Model.ExistsInCart)
-                        {
-                            <a asp-action="RemoveFromCart" asp-route-id="@Model.Product.Id" class="btn btn-warning btn-square form-control btn-lg" style="height:50px;">Видалити з кошика</a>
-                        }
-                        else
-                        {
-                            <button type="submit" asp-route-id="@Model.Product.Id" class="btn btn-info form-control btn-lg" style="height:50px;">Додати в кошик</button>
-
-                        }
-                       
-                        </div>
-                    <div class="col-12 col-md-6 pb-1 ">
-                        <a asp-action="Index" class="btn btn-warning btn-square form-control btn-lg" style="height:50px;">До переліку</a>
-                        </div>                    
-                    </div>
-                </div>
         </div>
     </form>
 </div>
+@section Scripts
+{
+    <script>
+        function increaseQuantity() {
+            var quantityInput = document.getElementById("quantity");
+            quantityInput.stepUp();
+            updateTotalPrice();
+        }
+
+        function decreaseQuantity() {
+            var quantityInput = document.getElementById("quantity");
+            quantityInput.stepDown();
+            updateTotalPrice();
+        }
+
+        function updateTotalPrice() {
+        var price = parseFloat(document.getElementById('product-price-modal').innerText);
+        var quantity = parseInt(document.getElementById('quantity').value);
+        var totalPrice = price * quantity;
+        document.getElementById('total-price').innerText = totalPrice.toFixed(2) + ' грн';
+    }
+
+    document.getElementById('quantity').addEventListener('change', updateTotalPrice);
+    
+</script>
+}
+

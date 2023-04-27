@@ -1,4 +1,5 @@
 ﻿@model Barbershop.Models.ViewModels.ProductUserVM
+
 <form method="post">
     <br />
     <div class="backgroundWhiteBorder">
@@ -34,7 +35,7 @@
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label>Phone</label>
+                                        <label>Номер телефону</label>
                                     </div>
                                     <div class="col-9">
                                         <input asp-for="BarbershopUser.PhoneNumber" type="text" class="form-control" />
@@ -43,11 +44,51 @@
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label>Email</label>
+                                        <label>Ел. пошта</label>
                                     </div>
                                     <div class="col-9">
                                         <input asp-for="BarbershopUser.Email" type="text" class="form-control" />
                                         <span asp-validation-for="BarbershopUser.Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Спосіб доставки</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <select asp-for="BarbershopUser.DeliveryMethod" type="text" class="form-control" >
+                                            <option disabled>--Оберіть спосіб доставки--</option>
+                                            <option>Самовивіз(м.Бердичів, вул.Європейська 54)</option>
+                                            <option>Доставка Новою Поштою</option>
+                                        </select>
+                                        <span asp-validation-for="BarbershopUser.DeliveryMethod" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1 delivery-details">
+                                    <div class="col-3">
+                                        <label>Область</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="BarbershopUser.State" type="text" class="form-control" />
+                                        <span asp-validation-for="BarbershopUser.State" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1 delivery-details">
+                                    <div class="col-3">
+                                        <label>Місто</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="BarbershopUser.City" type="text" class="form-control" />
+                                        <span asp-validation-for="BarbershopUser.City" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1 delivery-details">
+                                    <div class="col-3">
+                                        <label>Відділення Нової Пошти</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="BarbershopUser.Department" type="text" class="form-control" />
+                                        <span asp-validation-for="BarbershopUser.Department" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
@@ -90,5 +131,17 @@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $('#BarbershopUser_DeliveryMethod').change(function () {
+                if ($(this).val() === 'Доставка Новою Поштою') {
+                    $('.delivery-details').removeClass('d-none');
+                }
+                else {
+                    $('.delivery-details').addClass('d-none');
+                }
+            }).trigger('change'); 
+        });
+    </script>
 }
 

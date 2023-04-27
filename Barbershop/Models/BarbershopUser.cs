@@ -16,5 +16,19 @@ namespace Barbershop.Models
         {
             DateOfBirth = new DateTime(1900, 1, 1);
         }
+        [NotMapped]
+        public string DeliveryMethod { get; set; }
+        [NotMapped]
+        public string State { get; set; }
+        [NotMapped]
+        public string City { get; set; }
+        [NotMapped]
+        public string Department { get; set; }
+
+
+
+
+
+       
     }
 }
