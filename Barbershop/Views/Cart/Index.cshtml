@@ -15,7 +15,7 @@
                                 Кошик
                             </div>
                             <div class="col-6 text-right">
-                                <a asp-action="Index" asp-controller="Home" class="btn btn-outline-info btn-sm">Перейти до товарів</a>
+                                <a asp-action="Index" asp-controller="Stock" class="btn btn-outline-info btn-sm">Продовжити покупки</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -23,11 +23,17 @@
                                 <div class="row" style="color:#821f3d">
                                     <div class="col-lg-2">
                                     </div>
-                                    <div class="col-12 col-lg-7">
+                                    <div class="col-12 col-lg-3">
                                         Інформація про товар
                                     </div>
                                     <div class="col-12 col-lg-2">
                                         Ціна за шт.
+                                    </div>
+                                    <div class="col-6 col-lg-2">
+                                        К-ть од. товару
+                                    </div>
+                                    <div class="col-6 col-lg-2">
+                                        Загальна ціна
                                     </div>
                                     <div class="col-6 col-sm-4 col-lg-1">
                                     </div>
@@ -35,20 +41,26 @@
                             </div>
 
                             <hr />
-
+                            @{                        
+                                var orderTotal = 0.0m;
+                            }
                             @foreach (var obj in Model)
                             {
                                 <div class="row h-100">
                                     <div class="col-4 col-md-2 text-center py-2">
                                         <img src="@WC.ProductPath@obj.ProductImage" class="rounded" width="100%" />
                                     </div>
-                                    <div class="col-8 col-lg-7">
+                                    <div class="col-8 col-lg-3">
                                         <h5>@obj.ProductName</h5>
-                                        <div style="font-size:11px;">@obj.Description</div>
                                     </div>
                                     <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
                                         <span style="font-size:17px;"> @obj.Price грн</span>/ за од.
-
+                                    </div>
+                                    <div class="col-4 col-lg-2 pt-lg-4" style="font-size:11px;">
+                                        <input type="text" asp-for="@obj.TempCount" class="form-control"/>
+                                    </div>
+                                    <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
+                                        <span style="font-size:17px;"> @(obj.Price*obj.TempCount) грн</span>
                                     </div>
                                     <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
                                         <a asp-action="Remove" asp-route-id="@obj.Id" class="btn btn-outline-danger">
@@ -56,9 +68,14 @@
                                         </a>
                                     </div>
                                 </div>
+                                orderTotal += obj.Price * obj.TempCount;
                                 <hr />
                             }
-
+                            <div class="row">
+                                <div class="col-12 text-right pr-4">
+                                    Загальна ціна: @string.Format("{0:c}",orderTotal);
+                                </div>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <div class="row">
