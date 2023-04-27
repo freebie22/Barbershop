@@ -1,103 +1,4 @@
-﻿using Barbershop.Data;
-using Barbershop.Models;
-using Barbershop.Models.ViewModels;
-using Barbershop.Utility;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Text;
-
-namespace Barbershop.Controllers
-{
-    [Authorize]
-    public class CartController : Controller
-    {
-        private readonly ApplicationDbContext _db;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IEmailSender _emailSender;
-        [BindProperty]
-        public ProductUserVM ProductUserVM { get; set; }
-
-        public CartController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
-        {
-            _db = db;
-            _webHostEnvironment = webHostEnvironment;
-            _emailSender = emailSender;
-        }
-        public IActionResult Index()
-        {
-            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
-            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null
-                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0)
-            {
-                //session exists
-                shoppingCartList = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).ToList();
-            }
-            List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
-            IEnumerable<Products> prodList = _db.Products.Where(u => prodInCart.Contains(u.Id));
-            return View(prodList);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName("Index")]
-        public IActionResult IndexPost()
-        {
-
-            return RedirectToAction(nameof(Summary));
-        }
-
-
-        public IActionResult Summary()
-        {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-
-            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
-            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null
-                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0)
-            {
-                //session exists
-                shoppingCartList = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).ToList();
-            }
-
-            List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
-            IEnumerable<Products> prodList = _db.Products.Where(u => prodInCart.Contains(u.Id));
-
-            ProductUserVM = new ProductUserVM()
-            {
-                BarbershopUser = _db.BarbershopUser.FirstOrDefault(u => u.Id == claim.Value),
-                ProductList = prodList.ToList()
-            };
-
-            return View(ProductUserVM);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName("Summary")]
-        public async Task<IActionResult> SummaryPost(ProductUserVM ProductUserVM)
-        {
-            var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
-        + "templates" + Path.DirectorySeparatorChar.ToString() + "Template.html";
-
-            var subject = "Ваше замовлення";
-
-            ProductUserVM.OrderTotal = 0.0m;
-
-            StringBuilder productListSB = new StringBuilder();
-
-            for (int i = 0; i < ProductUserVM.ProductList.Count; i++)
-            {
-                var prod = ProductUserVM.ProductList[i];
-                ProductUserVM.OrderTotal += prod.Price;
-                productListSB.Append($"Товар: {prod.ProductName};<br/>");
-            }
-
-            string messageBody = $@"
-                <!DOCTYPE html>
+<!DOCTYPE html>
                             <html>
                             <head>
                                 <title></title>
@@ -106,97 +7,97 @@ namespace Barbershop.Controllers
                                 <meta http-equiv='X-UA-Compatible' content='IE=edge' />
                                 <style type='text/css'>
 	
-                                    @media screen {{
-                                        @font-face {{
+                                    @media screen {
+                                        @font-face {
                                             font-family: 'Lato';
                                             font-style: normal;
                                             font-weight: 400;
                                             src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
-                                        }}
+                                        }
 
-                                        @font-face {{
+                                        @font-face {
                                             font-family: 'Lato';
                                             font-style: normal;
                                             font-weight: 700;
                                             src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v11/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
-                                        }}
+                                        }
 
-                                        @font-face {{
+                                        @font-face {
                                             font-family: 'Lato';
                                             font-style: italic;
                                             font-weight: 400;
                                             src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v11/RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
-                                        }}
+                                        }
 
-                                        @font-face {{
+                                        @font-face {
                                             font-family: 'Lato';
                                             font-style: italic;
                                             font-weight: 700;
                                             src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v11/HkF_qI1x_noxlxhrhMQYELO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
-                                        }}
-                                    }}
+                                        }
+                                    }
 
                                     /* CLIENT-SPECIFIC STYLES */
                                     body,
                                     table,
                                     td,
-                                    a {{
+                                    a {
                                         -webkit-text-size-adjust: 100%;
                                         -ms-text-size-adjust: 100%;
-                                    }}
+                                    }
 
                                     table,
-                                    td {{
+                                    td {
                                         mso-table-lspace: 0pt;
                                         mso-table-rspace: 0pt;
-                                    }}
+                                    }
 
-                                    img {{
+                                    img {
                                         -ms-interpolation-mode: bicubic;
-                                    }}
+                                    }
 
                                     /* RESET STYLES */
-                                    img {{
+                                    img {
                                         border: 0;
                                         height: auto;
                                         line-height: 100%;
                                         outline: none;
                                         text-decoration: none;
-                                    }}
+                                    }
 
-                                    table {{
+                                    table {
                                         border-collapse: collapse !important;
-                                    }}
+                                    }
 
-                                    body {{
+                                    body {
                                         height: 100% !important;
                                         margin: 0 !important;
                                         padding: 0 !important;
                                         width: 100% !important;
-                                    }}
+                                    }
 
                                     /* iOS BLUE LINKS */
-                                    a[x-apple-data-detectors] {{
+                                    a[x-apple-data-detectors] {
                                         color: inherit !important;
                                         text-decoration: none !important;
                                         font-size: inherit !important;
                                         font-family: inherit !important;
                                         font-weight: inherit !important;
                                         line-height: inherit !important;
-                                    }}
+                                    }
 
                                     /* MOBILE STYLES */
-                                    @media screen and (max-width:600px) {{
-                                        h1 {{
+                                    @media screen and (max-width:600px) {
+                                        h1 {
                                             font-size: 32px !important;
                                             line-height: 32px !important;
-                                        }}
-                                    }}
+                                        }
+                                    }
 
                                     /* ANDROID CENTER FIX */
-                                    div[style*='margin: 16px 0;'] {{
+                                    div[style*='margin: 16px 0;'] {
                                         margin: 0 !important;
-                                    }}
+                                    }
                                 </style>
                             </head>
 
@@ -218,22 +119,21 @@ namespace Barbershop.Controllers
                                         <table border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px;'>
                                             <tr>
                                                 <td bgcolor='#ffffff' align='center' valign='top' style='padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;'>
-                                                    <img src=""https://i.ibb.co/tDWZZnD/Oasis.jpg"" width = '225' height = '120' alt=""""Oasis"""" border=""""0"""" />
-                                                     <h1 style='font-size: 24px; font-weight: 400; margin: 2;'>Вами було оформленно замовлення в нашому магазині!</h1> 
+                                                    <img src=""https://i.ibb.co/tDWZZnD/Oasis.jpg"" width = '225' height = '120' alt=""Oasis"" border=""0"" />
+                                                     <h1 style='font-size: 24px; font-weight: 400; margin: 2;'>Вами було оформленно замовлення нашому магазині!</h1> 
                                                 </td>
                                             </tr>
-                                            
                                             <tr>
                                                 <td bgcolor='#ffffff' align='center' style='padding: 0px 30px 20px 30px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
                                                     <p style='margin: 0;'>Деталі замовлення вашого замовлення</p>
-                                                    <table width=""95%"" border=""0"" align=""center"" cellpadding=""0"" cellspacing=""0"">
+                                                    <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
 
                                                         <tr>
-                                                            <td width=""100%"" style=""color:darkslategrey; font-family:Arial, Helvetica, sans-serif; padding:10px;"">
-                                                                <div style=""font-size:16px; color:#564319;"">
+                                                            <td width="100%" style="color:darkslategrey; font-family:Arial, Helvetica, sans-serif; padding:10px;">
+                                                                <div style="font-size:16px; color:#564319;">
                                                                     Інформація про замовника: 
                                                                 </div>
-                                                                <div style=""font-size:16px;padding-left:15px;"">
+                                                                <div style="font-size:16px;padding-left:15px;">
                                                                     Ім'я та прізвище  : {ProductUserVM.BarbershopUser.FullName}
                                                                     <br />
                                                                     Ел. пошта &nbsp;: {ProductUserVM.BarbershopUser.Email}
@@ -247,15 +147,13 @@ namespace Barbershop.Controllers
                                                         </tr>
                         
                                                         <tr>
-                                                            <td width=""100%"" style=""color:darkslategrey; font-family:Arial, Helvetica, sans-serif; padding:10px;"">
-                                                                <div style=""font-size:16px; color:#564319;"">
+                                                            <td width="100%" style="color:darkslategrey; font-family:Arial, Helvetica, sans-serif; padding:10px;">
+                                                                <div style="font-size:16px; color:#564319;">
                                                                     Замовлені товари:
                                                                 </div>
-                                                                <div style=""font-size:16px; color:#525252;padding-left:15px;"">
+                                                                <div style="font-size:16px; color:#525252;padding-left:15px;">
                                                                   
                                                                     {productListSB.ToString()}
-                                                                    Ціна до сплати:
-                                                                    {ProductUserVM.OrderTotal} грн
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -275,8 +173,23 @@ namespace Barbershop.Controllers
                                                 </td>
                                             </tr>-->
                                             <tr>
+                                                <td bgcolor='#ffffff' align='left'>
+                                                    <table width='100%' border='0' cellspacing='0' cellpadding='0'>
+                                                        <tr>
+                                                            <td bgcolor='#ffffff' align='center' style='padding: 20px 30px 30px 30px;'>
+                                                                <table border='0' cellspacing='0' cellpadding='0'>
+                                                                    <tr>
+                                                                        <td align='center' style='border-radius: 3px;' bgcolor='#000000'><a href='" + HtmlEncoder.Default.Encode(callbackUrl) + @"' target='_blank' style='font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #000000; display: inline-block;'>Підтвердити</a></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr> <!-- COPY -->
+                                            <tr>
                                                 <td bgcolor='#ffffff' align='center' style='padding: 0px 30px 20px 30px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                                                    <p style='margin: 0;'>Очікуйте прибуття замовлення за адресою вказаною при оформленні.</p>
+                                                    <p style='margin: 0;'>Якщо ви не вказували даний E-Mail при реєстрації, або вказали інший - не переходьте за цим посиланням.</p>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -305,35 +218,4 @@ namespace Barbershop.Controllers
                                 </tr>
                             </table>
                             </body>
-                            </html>";
-
-
-            await _emailSender.SendEmailAsync(ProductUserVM.BarbershopUser.Email, subject, messageBody);
-
-
-            return RedirectToAction(nameof(InquiryConfirmation));
-        }
-
-        public IActionResult InquiryConfirmation()
-        {
-            HttpContext.Session.Clear();
-            return View();
-        }
-
-        public IActionResult Remove(int id)
-        {
-            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
-            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null
-                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0)
-            {
-                //session exists
-                shoppingCartList = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).ToList();
-            }
-
-            shoppingCartList.Remove(shoppingCartList.FirstOrDefault(u => u.ProductId == id));
-            HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
-
-            return RedirectToAction(nameof(Index));
-        }
-    }
-}
+                            </html>

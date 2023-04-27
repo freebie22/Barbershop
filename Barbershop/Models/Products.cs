@@ -10,8 +10,8 @@ namespace Barbershop.Models
         public int Id { get; set; }
         [Required, DisplayName("Назва товару")]
         public string ProductName { get; set; }
-        [Required, Range(1, 15000), DisplayName("Ціна")]
-        public double Price { get; set; }
+        [Required, Range(1, 15000), DisplayName("Ціна, грн")]
+        public decimal Price { get; set; }
         [Required, DisplayName("Виробник")]
         public string Producer { get; set; }
         [Required, DisplayName("Об'єм")]

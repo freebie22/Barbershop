@@ -65,6 +65,8 @@ namespace Barbershop.Controllers
                 shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
             }
 
+            var product = _db.Products.FirstOrDefault(p => p.Id == id);
+
             shoppingCartList.Add(new ShoppingCart { ProductId = id });
 
             HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
