@@ -19,9 +19,7 @@ namespace Barbershop.Data
         public DbSet<Barbers> Barbers { get; set; }
         public DbSet<BarbershopUser> BarbershopUser { get; set; }
         public DbSet<ProductImages> ProductImages { get; set; }
-        public DbSet<Region> Regions { get; set; }
-        public DbSet<City> Cities { get; set; }
-        public DbSet<PostOffice> PostOffices { get; set; }
+
 
        
 

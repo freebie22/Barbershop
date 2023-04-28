@@ -19,11 +19,11 @@ namespace Barbershop.Models
         [NotMapped]
         public string DeliveryMethod { get; set; }
         [NotMapped]
-        public string State { get; set; }
+        public string Region { get; set; }
         [NotMapped]
         public string City { get; set; }
         [NotMapped]
-        public string Department { get; set; }
+        public string PostOffice { get; set; }
 
 
 
