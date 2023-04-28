@@ -72,7 +72,33 @@
                                         <label>Область</label>
                                     </div>
                                     <div class="col-9">
-                                        <input asp-for="BarbershopUser.State" type="text" class="form-control" />
+                                        <select asp-for="BarbershopUser.State" type="text" class="form-control">
+                                            <option value="">-- Оберіть область --</option>
+                                            <option value="Вінницька область">Вінницька область</option>
+                                            <option value="Волинська область">Волинська область</option>
+                                            <option value="Дніпропетровська область">Дніпропетровська область</option>
+                                            <option value="Донецька область">Донецька область</option>
+                                            <option value="Житомирська область">Житомирська область</option>
+                                            <option value="Закарпатська область">Закарпатська область</option>
+                                            <option value="Запорізька область">Запорізька область</option>
+                                            <option value="Івано-Франківська область">Івано-Франківська область</option>
+                                            <option value="Київська область">Київська область</option>
+                                            <option value="Кіровоградська область">Кіровоградська область</option>
+                                            <option value="Луганська область">Луганська область</option>
+                                            <option value="Львівська область">Львівська область</option>
+                                            <option value="Миколаївська область">Миколаївська область</option>
+                                            <option value="Одеська область">Одеська область</option>
+                                            <option value="Полтавська область">Полтавська область</option>
+                                            <option value="Рівненська область">Рівненська область</option>
+                                            <option value="Сумська область">Сумська область</option>
+                                            <option value="Тернопільська область">Тернопільська область</option>
+                                            <option value="Харківська область">Харківська область</option>
+                                            <option value="Херсонська область">Херсонська область</option>
+                                            <option value="Хмельницька область">Хмельницька область</option>
+                                            <option value="Черкаська область">Черкаська область</option>
+                                            <option value="Чернівецька область">Чернівецька область</option>
+                                            <option value="Чернігівська область">Чернігівська область</option>
+                                        </select>
                                         <span asp-validation-for="BarbershopUser.State" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -81,7 +107,43 @@
                                         <label>Місто</label>
                                     </div>
                                     <div class="col-9">
-                                        <input asp-for="BarbershopUser.City" type="text" class="form-control" />
+                                        <select asp-for="BarbershopUser.City" type="text" class="form-control" >
+                                            <option disabled selected value="">-- Оберіть місто --</option>
+                                            <option value="Бердичів">Бердичів</option>
+                                            <option value="Київ">Київ</option>
+                                            <option value="Харків">Харків</option>
+                                            <option value="Одеса">Одеса</option>
+                                            <option value="Дніпро">Дніпро</option>
+                                            <option value="Донецьк">Донецьк</option>
+                                            <option value="Запоріжжя">Запоріжжя</option>
+                                            <option value="Львів">Львів</option>
+                                            <option value="Кривий Ріг">Кривий Ріг</option>
+                                            <option value="Миколаїв">Миколаїв</option>
+                                            <option value="Маріуполь">Маріуполь</option>
+                                            <option value="Севастополь">Севастополь</option>
+                                            <option value="Сімферополь">Сімферополь</option>
+                                            <option value="Чернігів">Чернігів</option>
+                                            <option value="Чернівці">Чернівці</option>
+                                            <option value="Житомир">Житомир</option>
+                                            <option value="Полтава">Полтава</option>
+                                            <option value="Рівне">Рівне</option>
+                                            <option value="Кропивницький">Кропивницький</option>
+                                            <option value="Івано-Франківськ">Івано-Франківськ</option>
+                                            <option value="Кам'янське">Кам'янське</option>
+                                            <option value="Тернопіль">Тернопіль</option>
+                                            <option value="Луцьк">Луцьк</option>
+                                            <option value="Ужгород">Ужгород</option>
+                                            <option value="Суми">Суми</option>
+                                            <option value="Мелітополь">Мелітополь</option>
+                                            <option value="Кременчук">Кременчук</option>
+                                            <option value="Херсон">Херсон</option>
+                                            <option value="Хмельницький">Хмельницький</option>
+                                            <option value="Черкаси">Черкаси</option>
+                                            <option value="Біла Церква">Біла Церква</option>
+                                            <option value="Ковель">Ковель</option>
+                                            <option value="Євпаторія">Євпаторія</option>
+                                            <option value="Ніжин">Ніжин</option>
+                                        </select>
                                         <span asp-validation-for="BarbershopUser.City" class="text-danger"></span>
                                     </div>
                                 </div>
