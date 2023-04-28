@@ -1,7 +1,12 @@
 ﻿@model Barbershop.Models.Barbers
+<style>
+    body{
+        background-image: url(~/wwwroot/images/pattern-light.jpg);
+    }
+</style>
         <div class="col-lg-4 col-md-6 pb-4 filter @Model.WorkPosition.PositionName.Replace(' ', '_')">
             <!-- Card-->
-            <div class="card bg-white rounded shadow-sm" style="border:1px solid #222">
+            <div class="card rounded shadow-sm" style="border:1px solid #222">
                 <div class="card-body px-3 pt-3 pb-1 row">
                     <div class="col-7"><label class="float-left">@Model.FullName</label></div>
             <div class="col-5"><label class="float-right"><span class="text-info h5">@Model.FullName</span></label> </div>
@@ -12,4 +17,3 @@
                 </div>
                 </div>
             </div>
-        </div>

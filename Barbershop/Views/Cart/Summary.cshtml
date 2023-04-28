@@ -1,5 +1,8 @@
 ﻿@model Barbershop.Models.ViewModels.ProductUserVM
 
+@{
+    var orderTotal = 0.0m;
+}
 <form method="post">
     <br />
     <div class="backgroundWhiteBorder">
@@ -103,13 +106,22 @@
                                             <input type="hidden" asp-for="@Model.ProductList[i].Id" />
                                             <input type="hidden" asp-for="@Model.ProductList[i].ProductName" />
                                             <input type="hidden" asp-for="@Model.ProductList[i].Price" />
+                                            <input type="hidden" asp-for="@Model.ProductList[i].TempCount" />
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
                                                     <h6 class="my-0">@Model.ProductList[i].ProductName</h6>
-                                                    <small class="text-muted">Ціна за одиницю: @Model.ProductList[i].Price грн</small>
+                                                    <small class="text-muted">Кількість замовлено: @Model.ProductList[i].TempCount шт</small>
+                                                    <small class="text-muted">Загальна сума по товару: @(Model.ProductList[i].Price * Model.ProductList[i].TempCount) грн</small>
                                                 </div>
+
                                             </li>
+                                            orderTotal += Model.ProductList[i].Price * Model.ProductList[i].TempCount;
+                                        <li class="list-group-item d-flex justify-content-between bj-light">
+                                            <strong class="text-dark">Загальна ціна (UAH)</strong>
+                                            <strong class="text-dark">@orderTotal грн</strong>
+                                        </li>
                                         }
+
                                     </ul>
                                 </div>
                             </div>

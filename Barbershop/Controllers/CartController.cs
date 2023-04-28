@@ -51,9 +51,15 @@ namespace Barbershop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Index")]
-        public IActionResult IndexPost()
+        public IActionResult IndexPost(List<Products> ProdList)
         {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            foreach (Products prod in ProdList)
+            {
+                shoppingCartList.Add(new ShoppingCart { ProductId = prod.Id, ProductCount = prod.TempCount });
+            }
 
+            HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
             return RedirectToAction(nameof(Summary));
         }
 
@@ -78,8 +84,15 @@ namespace Barbershop.Controllers
             ProductUserVM = new ProductUserVM()
             {
                 BarbershopUser = _db.BarbershopUser.FirstOrDefault(u => u.Id == claim.Value),
-                ProductList = prodList.ToList()
+                
             };
+
+            foreach(var cartObj in shoppingCartList)
+            {
+                Products prodTemp = _db.Products.FirstOrDefault(u=> u.Id == cartObj.ProductId);
+                prodTemp.TempCount = cartObj.ProductCount;
+                ProductUserVM.ProductList.Add(prodTemp);    
+            }
 
             return View(ProductUserVM);
         }
@@ -101,8 +114,8 @@ namespace Barbershop.Controllers
             for (int i = 0; i < ProductUserVM.ProductList.Count; i++)
             {
                 var prod = ProductUserVM.ProductList[i];
-                ProductUserVM.OrderTotal += prod.Price;
-                productListSB.Append($"Товар: {prod.ProductName};<br/>");
+                ProductUserVM.OrderTotal += prod.Price * prod.TempCount;
+                productListSB.Append($"Товар: {prod.ProductName} - {prod.TempCount} шт;<br/>");
             }
 
             string messageBody = $@"
@@ -342,6 +355,19 @@ namespace Barbershop.Controllers
             shoppingCartList.Remove(shoppingCartList.FirstOrDefault(u => u.ProductId == id));
             HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
 
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateCart(List<Products> ProdList)
+        {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            foreach(Products prod in ProdList)
+            {
+                shoppingCartList.Add(new ShoppingCart { ProductId = prod.Id, ProductCount = prod.TempCount });
+            }
+
+            HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
             return RedirectToAction(nameof(Index));
         }
     }
