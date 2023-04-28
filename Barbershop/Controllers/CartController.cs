@@ -293,14 +293,28 @@ namespace Barbershop.Controllers
                                     <td bgcolor='#f4f4f4' align='center' style='padding: 0px 10px 0px 10px;'>
                                         <table border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px;'>
                                            <!-- <tr>
-                                                <td bgcolor='#ffffff' align='left' style='padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
+                                                <td bgcolor='#ffffff' align='left' style='padding:0px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
                                                     <p style='margin: 0; text-align:center'>YOUR OPT : *****</p>
                                                 </td>
                                             </tr>-->
                                             <tr>
-                                                <td bgcolor='#ffffff' align='center' style='padding: 0px 30px 20px 30px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                                                    <p style='margin: 0;'>Очікуйте прибуття замовлення за адресою вказаною при оформленні.</p>
-                                                </td>
+                                                <td bgcolor='#ffffff' width=""100%"" style=""color:darkslategrey; font-family:Arial, Helvetica, sans-serif; padding:0px 30px 20px 30px;"">
+                                                                <br />
+                                                                <hr>
+                                                                <div style=""font-size:16px; color:#564319;"">
+                                                                    Інформація про доставку: 
+                                                                </div>
+                                                                <div style=""font-size:16px;padding-left:15px;"">
+                                                                    Область : {ProductUserVM.BarbershopUser.Region}
+                                                                    <br />
+                                                                    Місто : {ProductUserVM.BarbershopUser.City}
+                                                                    <br />
+                                                                    Адреса доставки : Нова Пошта - Відділення {ProductUserVM.BarbershopUser.PostOffice}
+                                                                </div>
+                                                                <br />
+                                                                <hr>
+                        
+                                                            </td>
                                             </tr>
                                             <tr>
                                                 <td bgcolor='#ffffff' align='left' style='padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
