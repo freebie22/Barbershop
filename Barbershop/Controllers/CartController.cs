@@ -163,7 +163,7 @@ namespace Barbershop.Controllers
 
 
             var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
-        + "templates" + Path.DirectorySeparatorChar.ToString() + "Template.html";
+            + "templates" + Path.DirectorySeparatorChar.ToString() + "Template.html";
 
             var subject = "Ваше замовлення";
 
