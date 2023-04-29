@@ -2,6 +2,8 @@
 using Barbershop.Models;
 using Barbershop.Models.ViewModels;
 using Barbershop.Utility;
+using Barbershop.Utility.BrainTreeSettings;
+using Braintree;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +20,16 @@ namespace Barbershop.Controllers
         private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEmailSender _emailSender;
+        private readonly IBrainTreeGate _brain;
         [BindProperty]
         public ProductUserVM ProductUserVM { get; set; }
 
-        public CartController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
+        public CartController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender, IBrainTreeGate brain)
         {
             _db = db;
             _webHostEnvironment = webHostEnvironment;
             _emailSender = emailSender;
+            _brain = brain;
         }
         public IActionResult Index()
         {
@@ -71,6 +75,9 @@ namespace Barbershop.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
+            var gateway = _brain.GetGateway();
+            var clientToken = gateway.ClientToken.Generate();
+            ViewBag.ClientToken = clientToken;
 
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
             if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null
@@ -102,7 +109,7 @@ namespace Barbershop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Summary")]
-        public async Task<IActionResult> SummaryPost(ProductUserVM ProductUserVM)
+        public async Task<IActionResult> SummaryPost(IFormCollection collection,ProductUserVM ProductUserVM)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -130,17 +137,18 @@ namespace Barbershop.Controllers
 
 
             OrderHeader orderHeader = new OrderHeader()
-                {
-                    CreatedByUserId = claim.Value,
-                    FinalOrderTotal = ProductUserVM.ProductList.Sum(x => x.TempCount * x.Price),
-                    City = city,
-                    Region = region,
-                    PostOffice = postOffice,
-                    FullName = ProductUserVM.BarbershopUser.FullName,
-                    Email = ProductUserVM.BarbershopUser.Email,
-                    PhoneNumber = ProductUserVM.BarbershopUser.PhoneNumber,
-                    OrderDate = DateTime.Now,
-                    OrderStatus = WC.StatusPending
+            {
+                CreatedByUserId = claim.Value,
+                FinalOrderTotal = ProductUserVM.ProductList.Sum(x => x.TempCount * x.Price),
+                City = city,
+                Region = region,
+                PostOffice = postOffice,
+                FullName = ProductUserVM.BarbershopUser.FullName,
+                Email = ProductUserVM.BarbershopUser.Email,
+                PhoneNumber = ProductUserVM.BarbershopUser.PhoneNumber,
+                OrderDate = DateTime.Now,
+                OrderStatus = WC.StatusPending,
+                TransactionId = "NONE"
 
                 };
                 _db.OrderHeader.Add(orderHeader);
@@ -160,7 +168,32 @@ namespace Barbershop.Controllers
                 }
                 _db.SaveChanges();
 
+            string nonceFromTheClient = collection["payment_method_nonce"];
 
+            var request = new TransactionRequest
+            {
+                Amount = Convert.ToDecimal(orderHeader.FinalOrderTotal / 38.0m),
+                PaymentMethodNonce = nonceFromTheClient,
+                OrderId = orderHeader.Id.ToString(),
+                Options = new TransactionOptionsRequest
+                {
+                    SubmitForSettlement = true
+                }
+            };
+            var gateway = _brain.GetGateway();
+            Result<Transaction> result = gateway.Transaction.Sale(request);
+
+            if (result.Target.ProcessorResponseText == "Approved")
+            {
+                orderHeader.TransactionId = result.Target.Id;
+                orderHeader.OrderStatus = WC.StatusApproved;
+            }
+            else
+            {
+                orderHeader.OrderStatus = WC.StatusCancelled;
+            }
+            _db.OrderHeader.Update(orderHeader);
+            _db.SaveChanges();
 
             var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
             + "templates" + Path.DirectorySeparatorChar.ToString() + "Template.html";
@@ -410,10 +443,11 @@ namespace Barbershop.Controllers
             return RedirectToAction(nameof(InquiryConfirmation), new { id = orderHeader.Id });
         }
 
-        public IActionResult InquiryConfirmation()
+        public IActionResult InquiryConfirmation(int id=0)
         {
+            OrderHeader orderHeader = _db.OrderHeader.FirstOrDefault(u => u.Id == id);
             HttpContext.Session.Clear();
-            return View();
+            return View(orderHeader);
         }
 
         public IActionResult Remove(int id)
@@ -443,6 +477,12 @@ namespace Barbershop.Controllers
 
             HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Clear()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

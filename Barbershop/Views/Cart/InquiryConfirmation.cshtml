@@ -1,7 +1,15 @@
-﻿<div  class="text-center">
-    <h1 class="text-info">Замовлення сформоване</h1>
+﻿@model Barbershop.Models.OrderHeader
 
-    <p>Ми отримали Ваше замовлення і скоро зв'яжемось з Вами для уточнення деталей' </p>
+<div class="text-center">
 
-    <img src="/images/patio.jpg" width="80%"/>
+    @if (Model != null)
+    {
+        <div class="text-center">
+            <h1 class="text-dark">Замовлення №@Model.Id сформоване</h1>
+
+            <p>Ми отримали Ваше замовлення і скоро зв'яжемось з Вами для уточнення деталей!</p>
+
+            <img src="/images/patio.jpg" width="80%" />
+        </div>
+    }
 </div>
