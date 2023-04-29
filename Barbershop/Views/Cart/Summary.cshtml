@@ -59,10 +59,10 @@
                                         <label>Спосіб доставки</label>
                                     </div>
                                     <div class="col-9">
-                                        <select asp-for="BarbershopUser.DeliveryMethod" type="text" class="form-control" >
+                                        <select asp-for="BarbershopUser.DeliveryMethod" type="text" class="form-control delivery-method" >
                                             <option disabled>--Оберіть спосіб доставки--</option>
-                                            <option>Самовивіз(м.Бердичів, вул.Європейська 54)</option>
-                                            <option>Доставка Новою Поштою</option>
+                                            <option value="Самовивіз(м.Бердичів, вул.Європейська 54)">Самовивіз(м.Бердичів, вул.Європейська 54)</option>
+                                            <option value="Доставка Новою Поштою">Доставка Новою Поштою</option>
                                         </select>
                                         <span asp-validation-for="BarbershopUser.DeliveryMethod" class="text-danger"></span>
                                     </div>
@@ -73,7 +73,7 @@
                                     </div>
                                     <div class="col-9">
                                         <select id="regionSelect" asp-for="BarbershopUser.Region" type="text" class="form-control">
-                                            <option value="">-- Оберіть область --</option>
+                                            <option disabled selected value="">-- Оберіть область --</option>
                                             <option value="Вінницька область">Вінницька область</option>
                                             <option value="Волинська область">Волинська область</option>
                                             <option value="Дніпропетровська область">Дніпропетровська область</option>
@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="row my-1 delivery-details">
                                     <div class="col-3">
-                                        <label>Відділення Нової Пошти</label>
+                                        <label>Адреса доставки</label>
                                     </div>
                                     <div class="col-9">
                                         <select id="officeSelect" asp-for="BarbershopUser.PostOffice" type="text" class="form-control">
@@ -147,12 +147,12 @@
 
                                             </li>
                                             orderTotal += Model.ProductList[i].Price * Model.ProductList[i].TempCount;
+                                        
+                                        }
                                         <li class="list-group-item d-flex justify-content-between bj-light">
                                             <strong class="text-dark">Загальна ціна (UAH)</strong>
                                             <strong class="text-dark">@orderTotal грн</strong>
                                         </li>
-                                        }
-
                                     </ul>
                                 </div>
                             </div>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 using System.Security.Claims;
 using System.Text;
 
@@ -107,6 +108,27 @@ namespace Barbershop.Controllers
         + "templates" + Path.DirectorySeparatorChar.ToString() + "Template.html";
 
             var subject = "Ваше замовлення";
+
+            var region = ProductUserVM.BarbershopUser.Region;
+
+            if (region == "" || region == null)
+            {
+                region = "Житомирська область";
+            }
+
+            var city = ProductUserVM.BarbershopUser.City;
+
+            if (city == "" || city == null)
+            {
+                city = "Бердичів";
+            }
+
+            var postOffice = ProductUserVM.BarbershopUser.PostOffice;
+
+            if(postOffice == "" || postOffice == null)
+            {
+                postOffice = "Самовивіз (м.Бердичів, вул.Європейська 54)";
+            }
 
             ProductUserVM.OrderTotal = 0.0m;
 
@@ -305,11 +327,11 @@ namespace Barbershop.Controllers
                                                                     Інформація про доставку: 
                                                                 </div>
                                                                 <div style=""font-size:16px;padding-left:15px;"">
-                                                                    Область : {ProductUserVM.BarbershopUser.Region}
+                                                                    Область : {region}
                                                                     <br />
-                                                                    Місто : {ProductUserVM.BarbershopUser.City}
+                                                                    Місто : {city}
                                                                     <br />
-                                                                    Адреса доставки : Нова Пошта - Відділення {ProductUserVM.BarbershopUser.PostOffice}
+                                                                    Адреса доставки : {postOffice}
                                                                 </div>
                                                                 <br />
                                                                 <hr>
