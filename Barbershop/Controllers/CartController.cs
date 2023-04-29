@@ -104,10 +104,8 @@ namespace Barbershop.Controllers
         [ActionName("Summary")]
         public async Task<IActionResult> SummaryPost(ProductUserVM ProductUserVM)
         {
-            var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
-        + "templates" + Path.DirectorySeparatorChar.ToString() + "Template.html";
-
-            var subject = "Ваше замовлення";
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
             var region = ProductUserVM.BarbershopUser.Region;
 
@@ -125,10 +123,49 @@ namespace Barbershop.Controllers
 
             var postOffice = ProductUserVM.BarbershopUser.PostOffice;
 
-            if(postOffice == "" || postOffice == null)
+            if (postOffice == "" || postOffice == null)
             {
                 postOffice = "Самовивіз (м.Бердичів, вул.Європейська 54)";
             }
+
+
+            OrderHeader orderHeader = new OrderHeader()
+                {
+                    CreatedByUserId = claim.Value,
+                    FinalOrderTotal = ProductUserVM.ProductList.Sum(x => x.TempCount * x.Price),
+                    City = city,
+                    Region = region,
+                    PostOffice = postOffice,
+                    FullName = ProductUserVM.BarbershopUser.FullName,
+                    Email = ProductUserVM.BarbershopUser.Email,
+                    PhoneNumber = ProductUserVM.BarbershopUser.PhoneNumber,
+                    OrderDate = DateTime.Now,
+                    OrderStatus = WC.StatusPending
+
+                };
+                _db.OrderHeader.Add(orderHeader);
+                _db.SaveChanges();
+
+                foreach (var prod in ProductUserVM.ProductList)
+                {
+                    OrderDetail orderDetail = new OrderDetail()
+                    {
+                        OrderHeaderId = orderHeader.Id,
+                        PricePerOne = prod.Price,
+                        Count = prod.TempCount,
+                        ProductId = prod.Id
+                    };
+                    _db.OrderDetail.Add(orderDetail);
+
+                }
+                _db.SaveChanges();
+
+
+
+            var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+        + "templates" + Path.DirectorySeparatorChar.ToString() + "Template.html";
+
+            var subject = "Ваше замовлення";
 
             ProductUserVM.OrderTotal = 0.0m;
 
@@ -270,7 +307,7 @@ namespace Barbershop.Controllers
                                             
                                             <tr>
                                                 <td bgcolor='#ffffff' align='center' style='padding: 0px 30px 20px 30px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                                                    <p style='margin: 0;'>Деталі замовлення вашого замовлення</p>
+                                                    <p style='margin: 0;'>Деталі Вашого замовлення</p>
                                                     <table width=""95%"" border=""0"" align=""center"" cellpadding=""0"" cellspacing=""0"">
 
                                                         <tr>
@@ -370,7 +407,7 @@ namespace Barbershop.Controllers
             await _emailSender.SendEmailAsync(ProductUserVM.BarbershopUser.Email, subject, messageBody);
 
 
-            return RedirectToAction(nameof(InquiryConfirmation));
+            return RedirectToAction(nameof(InquiryConfirmation), new { id = orderHeader.Id });
         }
 
         public IActionResult InquiryConfirmation()

@@ -13,6 +13,14 @@
         public const string BarberRole = "Barber";
         public const string ClientRole = "Client";
 
+        public const string StatusPending = "В очікуванні";
+        public const string StatusApproved = "Прийняте до обробки";
+        public const string StatusInProcess = "В дорозі";
+        public const string StatusArrived = "Очікує замовника";
+        public const string StatusReceived = "Отримане";
+        public const string StatusCancelled = "Відмінене";
+        public const string StatusReturned = "Повернене";
+
 
     }
 }
