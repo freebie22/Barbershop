@@ -1,0 +1,26 @@
+﻿@page
+@model Barbershop.Models.ViewModels.OrderListVM
+@{
+    ViewData["Title"] = "Історія замовлень";
+    ViewData["ActivePage"] = ManageNavPages.UserProductOrders;
+}
+
+<h3>@ViewData["Title"]</h3>
+<div class="row">
+    <div class="bg-white p-3" id="orderList"></div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+        <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url: "/Order/IndexUser", 
+                success: function(html) {
+                    $('#orderList').html(html);
+                }
+            });
+        });
+    </script>
+}

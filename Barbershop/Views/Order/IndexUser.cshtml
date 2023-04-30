@@ -1,11 +1,12 @@
-﻿@model Barbershop.Models.ViewModels.OrderListVM
-@using Microsoft.AspNetCore.Identity
+﻿@{
+    Layout = null;
+}
+@model Barbershop.Models.ViewModels.OrderListVM
 
-@inject UserManager<IdentityUser> userManager
+<link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/material.css" />
 <div>
-    <form method="get">
+    <form asp-controller="Order" asp-action="IndexUser" method="get">
         <div class="container p-4 my-3">
-            <h2 class="text-dark">Керування замовленнями</h2>
             <div class="border bg-white p-3" style="border-radius:15px">
                 <div class="col-12">
                     <div class="row" style="padding-top:10px">
@@ -42,7 +43,7 @@
         <e-grid-pagesettings pageSize="5"></e-grid-pagesettings>
         <e-grid-columns>
 
-            <e-grid-column field="Id" headerText="ID" isPrimaryKey="true" textAlign="Right" width="100"></e-grid-column>
+            <e-grid-column field="Id" headerText="№" isPrimaryKey="true" textAlign="Right" width="100"></e-grid-column>
             <e-grid-column field="FullName" headerText="Замовник" textAlign="Right"></e-grid-column>
             <e-grid-column field="Email" headerText="E-Mail" textAlign="Right"></e-grid-column>
             <e-grid-column field="PhoneNumber" headerText="Номер телефону" textAlign="Right"></e-grid-column>
@@ -52,3 +53,7 @@
         </e-grid-columns>
     </ejs-grid>
 </div>
+
+<script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
+
+<ejs-scripts></ejs-scripts>

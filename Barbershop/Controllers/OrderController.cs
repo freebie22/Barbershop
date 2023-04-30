@@ -3,16 +3,19 @@ using Barbershop.Models;
 using Barbershop.Models.ViewModels;
 using Barbershop.Utility.BrainTreeSettings;
 using Braintree;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Barbershop.Controllers
 {
+    [Authorize(Roles = WC.AdminRole)]
     public class OrderController : Controller
     {
         private readonly ApplicationDbContext _db;
         private readonly IBrainTreeGate _brain;
-
         [BindProperty]
         public OrderVM OrderVM { get; set; }
 
@@ -54,7 +57,43 @@ namespace Barbershop.Controllers
             return View(orderListVM);
         }
 
-        public IActionResult Details(int id)
+        [AllowAnonymous]
+        public async Task <IActionResult> IndexUser(string searchName = null, string searchEmail = null, string searchPhone = null, string Status = null)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            OrderListVM orderListVM = new OrderListVM()
+            {
+                OrderHList = _db.OrderHeader.Where(u => u.CreatedByUserId == claim.Value),
+                StatusList = WC.listStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                {
+                    Text = i,
+                    Value = i
+                })
+            };
+
+             if (!string.IsNullOrEmpty(searchName))
+            {
+                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.FullName.ToLower().Contains(searchName.ToLower()) && u.CreatedByUserId == claim.Value);
+            }
+            if (!string.IsNullOrEmpty(searchEmail))
+            {
+                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.Email.ToLower().Contains(searchEmail.ToLower()) && u.CreatedByUserId == claim.Value);
+            }
+            if (!string.IsNullOrEmpty(searchPhone))
+            {
+                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.PhoneNumber.ToLower().Contains(searchPhone.ToLower()) && u.CreatedByUserId == claim.Value);
+            }
+            if (!string.IsNullOrEmpty(Status) && Status != "--Статус замовлення--")
+            {
+                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.OrderStatus.ToLower().Contains(Status.ToLower()) && u.CreatedByUserId == claim.Value);
+            }
+
+            return View(orderListVM);
+        }
+
+            public IActionResult Details(int id)
         {
             OrderVM = new OrderVM()
             {
