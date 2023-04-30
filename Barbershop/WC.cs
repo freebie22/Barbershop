@@ -1,4 +1,6 @@
-﻿namespace Barbershop
+﻿using System.Collections.ObjectModel;
+
+namespace Barbershop
 {
     public static class WC
     {
@@ -21,6 +23,12 @@
         public const string StatusCancelled = "Відмінене";
         public const string StatusReturned = "Повернене";
 
-
+        public static readonly IEnumerable<string> listStatus = new ReadOnlyCollection<string>(
+           new List<string>
+           {
+                 StatusPending, StatusApproved, StatusInProcess, StatusArrived, StatusReceived, StatusCancelled, StatusReturned
+           });
     }
+
 }
+

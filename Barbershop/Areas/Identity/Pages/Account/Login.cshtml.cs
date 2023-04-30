@@ -117,6 +117,8 @@ namespace Barbershop.Areas.Identity.Pages.Account
                     user = await _userManager.FindByNameAsync(Input.UserName);
                 }
 
+                
+
                 if (user != null)
                 {
                     // Sign in the user with their username

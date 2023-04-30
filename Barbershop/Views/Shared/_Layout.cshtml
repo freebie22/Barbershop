@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Barbershop.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/fontawesome/css/all.css" />
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/material.css" />
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 </head>
 <body>
@@ -60,6 +61,9 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Створити адміністратора</a>
                                 </div>
+                            </li>
+                            <li class="nav-item">
+                                <a style="color:white" class="nav-link" asp-area="" asp-controller="Order" asp-action="Index">Керування замовленнями</a>
                             </li>
                         }
                     
@@ -127,6 +131,9 @@
                                     <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Створити адміністратора</a>
                                 </div>
                             </li>
+                            <li class="nav-item">
+                                <a style="color:white" class="nav-link" asp-area="" asp-controller="Order" asp-action="Index">Керування замовленнями</a>
+                            </li>
                         }
 
                         <li class="nav-item">
@@ -143,7 +150,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
         //var loader = document.getelementbyid("preloader");
         //window.addeventlistener("load", function()
@@ -153,5 +162,6 @@
     </script>
     
     @await RenderSectionAsync("Scripts", required: false)
+    <ejs-scripts></ejs-scripts>
 </body>
 </html>

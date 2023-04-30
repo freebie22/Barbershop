@@ -137,6 +137,22 @@ namespace Barbershop.Areas.Identity.Pages.Account
 
                 var user = new BarbershopUser { UserName = Input.UserName, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FullName = Input.FullName, DateOfBirth = Input.DateOfBirth };
 
+                var existUser = await _userManager.FindByEmailAsync(user.Email);
+
+                if (existUser != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Дана електронна адреса вже використовується іншим користувачем.");
+                    return Page();
+                }
+
+                var existName = await _userManager.FindByNameAsync(user.UserName);
+
+                if (existName != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Даний нікнейм вже використоується іншим користувачем.");
+                    return Page();
+                }
+
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 

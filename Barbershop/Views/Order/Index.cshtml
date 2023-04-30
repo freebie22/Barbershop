@@ -1,0 +1,51 @@
+﻿@model Barbershop.Models.ViewModels.OrderListVM
+<div>
+    <form method="get">
+        <div class="container p-4 my-3">
+            <h2 class="text-dark">Керування замовленнями</h2>
+            <div class="border bg-white p-3" style="border-radius:15px">
+                <div class="col-12">
+                    <div class="row" style="padding-top:10px">
+                        <div class="col-4">
+                            @Html.Editor("searchName", new { htmlAttributes = new {@class ="form-control", place="Name..."}})
+                        </div>
+                        <div class="col-4">
+                            @Html.Editor("searchEmail", new { htmlAttributes = new {@class ="form-control", place="Email..."}})
+                        </div>
+                        <div class="col-4">
+                            @Html.Editor("searchPhone", new { htmlAttributes = new {@class ="form-control", place="Phone..."}})
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                @Html.DropDownListFor(u=>u.Status, Model.StatusList,"--Статус замовлення--", new {@class = "form-select"})
+                            </div>
+                            <div class="offset-4 col-4">
+                                <button type="submit" class="h-100 btn btn-info form-control">
+                                    <i class="fa fa-search"></i>Пошук
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<hr>
+<div class="bg-white p-3">
+    <ejs-grid id="Grid" dataSource="@Model.OrderHList" allowFiltering="true" allowSorting="true" allowPaging="true">
+        <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
+        <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
+        <e-grid-pagesettings pageSize="5"></e-grid-pagesettings>
+        <e-grid-columns>
+
+            <e-grid-column field="Id" headerText="ID" isPrimaryKey="true" textAlign="Right" width="100"></e-grid-column>
+            <e-grid-column field="FullName" headerText="Замовник" textAlign="Right"></e-grid-column>
+            <e-grid-column field="Email" headerText="E-Mail" textAlign="Right"></e-grid-column>
+            <e-grid-column field="PhoneNumber" headerText="Номер телефону" textAlign="Right"></e-grid-column>
+            <e-grid-column field="OrderStatus" headerText="Статус замовлення" textAlign="Right"></e-grid-column>
+            <e-grid-column field="OrderDate" headerText="Дата замовлення" customFormat="@(new {type="date", format="dd/MM/yyyy"})" textAlign="Right"></e-grid-column>
+            <e-grid-column field="Id" headerText="" width="70" template="<a rel='nofollow' href='Order/Details/${Id}' class='btn btn-primary'> <i class='fas fa-list'></i></a>"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>
+</div>

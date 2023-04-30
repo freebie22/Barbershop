@@ -31,9 +31,8 @@
                                         <label>Ім'я та прізвище</label>
                                     </div>
                                     <div class="col-9">
-                                        <input asp-for="BarbershopUser.FullName" type="text" class="form-control" />
+                                        <input asp-for="BarbershopUser.FullName" id="fullname" type="text" class="form-control" />
                                         <span asp-validation-for="BarbershopUser.FullName" class="text-danger"></span>
-
                                     </div>
                                 </div>
                                 <div class="row my-1">
@@ -64,7 +63,6 @@
                                             <option value="Самовивіз(м.Бердичів, вул.Європейська 54)">Самовивіз(м.Бердичів, вул.Європейська 54)</option>
                                             <option value="Доставка Новою Поштою">Доставка Новою Поштою</option>
                                         </select>
-                                        <span asp-validation-for="BarbershopUser.DeliveryMethod" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row my-1 delivery-details">
@@ -98,8 +96,9 @@
                                             <option value="Черкаська область">Черкаська область</option>
                                             <option value="Чернівецька область">Чернівецька область</option>
                                             <option value="Чернігівська область">Чернігівська область</option>
+                                            <span asp-validation-for="BarbershopUser.Region" class="text-danger"></span>
                                         </select>
-                                        <span asp-validation-for="BarbershopUser.Region" class="text-danger"></span>
+                                        
                                     </div>
                                 </div>
                                 <div class="row my-1 delivery-details">
@@ -109,9 +108,8 @@
                                     <div class="col-9">
                                         <select id="citySelect" asp-for="BarbershopUser.City" type="text" class="form-control" >
                                             <option disabled selected value="">--Оберіть місто--</option>
-                                           
+                                            <span asp-validation-for="BarbershopUser.City" class="text-danger"></span>
                                         </select>
-                                        <span asp-validation-for="BarbershopUser.City" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row my-1 delivery-details">
@@ -121,8 +119,8 @@
                                     <div class="col-9">
                                         <select id="officeSelect" asp-for="BarbershopUser.PostOffice" type="text" class="form-control">
                                         <option disabled selected value="">--Оберіть відділення--</option>
+                                            <span asp-validation-for="BarbershopUser.PostOffice" class="text-danger"></span>
                                         </select>
-                                        <span asp-validation-for="BarbershopUser.PostOffice" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +168,7 @@
                 <div class="card-footer" style=" background-color: transparent">
                     <div class="row">
                         <div class="col-12 col-md-5 offset-md-7">
-                            <button type="submit" style="border-radius: 0px" class="btn btn-dark form-control">Підтвердити замовлення</button>
+                            <button type="submit" style="border-radius: 0px" onclick="" class="btn btn-dark form-control">Підтвердити замовлення</button>
                         </div>
                     </div>
                 </div>
@@ -202,5 +200,23 @@
         });
     });
     </script>
-}
+    <script>
+        //function validateInput()
+        //{
+        //    var app_name = document.getElementById("fullname").value;
 
+        //    if (app_name.toString() === '' || app_name.toString() === null) {
+        //        Swal.fire({
+        //            icon: 'error',
+        //            title: 'Помилка',
+        //            text: 'Заповніть своє ім''я та прізвище',
+        //            footer: '<span>Будь-ласка, заповнюйте усі поля для вводу.</span>'
+        //        })
+        //        return false;
+        //    }
+           
+
+        //    return true;
+        //}
+    </script>
+}
