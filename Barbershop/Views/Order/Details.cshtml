@@ -25,7 +25,7 @@
                             <div class="row my-1">
                                 <div class="col-3">Name</div>
                                 <div class="col-9">
-                                    <input asp-for="OrderHeader.FullName" type="text" class="form-control" />
+                                    <input asp-for="OrderHeader.FullName" readonly type="text" class="form-control" />
                                     <span asp-validation-for="OrderHeader.FullName" class="text-danger"></span>
                                 </div>
                             </div>
@@ -33,7 +33,7 @@
                                 <div class="col-3">Phone</div>
                                 <div class="col-9">
 
-                                    <input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" />
+                                    <input asp-for="OrderHeader.PhoneNumber" readonly type="text" class="form-control" />
                                     <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
                                 </div>
                             </div>
@@ -41,7 +41,7 @@
                                 <div class="col-3">Address</div>
                                 <div class="col-9">
 
-                                    <input asp-for="OrderHeader.Region" type="text" class="form-control" />
+                                    <input asp-for="OrderHeader.Region" type="text" readonly class="form-control" />
                                     <span asp-validation-for="OrderHeader.Region" class="text-danger"></span>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
                                 <div class="col-3">City</div>
                                 <div class="col-9">
 
-                                    <input asp-for="OrderHeader.City" type="text" class="form-control" />
+                                    <input asp-for="OrderHeader.City" type="text" readonly class="form-control" />
                                     <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
                                 </div>
                             </div>
@@ -57,15 +57,14 @@
                                 <div class="col-3">State</div>
                                 <div class="col-9">
 
-                                    <input asp-for="OrderHeader.PostOffice" type="text" class="form-control" />
+                                    <input asp-for="OrderHeader.PostOffice" type="text" readonly class="form-control" />
                                     <span asp-validation-for="OrderHeader.PostOffice" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row my-1">
                                 <div class="col-3">Email</div>
                                 <div class="col-9">
-
-                                    <input asp-for="OrderHeader.Email" type="text" class="form-control" />
+                                    <input asp-for="OrderHeader.Email" type="text" readonly class="form-control" />
                                     <span asp-validation-for="OrderHeader.Email" class="text-danger"></span>
 
                                 </div>
@@ -86,6 +85,12 @@
                                 </div>
                             </div>
                             <div class="row my-1">
+                                <div class="col-3">Shipping Date</div>
+                                <div class="col-9">
+                                    <input value="@Model.OrderHeader.ReceivingDate.ToShortDateString()" id="receivingDate" type="text" readonly class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row my-1">
                                 <div class="col-3">Transaction ID</div>
                                 <div class="col-9">
                                     <input asp-for="OrderHeader.TransactionId" type="text" readonly class="form-control" />
@@ -96,13 +101,7 @@
                                 <div class="col-9">
                                     <input asp-for="OrderHeader.OrderStatus" type="text" readonly class="form-control" />
                                 </div>
-                            </div>
-                            <div class="row my-1">
-                                <div class="col-9 offset-3">
-                                    <input type="submit" value="Update Order Details" class="btn btn-warning form-control"
-                                           asp-action="UpdateOrderDetails" formmethod="post" />
-                                </div>
-                            </div>
+                            </div>                        
                         </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
                             <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -130,7 +129,7 @@
                                             <h5 class="text-white">Ціна до сплати</h5>
                                         </div>
                                         <div class="col-6 text-right">
-                                            <h5 class="text-white">$@(Model.OrderHeader.FinalOrderTotal)</h5>
+                                            <h5 class="text-white">@(Model.OrderHeader.FinalOrderTotal) грн</h5>
                                         </div>
                                     </div>
                                 </li>
@@ -152,8 +151,14 @@
                                    formmethod="post" asp-action="ShipOrder"
                                    class="btn btn-primary form-control" />
                             }
+                            @if (Model.OrderHeader.OrderStatus == Barbershop.WC.StatusArrived)
+                            {
+                                <input type="submit" value="Receive Order"
+                                   formmethod="post" asp-action="ReceiveOrder"
+                                   class="btn btn-primary form-control" />
+                            }
                             @if (Model.OrderHeader.OrderStatus != Barbershop.WC.StatusReturned
-                            && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusCancelled)
+                            && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusCancelled && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusReceived)
                             {
                                 <div class="pt-2">
                                     <button type="submit"

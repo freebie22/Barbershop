@@ -64,6 +64,8 @@ namespace Barbershop.Controllers
             return View(OrderVM);
         }
 
+
+
         [HttpPost]
         public IActionResult StartProcessing()
         {
@@ -78,6 +80,16 @@ namespace Barbershop.Controllers
             OrderHeader orderHeader = _db.OrderHeader.FirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeader.OrderStatus = WC.StatusArrived;
             orderHeader.ShippingDate = DateTime.Now;
+            _db.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult ReceiveOrder()
+        {
+            OrderHeader orderHeader = _db.OrderHeader.FirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
+            orderHeader.OrderStatus = WC.StatusReceived;
+            orderHeader.ReceivingDate = DateTime.Now;
             _db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
@@ -106,20 +118,20 @@ namespace Barbershop.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        public IActionResult UpdateOrderDetails()
-        {
-            OrderHeader orderHeaderFromDb = _db.OrderHeader.FirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
+        //[HttpPost]
+        //public IActionResult UpdateOrderDetails()
+        //{
+        //    OrderHeader orderHeaderFromDb = _db.OrderHeader.FirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
 
-            orderHeaderFromDb.FullName = OrderVM.OrderHeader.FullName;
-            orderHeaderFromDb.PhoneNumber = OrderVM.OrderHeader.PhoneNumber;
-            orderHeaderFromDb.Region = OrderVM.OrderHeader.Region;
-            orderHeaderFromDb.City = OrderVM.OrderHeader.City;
-            orderHeaderFromDb.PostOffice = OrderVM.OrderHeader.PostOffice;
-            orderHeaderFromDb.Email = OrderVM.OrderHeader.Email;
+        //    orderHeaderFromDb.FullName = OrderVM.OrderHeader.FullName;
+        //    orderHeaderFromDb.PhoneNumber = OrderVM.OrderHeader.PhoneNumber;
+        //    orderHeaderFromDb.Region = OrderVM.OrderHeader.Region;
+        //    orderHeaderFromDb.City = OrderVM.OrderHeader.City;
+        //    orderHeaderFromDb.PostOffice = OrderVM.OrderHeader.PostOffice;
+        //    orderHeaderFromDb.Email = OrderVM.OrderHeader.Email;
 
-            _db.SaveChanges();
-            return RedirectToAction("Details", "Order", new { id = orderHeaderFromDb.Id });
-        }
+        //    _db.SaveChanges();
+        //    return RedirectToAction("Details", "Order", new { id = orderHeaderFromDb.Id });
+        //}
     }
 }

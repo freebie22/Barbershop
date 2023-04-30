@@ -13,6 +13,7 @@ namespace Barbershop.Models
         [Required]
         public DateTime OrderDate { get; set; }
         public DateTime ShippingDate { get; set; }
+        public DateTime ReceivingDate { get; set; }
         [Required]
         public decimal FinalOrderTotal { get; set; }
         public string OrderStatus { get; set; }
