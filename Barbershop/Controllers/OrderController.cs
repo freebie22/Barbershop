@@ -58,7 +58,7 @@ namespace Barbershop.Controllers
         }
 
         [AllowAnonymous]
-        public async Task <IActionResult> IndexUser(string searchName = null, string searchEmail = null, string searchPhone = null, string Status = null)
+        public async Task <IActionResult> IndexUser(string searchId = null, string searchEmail = null, string searchPhone = null, string Status = null)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -73,9 +73,9 @@ namespace Barbershop.Controllers
                 })
             };
 
-             if (!string.IsNullOrEmpty(searchName))
+             if (!string.IsNullOrEmpty(searchId))
             {
-                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.FullName.ToLower().Contains(searchName.ToLower()) && u.CreatedByUserId == claim.Value);
+                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.FullName.ToLower().Contains(searchId.ToLower()) && u.CreatedByUserId == claim.Value);
             }
             if (!string.IsNullOrEmpty(searchEmail))
             {
@@ -94,14 +94,25 @@ namespace Barbershop.Controllers
         }
 
             public IActionResult Details(int id)
+            {
+                OrderVM = new OrderVM()
+                {
+                    OrderHeader = _db.OrderHeader.FirstOrDefault(o => o.Id == id),
+                    OrderDetail = _db.OrderDetail.Where(d => d.OrderHeaderId == id).Include("Product").ToList()
+                };
+                return View(OrderVM);
+            }
+
+        public IActionResult UserDetails(int id)
         {
             OrderVM = new OrderVM()
             {
                 OrderHeader = _db.OrderHeader.FirstOrDefault(o => o.Id == id),
                 OrderDetail = _db.OrderDetail.Where(d => d.OrderHeaderId == id).Include("Product").ToList()
-        };
+            };
             return View(OrderVM);
         }
+
 
 
 

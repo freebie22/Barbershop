@@ -23,4 +23,31 @@
             });
         });
     </script>
+    <script>
+        $(document).on('click', '#searchButton', function (event) {
+            event.preventDefault();
+
+            var searchId = $('#searchId').val();
+            var searchEmail = $('#searchEmail').val();
+            var searchPhone = $('#searchPhone').val();
+            var status = $('#statusDropdown').val();
+
+            // Відправити AJAX-запит
+            $.ajax({
+                type: 'GET',
+                url: '/Order/IndexUser',
+                data: {
+                    searchId: searchId,
+                    searchEmail: searchEmail,
+                    searchPhone: searchPhone,
+                    Status: status
+                },
+                success: function (html) {
+                    $('#orderList').html(html);
+                }
+            });
+        });
+    </script>
+
+
 }
