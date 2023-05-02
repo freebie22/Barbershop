@@ -58,7 +58,7 @@ namespace Barbershop.Controllers
         }
 
         [AllowAnonymous]
-        public async Task <IActionResult> IndexUser(string searchId = null, string searchEmail = null, string searchPhone = null, string Status = null)
+        public async Task <IActionResult> IndexUser(int searchId = 0, string searchEmail = null, string searchPhone = null, string Status = null)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -73,9 +73,9 @@ namespace Barbershop.Controllers
                 })
             };
 
-             if (!string.IsNullOrEmpty(searchId))
+             if (!(searchId == 0))
             {
-                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.FullName.ToLower().Contains(searchId.ToLower()) && u.CreatedByUserId == claim.Value);
+                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.Id == searchId && u.CreatedByUserId == claim.Value);
             }
             if (!string.IsNullOrEmpty(searchEmail))
             {
@@ -103,6 +103,7 @@ namespace Barbershop.Controllers
                 return View(OrderVM);
             }
 
+        [AllowAnonymous]
         public IActionResult UserDetails(int id)
         {
             OrderVM = new OrderVM()
@@ -112,8 +113,6 @@ namespace Barbershop.Controllers
             };
             return View(OrderVM);
         }
-
-
 
 
         [HttpPost]

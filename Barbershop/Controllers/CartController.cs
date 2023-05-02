@@ -135,20 +135,23 @@ namespace Barbershop.Controllers
                 postOffice = "Самовивіз (м.Бердичів, вул.Європейська 54)";
             }
 
+            var paymentType = ProductUserVM.BarbershopUser.PaymentType;
 
-            OrderHeader orderHeader = new OrderHeader()
-            {
-                CreatedByUserId = claim.Value,
-                FinalOrderTotal = ProductUserVM.ProductList.Sum(x => x.TempCount * x.Price),
-                City = city,
-                Region = region,
-                PostOffice = postOffice,
-                FullName = ProductUserVM.BarbershopUser.FullName,
-                Email = ProductUserVM.BarbershopUser.Email,
-                PhoneNumber = ProductUserVM.BarbershopUser.PhoneNumber,
-                OrderDate = DateTime.Now,
-                OrderStatus = WC.StatusPending,
-                TransactionId = "NONE"
+
+                OrderHeader orderHeader = new OrderHeader()
+                {
+                    CreatedByUserId = claim.Value,
+                    FinalOrderTotal = ProductUserVM.ProductList.Sum(x => x.TempCount * x.Price),
+                    City = city,
+                    Region = region,
+                    PostOffice = postOffice,
+                    PaymentType = paymentType,
+                    FullName = ProductUserVM.BarbershopUser.FullName,
+                    Email = ProductUserVM.BarbershopUser.Email,
+                    PhoneNumber = ProductUserVM.BarbershopUser.PhoneNumber,
+                    OrderDate = DateTime.Now,
+                    OrderStatus = WC.StatusApproved,
+                    TransactionId = "NONE"
 
                 };
                 _db.OrderHeader.Add(orderHeader);
@@ -166,35 +169,43 @@ namespace Barbershop.Controllers
                     _db.OrderDetail.Add(orderDetail);
 
                 }
+
                 _db.SaveChanges();
 
-            string nonceFromTheClient = collection["payment_method_nonce"];
-
-            var request = new TransactionRequest
-            {
-                Amount = Convert.ToDecimal(orderHeader.FinalOrderTotal / 38.0m),
-                PaymentMethodNonce = nonceFromTheClient,
-                OrderId = orderHeader.Id.ToString(),
-                Options = new TransactionOptionsRequest
+                if(paymentType == WC.CardPay)
                 {
-                    SubmitForSettlement = true
+                    string nonceFromTheClient = collection["payment_method_nonce"];
+
+                    var request = new TransactionRequest
+                    {
+                        Amount = Convert.ToDecimal(orderHeader.FinalOrderTotal / 38.0m),
+                        PaymentMethodNonce = nonceFromTheClient,
+                        OrderId = orderHeader.Id.ToString(),
+                        Options = new TransactionOptionsRequest
+                        {
+                            SubmitForSettlement = true,
+                            
+                        }
+                    };
+                    var gateway = _brain.GetGateway();
+                    Result<Transaction> result = gateway.Transaction.Sale(request);
+
+                    if (result.Target.ProcessorResponseText == "Approved")
+                    {
+                        orderHeader.TransactionId = result.Target.Id;
+                        orderHeader.OrderStatus = WC.StatusApproved;
+                    }
+                    else
+                    {
+                        orderHeader.OrderStatus = WC.StatusCancelled;
+                    }
+                    _db.OrderHeader.Update(orderHeader);
+                    _db.SaveChanges();
                 }
-            };
-            var gateway = _brain.GetGateway();
-            Result<Transaction> result = gateway.Transaction.Sale(request);
 
-            if (result.Target.ProcessorResponseText == "Approved")
-            {
-                orderHeader.TransactionId = result.Target.Id;
-                orderHeader.OrderStatus = WC.StatusApproved;
-            }
-            else
-            {
-                orderHeader.OrderStatus = WC.StatusCancelled;
-            }
-            _db.OrderHeader.Update(orderHeader);
-            _db.SaveChanges();
-
+                
+            
+                    
             var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
             + "templates" + Path.DirectorySeparatorChar.ToString() + "Template.html";
 

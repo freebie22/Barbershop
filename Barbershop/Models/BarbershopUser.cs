@@ -24,6 +24,8 @@ namespace Barbershop.Models
         public string City { get; set; }
         [NotMapped]
         public string PostOffice { get; set; }
+        [NotMapped]
+        public string PaymentType { get; set; }
 
 
 

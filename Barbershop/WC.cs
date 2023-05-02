@@ -23,6 +23,9 @@ namespace Barbershop
         public const string StatusCancelled = "Відмінене";
         public const string StatusReturned = "Повернене";
 
+        public const string CardPay = "Оплата картою";
+        public const string ReceivePay = "Оплата при отриманні";
+
         public static readonly IEnumerable<string> listStatus = new ReadOnlyCollection<string>(
            new List<string>
            {

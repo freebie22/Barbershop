@@ -6,13 +6,13 @@
 
 <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/material.css" />
 <div>
-    <form asp-controller="Order" asp-action="IndexUser" method="get" >
+    <form method="get" >
         <div class="container p-4 my-3">
             <div class="border bg-white p-3" style="border-radius:15px">
                 <div class="col-12">
                     <div class="row" style="padding-top:10px">
                         <div class="col-4">
-                            @Html.Editor("searchId", new { htmlAttributes = new {@class ="form-control", place="Name..."}})
+                            @Html.Editor("searchId", new { htmlAttributes = new {@class ="form-control", place="ID..."}})
                         </div>
                         <div class="col-4">
                             @Html.Editor("searchEmail", new { htmlAttributes = new {@class ="form-control", place="Email..."}})
@@ -25,9 +25,9 @@
                                 @Html.DropDownListFor(u=>u.Status, Model.StatusList,"--Статус замовлення--", new {@class = "form-select"})
                             </div>
                             <div class="offset-4 col-4">
-                                <button type="submit" class="h-100 btn btn-info form-control id="searchButton">
+                                <button type="submit" class="h-100 btn btn-info form-control" id="search-button" >
                                     <i class="fa fa-search"></i>Пошук
-                                </button>
+                                    </button>
                             </div>
                         </div>
                     </div>
