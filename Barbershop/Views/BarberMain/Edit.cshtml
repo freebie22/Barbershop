@@ -4,7 +4,7 @@
     <input asp-for="Barber.Id" hidden />
     <div class="border p-3">
         <div class="form-group row">
-            <h2 class="text-info pl-3">Edit product</h2>
+            <h2 class="text-info pl-3">Редагування барбера</h2>
         </div>
         <div class="row">
             <div class="col-8">
@@ -18,11 +18,19 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                <div class="col-4">
+                    <label>Ідентифікатор барбера</label>
+                </div>
+                <div class="col-8">
+                    <input readonly asp-for="Barber.BarbershopUserId" class="form-control mb-2" />
+                </div>
+            </div>
+                <div class="form-group row">
                     <div class="col-4">
                         <label asp-for="Barber.PhoneNumber"></label>
                     </div>
                     <div class="col-8">
-                        <input readonly asp-for="Barber.PhoneNumber" class="form-control mb-2" />
+                        <input type="text" id="phone" asp-for="Barber.PhoneNumber" class="form-control mb-2" />
                         <span asp-validation-for="Barber.PhoneNumber" class="text-danger"></span>
                     </div>
                 </div>
@@ -37,11 +45,20 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Barber.Exprerience"></label>
+                        <label>Стаж в роках</label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Barber.Exprerience" class="form-control mb-2" />
                         <span asp-validation-for="Barber.Exprerience" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label>Рейтинг</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Barber.Rating" class="form-control mb-2" />
+                        <span asp-validation-for="Barber.Rating" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -58,7 +75,15 @@
                         Фото барбера
                     </div>
                     <div class="col-8">
-                        <input type="file" name="files" id="uploadBox" multiple class="form-control mb-2" />
+                        <input type="file" name="files" id="uploadBox" accept=".png, .jpg, .jpeg" class="form-control mb-2" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Barber.IsActive"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Barber.IsActive" type="checkbox" />
                     </div>
                 </div>
                 <div class="form-group row">
@@ -89,7 +114,7 @@
                             <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Back</a>
                         </div>
                     </div>
-                </div>
+                </div>                               
             </div>
             <div class="col-4">
                 <img src="@WC.BarberPath@Model.Barber.BarberImage" width="100%" style="border-radius:5px; border:1px solid #bbb" />
@@ -109,16 +134,16 @@
                 height: 250
             });
         });
-        function validateInput() {
-            if (document.getElementById("uploadBox").value == "") {
-                Swal.fire(
-                    'Error!',
-                    'Please, upload the image!',
-                    'error'
-                )
-                return false;
-            }
-            return true;
-        }
+        //function validateInput() {
+        //    if (document.getElementById("uploadBox").value == "") {
+        //        Swal.fire(
+        //            'Error!',
+        //            'Please, upload the image!',
+        //            'error'
+        //        )
+        //        return false;
+        //    }
+        //    return true;
+        //}
     </script>
 }

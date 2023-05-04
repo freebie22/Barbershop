@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using Barbershop.Data;
 using Barbershop.Models;
 using Mailjet.Client.Resources.SMS;
 using Microsoft.AspNetCore.Authentication;
@@ -23,6 +24,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Barbershop.Areas.Identity.Pages.Account
 {
+    [Authorize(Roles = WC.AdminRole)]
     public class RegisterBarberModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -32,6 +34,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _db;
  
 
         public RegisterBarberModel(
@@ -40,7 +43,9 @@ namespace Barbershop.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext db
+            )
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,6 +54,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _db = db;
         }
 
         /// <summary>
@@ -153,10 +159,22 @@ namespace Barbershop.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-
+                    Barbers barbers = new Barbers()
+                    {
+                        FullName = user.FullName,
+                        PhoneNumber = user.PhoneNumber,
+                        Description = "",
+                        BarberImage = "",
+                        BarbershopUserId = user.Id,
+                        WorkPositionId = 1,
+                        IsActive = false,
+                        Email = user.Email
+                    };
                         await _userManager.AddToRoleAsync(user, WC.BarberRole);
 
                     _logger.LogInformation("User created a new account with password.");
+
+                    
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -356,6 +374,8 @@ namespace Barbershop.Areas.Identity.Pages.Account
                             </table>
                             </body>
                             </html>");
+                    _db.Barbers.Add(barbers);
+                    _db.SaveChanges();
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

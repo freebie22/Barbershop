@@ -8,8 +8,8 @@
             <!-- Card-->
             <div class="card rounded shadow-sm" style="border:1px solid #222">
                 <div class="card-body px-3 pt-3 pb-1 row">
-                    <div class="col-7"><label class="float-left">@Model.FullName</label></div>
-            <div class="col-5"><label class="float-right"><span class="text-info h5">@Model.FullName</span></label> </div>
+                    <div class="col-7"><h5 class="float-left">@Model.FullName</h5></div>
+            <div class="col-5"><label class="float-right"><span class="text-info h5">@Model.WorkPosition.PositionName</span></label> </div>
                 </div>
                 <img class="card-img-top img-fluid d-block mx-auto mb-3" src="@WC.BarberPath@Model.BarberImage" alt="Card image cap">
                 <div class="col-12 p-1">

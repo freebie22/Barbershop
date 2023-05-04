@@ -197,54 +197,59 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/Summary.js"></script>
-        <script>
-            function toggleScript() {
-                var paymentTypeSelect = document.querySelector('#payment-type-select');
-                var dropinContainer = document.querySelector('#dropin-container');
+    <script>
+        $(document).ready(function () {
+            toggleScript();
+            document.reload();
 
-                if (paymentTypeSelect.value === '@WC.ReceivePay') {
-                    // remove the Braintree script from the page
-                    var existingScript = document.querySelector('#braintree-script');
-                    if (existingScript) {
-                        existingScript.remove();
-                    }
-                    // remove the dropin container from the page
-                    if (dropinContainer) {
-                        dropinContainer.remove();
-                    }
-                } 
-                else {
-                    // re-add the Braintree script to the page
-                    var script = document.createElement('script');
-                    script.id = 'braintree-script';
-                    script.src = 'https://js.braintreegateway.com/web/dropin/1.34.0/js/dropin.min.js';
-                    document.head.appendChild(script);
+        });
+    </script>
+    <script>
+        function toggleScript() {
+            var paymentTypeSelect = document.querySelector('#payment-type-select');
+            var dropinContainer = document.querySelector('#dropin-container');
 
-                    // add the dropin container back to the page
-                    var newDropinContainer = document.createElement('div');
-                    newDropinContainer.id = 'dropin-container';
-                    document.querySelector('.checkout-container').appendChild(newDropinContainer);
-
-                     var client_token = "@ViewBag.ClientToken";
-                        var form = document.querySelector('#payment-form');
-                        braintree.dropin.create({
-                            authorization: client_token,
-                            container: '#dropin-container'
-                        }, function (createErr, instance) {
-                            form.addEventListener('submit', function () {
-                                event.preventDefault();
-                                //Add the nonce to the form and submit
-                                instance.requestPaymentMethod(function (err, payload) {
-                                    // Submit payload.nonce to your server
-                                    document.querySelector('#nonce').value = payload.nonce;
-                                    form.submit();
-                                });
-                            });
-                        });
+            if (paymentTypeSelect.value === '@WC.ReceivePay') {
+                // remove the Braintree script from the page
+                var existingScript = document.querySelector('#braintree-script');
+                if (existingScript) {
+                    existingScript.remove();
+                }
+                // remove the dropin container from the page
+                if (dropinContainer) {
+                    dropinContainer.remove();
                 }
             }
-        </script>
+            else {
+                // re-add the Braintree script to the page
+                var script = document.createElement('script');
+                script.id = 'braintree-script';
+                script.src = 'https://js.braintreegateway.com/web/dropin/1.34.0/js/dropin.min.js';
+                document.head.appendChild(script);
 
-    </div>
+                // add the dropin container back to the page
+                var newDropinContainer = document.createElement('div');
+                newDropinContainer.id = 'dropin-container';
+                document.querySelector('.checkout-container').appendChild(newDropinContainer);
+
+                var client_token = "@ViewBag.ClientToken";
+                var form = document.querySelector('#payment-form');
+                braintree.dropin.create({
+                    authorization: client_token,
+                    container: '#dropin-container'
+                }, function (createErr, instance) {
+                    form.addEventListener('submit', function () {
+                        event.preventDefault();
+                        //Add the nonce to the form and submit
+                        instance.requestPaymentMethod(function (err, payload) {
+                            // Submit payload.nonce to your server
+                            document.querySelector('#nonce').value = payload.nonce;
+                            form.submit();
+                        });
+                    });
+                });
+            }
+        }
+    </script>
     
 }

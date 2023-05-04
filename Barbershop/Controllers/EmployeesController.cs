@@ -18,7 +18,7 @@ namespace Barbershop.Controllers
         {
             EmployeesVM employeesVM = new EmployeesVM()
             {
-                Barbers = _db.Barbers.Include(u => u.WorkPosition).Include(u => u.Specializations),
+                Barbers = _db.Barbers.Include(u => u.WorkPosition).Include(u => u.Specializations).Where(u => u.IsActive == true),
                 WorkPositions = _db.WorkPositions
             };
             return View(employeesVM);
