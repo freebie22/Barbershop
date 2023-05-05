@@ -15,5 +15,7 @@ namespace Barbershop.Models
         public double barberPrice { get; set; }
         [Required, Range(1, 10000),DisplayName("Топ-барбер")]
         public double seniorPrice { get; set; }
+        [Required, Display(Name = "Тривалість")]
+        public TimeSpan Duration { get; set; } = TimeSpan.Zero;
     }
 }

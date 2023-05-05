@@ -24,7 +24,7 @@ namespace Barbershop.Models
         public int WorkPositionId { get; set; }
         [ForeignKey("WorkPositionId")]
         public virtual WorkPositions WorkPosition { get; set; }
-        [DisplayName("Спеціалізація")]
+        [Required, DisplayName("Спеціалізація")]
         public ICollection<Specializations> Specializations { get; set; }
         [DisplayName("Рейтинг барбера"),Range(1,5)]
         public int Rating { get; set; }

@@ -32,10 +32,12 @@ namespace Barbershop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Services obj)
         {
+            var durationInMinutes = obj.Duration.Hours * 60 + obj.Duration.Minutes;
             if (ModelState.IsValid)
             {
                 await Task.Run(() =>
                 {
+                    obj.Duration = TimeSpan.FromMinutes(durationInMinutes);
                     _db.Services.AddAsync(obj);
                     _db.SaveChangesAsync();
 
@@ -67,10 +69,12 @@ namespace Barbershop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Services obj)
         {
+            var durationInMinutes = obj.Duration.Hours * 60 + obj.Duration.Minutes;
             if (ModelState.IsValid)
             {
                 await Task.Run(() =>
                 {
+                    obj.Duration = TimeSpan.FromMinutes(durationInMinutes);
                     _db.Services.Update(obj);
                     _db.SaveChanges();
 
