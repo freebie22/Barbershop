@@ -4,6 +4,7 @@ using Barbershop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Barbershop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230505091721_addedBarberScheduleToDb")]
+    partial class addedBarberScheduleToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace Barbershop.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AppointmentServices", b =>
-                {
-                    b.Property<int>("AppointmentsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ServicesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AppointmentsId", "ServicesId");
-
-                    b.HasIndex("ServicesId");
-
-                    b.ToTable("AppointmentServices");
-                });
 
             modelBuilder.Entity("BarbersSpecializations", b =>
                 {
@@ -50,59 +38,6 @@ namespace Barbershop.Migrations
                     b.HasIndex("SpecializationsId");
 
                     b.ToTable("BarbersSpecializations");
-                });
-
-            modelBuilder.Entity("Barbershop.Models.Appointment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AppointmentStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AppointmentType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BarberId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BarberId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("Barbershop.Models.BarberSchedule", b =>
@@ -673,21 +608,6 @@ namespace Barbershop.Migrations
                     b.HasDiscriminator().HasValue("BarbershopUser");
                 });
 
-            modelBuilder.Entity("AppointmentServices", b =>
-                {
-                    b.HasOne("Barbershop.Models.Appointment", null)
-                        .WithMany()
-                        .HasForeignKey("AppointmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Barbershop.Models.Services", null)
-                        .WithMany()
-                        .HasForeignKey("ServicesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BarbersSpecializations", b =>
                 {
                     b.HasOne("Barbershop.Models.Barbers", null)
@@ -701,25 +621,6 @@ namespace Barbershop.Migrations
                         .HasForeignKey("SpecializationsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Barbershop.Models.Appointment", b =>
-                {
-                    b.HasOne("Barbershop.Models.BarbershopUser", "Barber")
-                        .WithMany()
-                        .HasForeignKey("BarberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Barbershop.Models.BarbershopUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Barber");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Barbershop.Models.BarberSchedule", b =>

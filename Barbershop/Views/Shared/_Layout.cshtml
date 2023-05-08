@@ -59,6 +59,7 @@
                                     <a  class="nav-link text-dark" asp-area="" asp-controller="ProductCategory" asp-action="Index">Категорії товарів</a>
                                     <a  class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Товари</a>
                                     <a  class="nav-link text-dark" asp-area="" asp-controller="BarberMain" asp-action="Index">Перелік барберів</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="BarberSchedule" asp-action="Index">Розклад роботи барберів</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Створити адміністратора</a>
                                     <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/RegisterBarber">Створити барбера</a>
@@ -143,6 +144,9 @@
                         </li>
                         <li class="nav-item">
                             <a style="color:white" class="nav-link" asp-area="" asp-controller="Stock" asp-action="Index">Наші товари</a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Appointment" asp-action="Index">Тестування часу</a>
                         </li>
                     </ul>
                 </div>

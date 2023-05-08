@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Test GetAvailableTime</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#searchButton').click(function () {
+                var barberId = $('#barberId').val();
+                var date = $('#date').val();
+
+                $.ajax({
+                    url: '@Url.Action("GetAvailableTime", "Appointment")',
+                    type: 'GET',
+                    data: { barberId: barberId, date: date },
+                    success: function (response) {
+                        if (response.success) {
+                            var availableTimes = response.availableTimes;
+                            var timeList = '';
+
+                            if (availableTimes.length > 0) {
+                                for (var i = 0; i < availableTimes.length; i++) {
+                                    timeList += '<option>' + availableTimes[i] + '</option>';
+                                }
+                            } else {
+                                timeList = '<option>No available times</option>';
+                            }
+
+                            $('#result').html('<h3>Available Times:</h3><select>' + timeList + '</select>');
+                        } else {
+                            $('#result').html('<p>' + response.message + '</p>');
+                        }
+                    },
+                    error: function () {
+                        $('#result').html('<p>An error occurred</p>');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Test GetAvailableTime</h1>
+
+    <label for="barberId">Barber ID:</label>
+    <input type="text" id="barberId" />
+    <br />
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" />
+    <br />
+
+    <button id="searchButton">Search</button>
+
+    <div id="result"></div>
+</body>
+</html>

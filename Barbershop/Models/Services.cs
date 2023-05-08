@@ -17,5 +17,7 @@ namespace Barbershop.Models
         public double seniorPrice { get; set; }
         [Required, Display(Name = "Тривалість")]
         public TimeSpan Duration { get; set; } = TimeSpan.Zero;
+        [Required]
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }

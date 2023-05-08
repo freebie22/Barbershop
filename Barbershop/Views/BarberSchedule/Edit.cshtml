@@ -1,0 +1,63 @@
+﻿@model Barbershop.Models.ViewModels.BarberScheduleVM
+
+<form method="post">
+    <input type="hidden" asp-for="BarberSchedule.Id"></input>
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info pl-3">Оновити розклад для барбера</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="BarberSchedule.Date"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="date" asp-for="BarberSchedule.Date" class="form-control mb-2" />
+                        <span asp-validation-for="BarberSchedule.Date" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="BarberSchedule.StartTime"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="time" asp-for="BarberSchedule.StartTime" class="form-control mb-2" />
+                        <span asp-validation-for="BarberSchedule.StartTime" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="BarberSchedule.EndTime"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="time" asp-for="BarberSchedule.EndTime" class="form-control mb-2" />
+                        <span asp-validation-for="BarberSchedule.EndTime" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label>Для барбера:</label>
+                </div>
+                <div class="col-8">
+                    <select asp-for="BarberSchedule.BarbershopUserId" asp-items="@Model.BarbershopUserSelectList" class="form-control mb-2">
+                        @*<select asp-for="CategoryId" asp-items="@ViewData["CategoryDropDown"] as IEnumerable<SelectListItem>" class="form-control mb-2">*@
+                        <option disabled selected>--Оберіть барбера для формування розкладу--</option>
+                    </select>
+                    <span asp-validation-for="BarberSchedule.BarbershopUserId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-8 offset-4 row">
+                    <div class="col">
+                        <input type="submit" class="btn btn-primary w-100 text-white" value="Оновити" />
+                    </div>
+                    <div class="col">
+                        <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
