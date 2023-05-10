@@ -13,9 +13,9 @@ namespace Barbershop.Models
         [Required, DataType(DataType.Date), DisplayName("Дата")]
         public DateTime Date { get; set; }
         [Required]
-        public string BarbershopUserId { get; set; }
-        [ForeignKey("BarbershopUserId")]
-        public virtual BarbershopUser BarbershopUser { get; set; }
+        public int BarberId { get; set; }
+        [ForeignKey("BarberId")]
+        public virtual Barbers Barber { get; set; }
         [Required, DisplayName("Початок робочого дня")]
         public TimeSpan StartTime { get; set; }
         [Required, DisplayName("Кінець робочого дня")]

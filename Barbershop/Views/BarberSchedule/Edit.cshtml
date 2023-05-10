@@ -39,11 +39,11 @@
                     <label>Для барбера:</label>
                 </div>
                 <div class="col-8">
-                    <select asp-for="BarberSchedule.BarbershopUserId" asp-items="@Model.BarbershopUserSelectList" class="form-control mb-2">
+                    <select asp-for="BarberSchedule.BarberId" asp-items="@Model.BarbershopUserSelectList" class="form-control mb-2">
                         @*<select asp-for="CategoryId" asp-items="@ViewData["CategoryDropDown"] as IEnumerable<SelectListItem>" class="form-control mb-2">*@
                         <option disabled selected>--Оберіть барбера для формування розкладу--</option>
                     </select>
-                    <span asp-validation-for="BarberSchedule.BarbershopUserId" class="text-danger"></span>
+                    <span asp-validation-for="BarberSchedule.BarberId" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row">

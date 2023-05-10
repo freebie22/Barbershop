@@ -53,6 +53,7 @@ namespace Barbershop.Controllers
             var files = HttpContext.Request.Form.Files;
             string webRootPath = _webHostEnvironment.WebRootPath;
 
+
             //create
             string upload = webRootPath + WC.BarberPath;
             string fileName = Guid.NewGuid().ToString();

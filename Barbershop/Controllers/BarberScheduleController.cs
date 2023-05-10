@@ -19,19 +19,14 @@ namespace Barbershop.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<BarberSchedule> objList = _db.BarberSchedule.Include(b => b.BarbershopUser).ToList();
+            var objList = _db.BarberSchedule.Include(b => b.Barber).ToList();
             return View(objList);
         }
 
         public IActionResult Create()
         {
-            var barberRole = _db.Roles.FirstOrDefault(r => r.Name == "Barber");
-            var barberRoleId = barberRole?.Id;
 
-            var barbers = _db.BarbershopUser
-                .Where(u => _db.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == barberRoleId))
-                .OrderBy(u => u.FullName)
-                .ToList();
+            var barbers = _db.Barbers.OrderBy(b => b.FullName).ToList();
 
             BarberScheduleVM scheduleVM = new BarberScheduleVM()
             {
@@ -62,13 +57,7 @@ namespace Barbershop.Controllers
 
         public IActionResult Edit(int? id)
         {
-            var barberRole = _db.Roles.FirstOrDefault(r => r.Name == "Barber");
-            var barberRoleId = barberRole?.Id;
-
-            var barbers = _db.BarbershopUser
-                .Where(u => _db.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == barberRoleId))
-                .OrderBy(u => u.FullName)
-                .ToList();
+            var barbers = _db.Barbers.OrderBy(b => b.FullName).ToList();
 
             BarberScheduleVM scheduleVM = new BarberScheduleVM()
             {
@@ -102,13 +91,7 @@ namespace Barbershop.Controllers
 
         public IActionResult Delete(int? id)
         {
-            var barberRole = _db.Roles.FirstOrDefault(r => r.Name == "Barber");
-            var barberRoleId = barberRole?.Id;
-
-            var barbers = _db.BarbershopUser
-                .Where(u => _db.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == barberRoleId))
-                .OrderBy(u => u.FullName)
-                .ToList();
+            var barbers = _db.Barbers.OrderBy(b => b.FullName).ToList();
 
             BarberScheduleVM scheduleVM = new BarberScheduleVM()
             {

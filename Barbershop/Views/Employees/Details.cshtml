@@ -43,6 +43,9 @@
                         <div class="col-12 col-md-6 pb-1 ">
                             <a asp-action="Index" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Назад до переліку</a>
                         </div>
+                        <div class="col-12 col-md-6 pb-1 ">
+                            <a asp-action="Index" asp-controller="Appointment" asp-route-barberId = "@Model.Barbers.Id" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Записатись</a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@model Barbershop.Models.ViewModels.AppointmentVM
+
+
+@{
+    DateTime mindate = DateTime.Today;
+    ViewData["MinDate"] = mindate.ToString("yyyy-MM-dd");
+}
+<!DOCTYPE html>
 <html>
 <head>
     <title>Test GetAvailableTime</title>
@@ -20,13 +27,13 @@
 
                             if (availableTimes.length > 0) {
                                 for (var i = 0; i < availableTimes.length; i++) {
-                                    timeList += '<option>' + availableTimes[i] + '</option>';
+                                    timeList += '<button class = "btn btn-info">' + availableTimes[i] + '</button>';
                                 }
                             } else {
                                 timeList = '<option>No available times</option>';
                             }
 
-                            $('#result').html('<h3>Available Times:</h3><select>' + timeList + '</select>');
+                            $('#result').html('<h3>Available Times:</h3><ul>' + timeList + '</ul>');
                         } else {
                             $('#result').html('<p>' + response.message + '</p>');
                         }
@@ -38,20 +45,42 @@
             });
         });
     </script>
+
 </head>
 <body>
     <h1>Test GetAvailableTime</h1>
 
     <label for="barberId">Barber ID:</label>
-    <input type="text" id="barberId" />
+    <select asp-for = "@Model.Appointment.BarberId" asp-items="@Model.Barbers" type="text" id="barberId" >
+    </select>
     <br />
 
     <label for="date">Date:</label>
-    <input type="date" id="date" />
+    <input asp-for="@Model.Appointment.Date" min="" type="date" id="date" />
     <br />
 
     <button id="searchButton">Search</button>
 
     <div id="result"></div>
+
+    <script>
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+
+        var todayString = yyyy + '-' + mm + '-' + dd;
+
+        document.getElementById('date').min = todayString;
+    </script>
 </body>
+    
 </html>

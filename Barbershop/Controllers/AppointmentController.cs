@@ -1,6 +1,8 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
+using Barbershop.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Barbershop.Controllers
@@ -14,61 +16,70 @@ namespace Barbershop.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int barberId = 0)
         {
-            return View();
+            AppointmentVM appointmentVM = new AppointmentVM()
+            {
+                Barbers = _db.Barbers.Select(i => new SelectListItem
+                {
+                    Text = i.FullName,
+                    Value = i.Id.ToString(),
+                    Selected = i.Id == barberId,
+                }),
+                Appointment = new Appointment()
+                {
+                    Date = DateTime.Now.Date,
+                }
+               
+            };
+            return View(appointmentVM);
         }
 
-        public ActionResult GetAvailableTime(string barberId, DateTime date)
+        public IActionResult GetAvailableTime(int barberId, DateTime date)
         {
-            // Отримати розклад барбера за вказану дату
-            BarberSchedule schedule = _db.BarberSchedule
-                .FirstOrDefault(s => s.BarbershopUserId == barberId && s.Date == date);
+            BarberSchedule schedule = _db.BarberSchedule.FirstOrDefault(s => s.BarberId == barberId && s.Date == date);
 
             if (schedule == null)
             {
-                // Розклад не знайдений, повернути порожній список
                 return Json(new { success = false, message = "Розклад не знайдено" }) ;
             }
 
-            // Отримати всі записи на цей день для даного барбера
+
             List<Appointment> appointments = _db.Appointments
                 .Where(a => a.BarberId == barberId && a.Date == date)
                 .ToList();
 
-            // Отримати початковий та кінцевий час робочого дня барбера
+
             TimeSpan startTime = schedule.StartTime;
             TimeSpan endTime = schedule.EndTime;
+            DateTime day = schedule.Date;
 
-            // Створити список доступних часів
+
             List<TimeSpan> availableTimes = new List<TimeSpan>();
 
-            // Пройтись по інтервалам часу протягом робочого дня
+
             TimeSpan currentTime = startTime;
-            while (currentTime < endTime)
+            while (currentTime <= endTime.Subtract(TimeSpan.FromMinutes(30)))
             {
-                // Перевірити, чи цей інтервал часу вільний
+
                 bool isAvailable = true;
                 foreach (var appointment in appointments)
                 {
                     if (currentTime >= appointment.StartTime && currentTime < appointment.EndTime)
                     {
-                        // Час зайнятий, перейти до наступного інтервалу
                         isAvailable = false;
                         break;
                     }
                 }
 
-                // Якщо інтервал часу вільний, додати його до списку доступних часів
-                if (isAvailable)
+                if (isAvailable && !(day.Date == DateTime.Today && currentTime < DateTime.Now.TimeOfDay))
                 {
                     availableTimes.Add(currentTime);
                 }
 
-                // Перейти до наступного інтервалу часу
-                currentTime = currentTime.Add(TimeSpan.FromMinutes(30));
+                currentTime += TimeSpan.FromMinutes(15);
             }
-
+           
             return Json(new { success = true, availableTimes });
         }
 

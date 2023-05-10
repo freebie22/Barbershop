@@ -13,9 +13,9 @@ namespace Barbershop.Models
         [ForeignKey("UserId")]
         public virtual BarbershopUser User { get; set; }
         [Required]
-        public string BarberId { get; set; } 
+        public int BarberId { get; set; } 
         [ForeignKey("BarberId")]
-        public virtual BarbershopUser Barber { get; set; }
+        public virtual Barbers Barber { get; set; }
         [Required, Column(TypeName = "date")]
         public DateTime Date { get; set; }
         [Required]
