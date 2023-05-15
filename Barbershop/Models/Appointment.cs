@@ -35,5 +35,7 @@ namespace Barbershop.Models
         [Required]
         public string AppointmentStatus { get; set;}
 
+        public string? Comment { get; set; }
+
     }
 }

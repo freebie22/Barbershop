@@ -76,6 +76,9 @@
                         <li class="nav-item">
                             <a style="color:white" class="nav-link" asp-area="" asp-controller="Stock" asp-action="Index">Наші товари</a>
                         </li>
+                        <li class="nav-item">
+                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Appointment" asp-action="Index">Записатись</a>
+                        </li>
                         <li>
                             @if (HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null)
                             {
@@ -146,7 +149,7 @@
                             <a style="color:white" class="nav-link" asp-area="" asp-controller="Stock" asp-action="Index">Наші товари</a>
                         </li>
                         <li class="nav-item">
-                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Appointment" asp-action="Index">Тестування часу</a>
+                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Appointment" asp-action="Index">Записатись</a>
                         </li>
                     </ul>
                 </div>

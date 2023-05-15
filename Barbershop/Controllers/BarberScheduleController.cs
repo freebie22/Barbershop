@@ -15,12 +15,26 @@ namespace Barbershop.Controllers
         public BarberScheduleController(ApplicationDbContext db)
         {
             _db = db;
+            RemoveSchedule();
         }
 
         public IActionResult Index()
         {
             var objList = _db.BarberSchedule.Include(b => b.Barber).ToList();
             return View(objList);
+        }
+
+        private void RemoveSchedule()
+        {
+            var objList = _db.BarberSchedule.Include(b => b.Barber).ToList();
+            foreach (var obj in objList)
+            {
+                if (obj.Date < DateTime.Now.Date)
+                {
+                    _db.BarberSchedule.Remove(obj);
+                }
+            }
+            _db.SaveChanges();
         }
 
         public IActionResult Create()
@@ -82,8 +96,16 @@ namespace Barbershop.Controllers
         public IActionResult Edit(BarberScheduleVM scheduleVM)
         {
 
-            _db.BarberSchedule.Update(scheduleVM.BarberSchedule);
-            _db.SaveChanges();
+            var existingSchedule = _db.BarberSchedule.FirstOrDefault(b => b.Id == scheduleVM.BarberSchedule.Id);
+            if (existingSchedule != null)
+            {
+                existingSchedule.Date = scheduleVM.BarberSchedule.Date;
+                existingSchedule.StartTime = scheduleVM.BarberSchedule.StartTime;
+                existingSchedule.EndTime = scheduleVM.BarberSchedule.EndTime;
+
+                _db.BarberSchedule.Update(existingSchedule);
+                _db.SaveChanges();
+            }
 
             return RedirectToAction("Index");
 
