@@ -4,6 +4,7 @@ using Barbershop.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace Barbershop.Controllers
@@ -17,7 +18,7 @@ namespace Barbershop.Controllers
             _db = db;
         }
 
-        public IActionResult Index(int barberId = 0)
+        public IActionResult Index(int? barberId)
         {
             List<Barbers> barbers = _db.Barbers.Include(b => b.WorkPosition).OrderBy(b=> b.WorkPosition.PositionName == "Топ-барбер" ? 0 : 
                                                                                             b.WorkPosition.PositionName == "Барбер" ? 1 :
@@ -43,25 +44,81 @@ namespace Barbershop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [ActionName("IndexPost")]
-        public IActionResult Index(AppointmentVM appointmentVM)
+        [ActionName("Index")]
+        public IActionResult IndexPost(AppointmentVM appointmentVM)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            Appointment appointment = new Appointment()
+            appointmentVM.Appointment.UserId = claim.Value;
+
+            appointmentVM.Appointment.AppointmentStatus = WC.AppointmentReceived;
+
+            appointmentVM.Appointment.AppointmentType = "Онлайн";
+
+            appointmentVM.Appointment.PhoneNumber = "+3806850340888";
+            appointmentVM.Appointment.Email = "bojkov755@gmail.com";
+
+            if (appointmentVM.ServicesIds == null)
             {
-                UserId = claim.Value,
-                BarberId = appointmentVM.Appointment.BarberId,
-                Date = appointmentVM.Appointment.Date,
-                StartTime = appointmentVM.Appointment.StartTime,
-                EndTime = appointmentVM.Appointment.StartTime.Add(TimeSpan.FromMinutes(10)),
-                TotalPrice= appointmentVM.Appointment.TotalPrice,
+                _db.Entry(appointmentVM.Appointment).Collection(b => b.Services).Load();
+            }
 
-            };
+            if (appointmentVM.ServicesIds != null)
+            {
+                var selectedServices = _db.Services.Where(s => appointmentVM.ServicesIds.Contains(s.Id));
 
-            return View(appointmentVM); 
+                appointmentVM.Appointment.Services = new List<Services>();
+
+                foreach (var services in selectedServices)
+                {
+                    appointmentVM.Appointment.Services.Add(services);
+                }
+            }
+
+            _db.Appointments.Add(appointmentVM.Appointment);
+            _db.SaveChanges();
+
+
+            return RedirectToAction("Index", "Home");
         }
+
+        //public IActionResult AppointmentConfirmation(AppointmentVM appointmentVM)
+        //{
+
+        //    if(appointmentVM == null)
+        //    {
+        //        return RedirectToAction("Index");
+
+        //    }
+
+        //    return View(appointmentVM); 
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[ActionName("AppointmentConfirmation")]
+        //public IActionResult AppointmentConfirmationPost(AppointmentVM appointmentVM)
+        //{
+        //    var storedAppointmentVM = appointmentVM;
+
+        //    if(storedAppointmentVM == null)
+        //    {
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    storedAppointmentVM.Appointment.PhoneNumber = appointmentVM.Appointment.PhoneNumber;
+        //    storedAppointmentVM.Appointment.Email = appointmentVM.Appointment.Email;
+        //    storedAppointmentVM.Appointment.AppointmentStatus = WC.AppointmentReceived;
+        //    storedAppointmentVM.Appointment.AppointmentType = "Онлайн";
+        //    storedAppointmentVM.Appointment.Comment = appointmentVM.Appointment.Comment;
+
+        //    _db.Appointments.Add(storedAppointmentVM.Appointment);
+        //    _db.SaveChanges();
+
+        //    return RedirectToAction("Index");
+
+        //}
 
         public IActionResult GetAvailableTime(int barberId, DateTime date)
         {
@@ -141,6 +198,25 @@ namespace Barbershop.Controllers
 
             return Json(new { success = true, specialization });
 
+        }
+
+        public IActionResult SetEndTime(TimeSpan startTime, int addTime, int barberId)
+        {
+            BarberSchedule barber = _db.BarberSchedule.FirstOrDefault(b => b.BarberId == barberId);
+
+            TimeSpan lastTime = barber.EndTime;
+
+            TimeSpan endTime = startTime.Add(TimeSpan.FromMinutes(addTime));
+
+            if (endTime < lastTime)
+            {
+                return Json(new { success = true, endTime });
+            }
+
+            else
+            {
+                return Json(new { success = false, message = "Барбер в цей час не працює" });
+            }           
         }
 
     }

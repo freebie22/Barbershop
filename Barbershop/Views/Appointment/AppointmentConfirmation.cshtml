@@ -1,0 +1,32 @@
+﻿@model Barbershop.Models.ViewModels.AppointmentVM
+
+<h2>Inquiry Confirmation</h2>
+
+<h4>Appointment Details:</h4>
+
+<p>User ID: @Model.Appointment.UserId</p>
+<p>Barber ID: @Model.Appointment.BarberId</p>
+<p>Date: @Model.Appointment.Date</p>
+<p>Start Time: @Model.Appointment.StartTime</p>
+<p>End Time: @Model.Appointment.EndTime</p>
+<p>Total Price: @Model.Appointment.TotalPrice</p>
+
+<hr />
+
+<h4>Contact Information:</h4>
+
+<form method="post">
+    <div class="form-group">
+        <label for="PhoneNumber">Phone Number:</label>
+        <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.Appointment.PhoneNumber" required />
+    </div>
+    <div class="form-group">
+        <label for="Email">Email:</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Appointment.Email" required />
+    </div>
+    <div class="form-group">
+        <label for="Comment">Comment:</label>
+        <textarea class="form-control" id="Comment" name="Comment">@Model.Appointment.Comment</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Confirm</button>
+</form>

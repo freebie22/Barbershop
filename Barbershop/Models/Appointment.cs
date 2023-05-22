@@ -22,7 +22,7 @@ namespace Barbershop.Models
         public TimeSpan StartTime { get; set; }
         [Required]
         public TimeSpan EndTime { get; set; }
-        [Required]
+        [Required, Range(1, 10000)]
         public decimal TotalPrice { get; set; }
         [Required]
         public virtual ICollection<Services> Services { get; set; }

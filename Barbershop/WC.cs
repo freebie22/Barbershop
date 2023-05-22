@@ -23,6 +23,10 @@ namespace Barbershop
         public const string StatusCancelled = "Відмінене";
         public const string StatusReturned = "Повернене";
 
+        public const string AppointmentReceived = "Очікує на клієнта";
+        public const string AppointmentDone = "Заверешене";
+        public const string AppointmentCancelled = "Відмінене";
+
         public const string CardPay = "Оплата картою";
         public const string ReceivePay = "Оплата при отриманні";
 
