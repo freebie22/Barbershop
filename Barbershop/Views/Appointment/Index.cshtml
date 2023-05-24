@@ -11,9 +11,196 @@
 <head>
     <title>Запис до майстра</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .selectedItem
+        {
+        background-color: #FFEBA7;
+        color: #1F2029;
+            transition: background-color .5s, color .5s;
+        }
+
+        .notSelectedItem {
+            background-color: #1F2029;
+            color: #FFEBA7;
+            transition: background-color .5s, color .5s;
+        }
+    </style>
 </head>
 <body>
-    <form method="post">
+    @*<a href="https://front.codes/" class="logo" target="_blank">
+        <img src="https://assets.codepen.io/1462889/fcy.png" alt="">
+    </a>*@
+
+    <div class="section">
+        <div class="container text-center p-3 col-6 rounded" style="background-color: #1F2029;">
+            <div class="row full-height justify-content-center">
+                <div class="col-12 text-center align-self-center">
+                    <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                        <img class="" src="~/images/Oasis-Appointment.jpg" alt="Logo.jpg" style="width: 320px; height: 320px" />
+                        <h6 class="mb-0 pb-3"><span style="color: #FFEBA7">Деталі запису </span><span style="color: #FFEBA7">Деталі клієнта</span></h6>
+                        <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
+                        <label for="reg-log"></label>
+                        <div class="card-3d-wrap mx-auto">
+                            <div class="card-3d-wrapper mt-3">
+                                <div class="card-front" style="font-size: 16px">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                            <h4 class="mb-1 p-2" style="color: #FFEBA7; border:solid; border-width: 2px; display: inline-block">Запис до барбера</h4>
+                                            <div class="form-group">
+                                                <label class="mt-2" style="color: #FFEBA7" for="barberId">Обраний барбер:</label>
+                                                <div class="custom-select">
+                                                    <input type="button" class="btn" id="selectedBarber" value="Оберіть майстра" />
+                                                    <select asp-for="@Model.Appointment.BarberId" asp-items="@Model.Barbers" type="text" id="barberId" style="display: none"></select>
+                                                </div>                                                
+                                            <div class="form-group mt-4">
+                                                    <label style="color: #FFEBA7" for="date">Оберіть дату</label>
+                                                    <input asp-for="@Model.Appointment.Date" class="form-control-sm" min="" type="date" id="date" />
+                                                    <br />
+                                                    <button type="button" class="btn btn-dark m-3" id="searchButton">Знайти час для запису</button>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <span id="spanEndTime"></span>
+                                                <button type="button" id="buttonEndTime">Перевірити кінцевий час</button>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                    <div id="services" style="justify-content: center">
+                                                        <h3 style="color: #FFEBA7">Послуги</h3>
+                                                        <button type="button" class="btn btn-dark" id="selectServicesButton">Обрати послуги</button>
+
+                                                        <input asp-for="@Model.Appointment.TotalPrice" readonly id="Price" class="form-control-sm" style="display:none" />
+
+                                                        <input asp-for="@Model.Appointment.EndTime" type="time" class="form-control-sm" style="display:none" readonly id="EndTime" />
+
+                                                        <select id="choosenServices" asp-for="@Model.ServicesIds" asp-items="@(Model.Services.Select(s => new SelectListItem {Text = s.serviceName, Value = s.Id.ToString()}))" style="display: none" class="form-control" multiple></select>
+                                                        <span asp-validation-for="@Model.ServicesIds" class="text-danger"></span>
+                                                    </div>
+                                            </div>
+                                            <a href="#" class="btn mt-4">Перейти до оформлення</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                    <div class="card-back" style="font-size: 1rem">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                                <h4 class="mb-4 pb-3" style="color: #FFEBA7">Інформація про клієнта</h4>
+                                            <div class="form-group">
+                                                <input type="text" name="logname" class="form-style" placeholder="Your Full Name" id="logname" autocomplete="off">
+                                                <i class="input-icon uil uil-user"></i>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="email" name="logemail" class="form-style" placeholder="Your Email" id="logemail" autocomplete="off">
+                                                <i class="input-icon uil uil-at"></i>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
+                                                <i class="input-icon uil uil-lock-alt"></i>
+                                            </div>
+                                            <a href="#" class="btn mt-4">submit</a>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="modal fade" id="barberModal" tabindex="-1" aria-labelledby="barberModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" >
+            <div class="modal-content rounded" style="border-radius: 0rem; background-color:#1F2029;">
+                <div class="modal-header" style="justify-content: center;  border-bottom-color: #FFEBA7;">
+                    <h3 class="modal-title text-center" id="barberModalLabel" style="color: #FFEBA7">Наші барбери</h3>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="row">
+                        @foreach (var barber in Model.BarberDetails)
+                        {
+                            <div class="col-md-3">
+                                <div class="card mt-3" style="width: 10rem; border: 0; background-color: #1F2029">
+                                    <img src="@WC.BarberPath@barber.BarberImage" class="card-img-top rounded-circle" alt="Barber Image">
+                                    <div class="card-body">
+                                        @if (!string.IsNullOrEmpty(barber.FullName))
+                                        {
+                                            string[] nameParts = barber.FullName.Split(' ');
+                                            <h5  style="color: #FFEBA7">@nameParts[0]</h5>
+
+                                            <h5 style="color: #FFEBA7">@nameParts[1]</h5>
+                                        }
+                                        <p class="card-text" style="color: #FFEBA7">@barber.WorkPosition.PositionName</p>
+                                        <button type="button" class="btn btn-dark select-barber rounded" style="border-radius: 0" data-barber-id="@barber.Id" data-barber-name="@barber.FullName">Обрати</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer" style="justify-content: center; border-top-color: #FFEBA7">
+                    <button type="button" id="modal-close" class="btn btn-dark rounded" style="border-radius: 0px" data-bs-dismiss="modal">На головну</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="timeModal" tabindex="-1" aria-labelledby="timeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="background-color: #1F2029">
+                <div class="modal-header" style="justify-content: center; border-bottom-color: #FFEBA7;">
+                    <h5 class="modal-title" id="timeModalLabel" style="color: #FFEBA7">Доступні години для запису на @dayOfWeek, @DateTime.Today.ToShortDateString()</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="justify-content:center">
+                        <ul id="timePicker" class="form-control text-center" style="border: none; background-color: #1F2029">
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer text-center" style="border-top-color: #FFEBA7; justify-content: center">
+                    <div class="row">
+                      <div id="divTimeSelector">
+                        <h6 style="color: #FFEBA7" for="selectedTime">Обраний час для запису</h6>
+                            <input style="border:solid; border-radius: 1px; border-color: #FFEBA7; color: #FFEBA7; text-align: center" readonly class="form-style p-1" asp-for="@Model.Appointment.StartTime" id="selectedTime" />
+                      </div>
+                        <button type="button" id="confirmButton" class="btn btn-dark mt-3">Підтвердити</button>
+                        <button type="button" id="cancelButton" class="btn btn-secondary mt-2" data-dismiss="modal">Скасувати</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="servicesModal" tabindex="-1" aria-labelledby="servicesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #1F2029">
+                <div class="modal-header row" style="justify-content: center; border-bottom-color: #FFEBA7">
+                    <h5 class="modal-title text-center" style="color: #FFEBA7" id="servicesModalLabel">Оберіть послуги</h5>
+                    <span id="errorTime" class="text-danger text-center"></span>
+                </div>
+                <div class="modal-body">
+                    <ul id="servicesList" class="list-group">
+                        @foreach (var service in Model.Services)
+                        {
+                            <li class="list-group-item my-2" style="border-color: #FFEBA7; border-top-width: 1px; border-top-left-radius: inherit; border-top-right-radius: inherit;  border-bottom-left-radius: inherit;  border-bottom-right-radius: inherit;">
+                                <input style="display: none" type="checkbox" class="m-3" name="selectedServices" value="@service.Id" />
+                                <span class="service-name">@service.serviceName у <span class="specName" data-trainee-name="стажера" data-barber-name="барбера" data-senior-name="топ-барбера"></span></span> - <span class="service-price"></span> - <span class="service-duration" data-service-duration="@service.Duration.Minutes"></span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="modal-footer" style="border-top-color: #FFEBA7">
+                    <div class="col-12">
+                        <span style="color: #FFEBA7">Обрано послуг на суму: </span><span style="color: #FFEBA7" readonly id="totalPrice"></span>
+                    </div>
+                    <div class="col-12">
+                        <span style="color: #FFEBA7">Загальна тривалість послуг: </span><span style="color: #FFEBA7" readonly id="totalDuration"></span>
+                    </div>
+                    <div class="col-12">
+                        <button type="button" class="btn btn-dark form-control" id="addServicesButton">Додати послуги</button>
+                        <button type="button" class="btn btn-secondary form-control mt-1" data-bs-dismiss="modal">Закрити</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<form method="post">
         <div class="container text-center p-3 col-6" style="border: groove; border-radius: 5px; box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); background-color: white">
             <img src="~/images/Oasis.jpg" alt="Logo.jpg" style="width: 220px; height: 220px" />
             <h1>Запис до майстра</h1>
@@ -149,7 +336,7 @@
                 <button type="submit" class="btn btn-dark">Перейти до оформлення</button>
             </div>
         </div>
-    </form>
+    </form>*@
     
 
 
@@ -163,23 +350,27 @@
                 $('#barberModal').modal('show');
             });
 
+            $('.list-group-item').each(function (){
+                $(this).addClass('notSelectedItem');
+            });
 
-            //$('#barberId').on('change',function () {
-            //    if ($(this).val() !== 14) {
-            //        $('#selectServicesButton').attr('disabled', false);
-            //    } else {
-            //        $('#selectServicesButton').attr('disabled', true);
-            //    }
-            //});
+            $('.list-group-item').click(function()    {
+                var checkbox = $(this).find('input[name=selectedServices]');
+                checkbox.prop('checked', !checkbox.prop('checked'));
+
+                checkbox.trigger('change');
+            });
 
             var totalPrice = 0;
             var totalDuration = 0;
+
+
 
             $('.select-barber').click(function () {
                 var barberId = $(this).data('barber-id');
                 var barberName = $(this).data('barber-name');
 
-                $('#selectedBarber').text(barberName);
+                $('#selectedBarber').val(barberName);
                 $('#barberId').val(barberId);
 
                 $('.specName').each(function () {
@@ -207,44 +398,57 @@
                                     if (specialization === "Топ-барбер") {
                                         specName.text(seniorName);
                                     }
+                                    $('.service-price').each(function () {
+                                        var servicePriceElement = $(this);
+                                        let listGroupItem = $(this).closest('.list-group-item');
+                                        let checkBoxService = listGroupItem.find('input[name=selectedServices]');
+                                        let serviceId = checkBoxService.val();
+
+                                        $.ajax({
+                                            url: '@Url.Action("SetServicePrice", "Appointment")',
+                                            type: 'GET',
+                                            data: { "serviceId": serviceId },
+                                            success: function (response) {
+                                                if (response.success) {
+
+                                                    var traineePrice = response.traineePrice;
+                                                    var barberPrice = response.barberPrice;
+                                                    var seniorPrice = response.seniorPrice;
+
+                                                    var PriceService = 0;
+
+                                                    if (specialization === "Стажер") {
+                                                        PriceService = traineePrice;
+                                                        servicePriceElement.text(PriceService + ' грн');
+                                                    }
+                                                    if (specialization === "Барбер") {
+                                                        PriceService = barberPrice;
+                                                        servicePriceElement.text(PriceService + ' грн');
+                                                    }
+                                                    if (specialization === "Топ-барбер") {
+                                                        PriceService = seniorPrice;
+                                                        servicePriceElement.text(PriceService + ' грн');
+                                                    }
+
+                                                    servicePriceElement.data('price', PriceService);
+                                                }
+                                            },
+                                            error: function () {
+
+                                            }
+                                        });
+
+                                    });
                                 }
+
                             }
                         }
                     );
                 });
 
-                $('.service-price').each(function () {
-                    var servicePriceElement = $(this);
-                    var traineePrice = $(this).data('trainee-price');
-                    var barberPrice = $(this).data('barber-price');
-                    var seniorPrice = $(this).data('senior-price');
+                
 
-                    $.ajax({
-                        url: '@Url.Action("GetWorkPostiion", "Appointment")',
-                        type: 'GET',
-                        data: { barberId: barberId },
-                        success: function (response) {
-                            if (response.success) {
-                                var specialization = response.specialization;
-                                if (specialization === "Стажер") {
-                                    servicePriceElement.text(traineePrice + ' грн');
-                                }
-                                if (specialization === "Барбер") {
-                                    servicePriceElement.text(barberPrice + ' грн');
-                                }
-                                if (specialization === "Топ-барбер") {
-                                    servicePriceElement.text(seniorPrice + ' грн');
-                                }
-                            }
-                        },
-                        error: function () {
-
-                        }
-                    });
-
-                });
-
-                $('.serviceDuration').each(function () {
+                $('.service-duration').each(function () {
                     var serviceDurationElement = $(this);
                     var serviceDuration = $(this).data('service-duration');
                     serviceDurationElement.text(serviceDuration + ' хв');
@@ -267,13 +471,15 @@
                     var serviceId = $(this).val();
                     var servicePriceElement = serviceItem.find('.service-price');
                     var serviceDurationElement = serviceItem.find('.service-duration');
-                    var servicePrice = parseInt(servicePriceElement.text().trim());
+                    var servicePrice = parseInt(servicePriceElement.data('price'));
                     var serviceTime = parseInt(serviceDurationElement.data('service-duration'));
 
                     if (isChecked) {
                         totalPrice += servicePrice;
                         totalDuration += serviceTime;
                         selectedServices.push(serviceId);
+                        serviceItem.addClass('selectedItem');
+                    serviceItem.removeClass('notSelectedItem');
                     } else {
                         totalPrice -= servicePrice;
                         totalDuration -= serviceTime;
@@ -282,6 +488,8 @@
                         {
                             selectedServices.splice(index, 1);
                         }
+                    serviceItem.removeClass('selectedItem');
+                    serviceItem.addClass('notSelectedItem');
                     }
 
                     totalPriceElement.text(totalPrice + ' грн.');
@@ -290,55 +498,62 @@
 
 
             $('#addServicesButton').click(function() {
-                let price = $('#Price');
-                let totalPrice = $('#totalPrice');
-
-                price.val(parseInt(totalPrice.text().trim()));
-                
-                let endTimeElement = $('#EndTime');
-
-                let startTime = $('#selectedTime').val();
-
-                let addTime = parseInt($('#totalDuration').text().trim());
-
-                let barberId = $('#barberId').val();
-
                 let errorTime = $('#errorTime');
+                if(selectedServices.length === 0)
+                {
+                    errorTime.text('Оберіть хоча б одну послугу');
+                }
+                else
+                {
+                    errorTime.text('');
+                    let price = $('#Price');
+                    let totalPrice = $('#totalPrice');
 
-                $.ajax({
-                    url: '@Url.Action("SetEndTime", "Appointment")',
-                    type: 'GET',
-                    data : {startTime: startTime, addTime: addTime, barberId: barberId},
-                    success: function(response) 
-                    {
-                        if(response.success)
-                        {
-                            let endTime = response.endTime;
-                            endTimeElement.val(endTime);
-                            errorTime.text('');
-                            $('#servicesModal').modal('hide');
+                    price.val(parseInt(totalPrice.text().trim()));
+
+                    let endTimeElement = $('#EndTime');
+
+                    let startTime = $('#selectedTime').val();
+
+                    let addTime = parseInt($('#totalDuration').text().trim());
+
+                    let barberId = $('#barberId').val();
+
+                    let scheduleDate = $('#date').val();
+
+
+                    $.ajax({
+                        url: '@Url.Action("SetEndTime", "Appointment")',
+                        type: 'GET',
+                        data: { startTime: startTime, addTime: addTime, barberId: barberId, scheduleDate: scheduleDate },
+                        success: function (response) {
+                            if (response.success) {
+                                let endTime = response.endTime;
+                                endTimeElement.val(endTime);
+                                errorTime.text('');
+                                $('#servicesModal').modal('hide');
+                            }
+                            else {
+                                errorTime.text(response.message);
+                            }
                         }
-                        else
-                        {
-                            errorTime.text(response.message);
-                        }
-                        
+                    });
+
+                    let choosenServicesElement = $('#choosenServices');
+                    choosenServicesElement.empty();
+
+
+                    for (let i = 0; i < selectedServices.length; i++) {
+                        let serviceId = selectedServices[i];
+                        let service = $('#servicesList').find('input[value="' + serviceId + '"]').closest('.list-group-item');
+                        let serviceName = service.find('.service-name').text();
+                        choosenServicesElement.append($('<option>', {
+                            value: serviceId,
+                            text: serviceName,
+                            selected: true
+                        }));
                     }
-                });
-
-                let choosenServicesElement = $('#choosenServices');
-                choosenServicesElement.empty();
-
-                for (let i = 0; i < selectedServices.length; i++) {
-                    let serviceId = selectedServices[i];
-                    let service = $('#servicesList').find('input[value="' + serviceId + '"]').closest('.list-group-item');
-                    let serviceName = service.find('.service-name').text();
-                    choosenServicesElement.append($('<option>', {
-                        value: serviceId,
-                        text: serviceName,
-                        selected: true
-                    }));
-                }               
+                }                    
             });
             
             $('#selectServicesButton').click(function() {
@@ -379,26 +594,43 @@
                                         eveningTimes.push(time);
                                     }
                                 }
+
+
+
                                 if (morningTimes.length > 0) {
-                                    timeOptions += '<h4>Ранок:</h4><ul style="padding-left: 0rem">';
+                                    timeOptions += '<h4 class="text-center" style="color: #FFEBA7">Ранок</h4><ul style="padding-left: 0rem">';
                                     for (var i = 0; i < morningTimes.length; i++) {
-                                        timeOptions += '<input readonly class="btn btn-dark m-2 time-button" style="color: white" value="' + morningTimes[i] + '"/>';
+
+                                    let morning = morningTimes[i];
+
+                                    let morningHour = parseInt(morning.split(':')[0]);
+                                    let morningMinute = parseInt(morning.split(':')[1]);
+
+                                        let morningString = morningHour + ":" + morningMinute.toString().padStart(2, '0');
+                                        timeOptions += '<input readonly class="btn btn-dark m-2 time-button" value="' + morningString + '"/>';
                                     }
                                     timeOptions += '</ul>';
                                 }
 
                                 if (dayTimes.length > 0) {
-                                    timeOptions += '<h4>День:</h4><ul style="padding-left: 0rem">';
+                                    timeOptions += '<h4 class="text-center" style="color: #FFEBA7">День</h4><ul style="padding-left: 0rem">';
                                     for (var i = 0; i < dayTimes.length; i++) {
-                                        timeOptions += '<input readonly class="btn btn-dark m-2 time-button" style="color: white" value="' + dayTimes[i] + '"/>';
+                                        timeOptions += '<input readonly class="btn btn-dark m-2 time-button" value="' + dayTimes[i] + '"/>';
                                     }
                                     timeOptions += '</ul>';
                                 }
 
                                 if (eveningTimes.length > 0) {
-                                    timeOptions += '<h4>Вечір:</h4><ul style="padding-left: 0rem">';
+                                    timeOptions += '<h4 class="text-center" style="color: #FFEBA7">Вечір</h4><ul style="padding-left: 0rem">';
                                     for (var i = 0; i < eveningTimes.length; i++) {
-                                        timeOptions += '<input readonly class="btn btn-dark m-2 time-button" style="color: white" value="' + eveningTimes[i] + '"/>';
+                                        let evening = eveningTimes[i];
+
+                                        let eveningHour = parseInt(evening.split(':')[0]);
+                                        let eveningMinute = parseInt(evening.split(':')[1]);
+
+                                        let eveningString = eveningHour + ":" + eveningMinute.toString().padStart(2, '0');
+
+                                        timeOptions += '<input readonly class="btn btn-dark m-2 time-button"value="' + eveningString + '"/>';
                                     }
                                     timeOptions += '</ul>';
                                 }
@@ -423,6 +655,9 @@
                 $(this).addClass('active');
             });
 
+            var selectedTime = $('#selectedTime');
+
+
             $('#confirmButton').click(function () {
                 var time = '';
                 $('.time-button').each(function () {
@@ -431,16 +666,24 @@
                         return false;
                     }
                 });
-                $('#selectedTime').val(time);
+
+                let timeHour = parseInt(time.split(':')[0]);
+                let timeMinute = parseInt(time.split(':')[1]);
+
+                let timeString = timeHour + ':' + timeMinute.toString().padStart(2,'0');
+
+                selectedTime.val(timeString);
+                
+
                 $('#timeModal').modal('hide');
             });
 
-            $('#testBarberButton').click(function() {
-                var barberId = $('#barberId').val();
+            $('#buttonEndTime').click(function() {
+                var endTime = $('#EndTime').val();
 
-                var test = $('#testBarberId');
+               var testTime = $('#spanEndTime');
 
-                test.text(barberId);
+               testTime.text(endTime);
 
             });
 

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Barbershop.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/fontawesome/css/all.css" />
+    <link rel="stylesheet" href="~/css/appointment.css" />
     <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/material.css" />
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 </head>
@@ -34,7 +35,7 @@
     </style>
     <div id="preloader"></div>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-dark box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light box-shadow mb-3" style="background-color: #1F2029; color: #FFEBA7">
             <div  class="container-fluid">
                 <a style="color:white" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Barbershop</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -79,6 +80,9 @@
                         <li class="nav-item">
                             <a style="color:white" class="nav-link" asp-area="" asp-controller="Appointment" asp-action="Index">Записатись</a>
                         </li>
+                        <li class="nav-item">
+                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Тест</a>
+                        </li>
                         <li>
                             @if (HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null)
                             {
@@ -109,7 +113,7 @@
     </div>
 
     <footer class="footer text-muted">
-        <nav class="navbar navbar-expand-lg navbar-toggleable-sm" id="footer-nav">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm" id="footer-nav" style="background-color: #1F2029; color: #FFEBA7">
             <div class="container-fluid">
                 <a style="color:white" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Barbershop</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"

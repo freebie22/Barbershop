@@ -14,92 +14,115 @@
                     $('#officeSelect').innerHTML("");
                 }
             }).trigger('change'); 
+
+                var regionSelect = $("#regionSelect");
+                var citySelect = $("#citySelect");
+                var officeSelect = $("#officeSelect");
+                var apiKey = "e2cf44cd7f5c2cbc67892f3427d71234";
+                // Завантаження областей та міст
+                $.ajax({
+                    url: "https://api.novaposhta.ua/v2.0/json/Address/getAreas",
+                    type: "POST",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "apiKey": apiKey,
+                        "modelName": "Address",
+                        "calledMethod": "getAreas"
+                    }),
+                    success: function (data) {
+                        var areas = data.data;
+
+                        regionSelect.empty();
+                        regionSelect.append($('<option>', {
+                            value: "--Оберіть область--",
+                            text: "--Оберіть область--"
+                        }));
+
+                        for (var i = 0; i < areas.length; i++) {
+                            var option = $('<option>', {
+                                value: areas[i].Description,
+                                text: areas[i].Description
+                            });
+                            regionSelect.append(option);
+                        }
+                    }
+                });
+
+                // Завантаження міст для вибраної області
+                regionSelect.on("change", function () {
+                    var selectedRegion = regionSelect.val();
+
+                    $.ajax({
+                        url: "https://api.novaposhta.ua/v2.0/json/Address/getCities",
+                        type: "POST",
+                        dataType: "json",
+                        data: JSON.stringify({
+                            "apiKey": apiKey,
+                            "modelName": "Address",
+                            "calledMethod": "getCities",
+                            "methodProperties": {
+                                "Area": selectedRegion
+                            }
+                        }),
+                        success: function (data) {
+                            var cities = data.data;
+
+                            citySelect.empty();
+                            citySelect.append($('<option>', {
+                                value: "--Оберіть місто--",
+                                text: "--Оберіть місто--"
+                            }));
+
+                            for (var i = 0; i < cities.length; i++) {
+                                var option = $('<option>', {
+                                    value: cities[i].Description,
+                                    text: cities[i].Description
+                                });
+                                citySelect.append(option);
+                            }
+                        }
+                    });
+                });
+
+                // Завантаження відділень для вибраного міста
+                citySelect.on("change", function () {
+                    var selectedCity = citySelect.val();
+
+                    $.ajax({
+                        url: "https://api.novaposhta.ua/v2.0/json/Address/getWarehouses",
+                        type: "POST",
+                        dataType: "json",
+                        data: JSON.stringify({
+                            "apiKey": apiKey,
+                            "modelName": "Address",
+                            "calledMethod": "getWarehouses",
+                            "methodProperties": {
+                                "CityName": selectedCity
+                            }
+                        }),
+                        success: function (data) {
+                            var offices = data.data;
+
+                            officeSelect.empty();
+                            officeSelect.append($('<option>', {
+                                value: "--Оберіть відділення--",
+                                text: "--Оберіть відділення--"
+                            }));
+
+                            for (var i = 0; i < offices.length; i++) {
+                                var option = $('<option>', {
+                                    value: offices[i].Description,
+                                    text: offices[i].Description
+                                });
+                                officeSelect.append(option);
+                            }
+                        }
+                    });
+                });
             });
+
             /////////////////////////////
 
             //Перемикач для областей та міст
-            var citiesByRegion = {
-            "--Оберіть область--": ["--Оберіть місто--"],
-            "Вінницька область": ["Бар", "Вінниця", "Жмеринка", "Крижопіль", "Могилів-Подільський", "Хмільник"],
-            "Волинська область": ["Володимир-Волинський", "Ковель", "Луцьк", "Нововолинськ"],
-            "Дніпропетровська область": ["Дніпро", "Жовті Води", "Кам'янське", "Кривий Ріг", "Нікополь"],
-            "Донецька область": ["Авдіївка", "Волноваха", "Донецьк", "Дружківка", "Маріуполь"],
-            "Житомирська область": ["Бердичів", "Житомир", "Коростень", "Новоград-Волинський"],
-            "Закарпатська область": ["Берегово", "Мукачево", "Ужгород", "Хуст"],
-            "Запорізька область": ["Бердянськ", "Запоріжжя", "Кам'янка-Дніпровська", "Мелітополь"],
-            "Івано-Франківська область": ["Івано-Франківськ", "Калуш", "Коломия", "Хуст"],
-            "Київ": ["Київ"],
-            "Київська область": ["Біла Церква", "Бровари", "Ірпінь", "Українка"],
-            "Кіровоградська область": ["Кропивницький", "Олександрія", "Світловодськ", "Устинівка"],
-            "Луганська область": ["Алчевськ", "Лисичанськ", "Луганськ", "Рубіжне", "Сєвєродонецьк"],
-            "Львівська область": ["Дрогобич", "Львів", "Самбір", "Трускавець"],
-            "Миколаївська область": ["Миколаїв", "Нова Одеса", "Первомайськ", "Южноукраїнськ"],
-            "Одеська область": ["Ізмаїл", "Одеса", "Подільськ", "Южне", "Березівка"],
-            "Полтавська область": ["Гадяч", "Глобине", "Гребінка", "Зіньків", "Карлівка", "Кременчук", "Лохвиця", "Миргород", "Пирятин", "Полтава"],
-            "Рівненська область": ["Рівне", "Дубно", "Вараш", "Здолбунів", "Кузнецовськ", "Костопіль"],
-            "Сумська область": ["Конотоп", "Ромни", "Суми", "Шостка"],
-            "Тернопільська область": ["Бережани", "Борщів", "Теребовля", "Тернопіль"],
-            "Харківська область": ["Ізюм", "Куп'янськ", "Лозова", "Харків"],
-            "Херсонська область": ["Херсон", "Нова Каховка", "Каховка", "Генічеськ", "Скадовськ"],
-            "Хмельницька область": ["Волочиськ", "Городок", "Деражня", "Дунаївці", "Кам'янець-Подільський", "Красилів", "Нетішин", "Полонне", "Славута", "Старокостянтинів", "Хмельницький"],
-            "Черкаська область": ["Канів", "Сміла", "Умань", "Черкаси"],
-            "Чернівецька область": ["Вижниця", "Новоселиця", "Сторожинець", "Чернівці"],
-            "Чернігівська область": ["Ніжин", "Прилуки", "Чернігів"]
-        };
-
-        var regionSelect = document.getElementById("regionSelect");
-        var citySelect = document.getElementById("citySelect");
-
-        regionSelect.addEventListener("change", function () {
-            var selectedRegion = regionSelect.value;
-            var cities = citiesByRegion[selectedRegion];
-
-            citySelect.innerHTML = "";
-
-            for (var i = 0; i < cities.length; i++) {
-                var option = document.createElement("option");
-                option.text = cities[i];
-                option.value = cities[i];
-                citySelect.add(option);
-            }
-        });
-
-        /////////////////////////////////////////////
-        //Перемикач для областей та міст
-            var officesByCities = {
-            "--Оберіть місто--": ["--Оберіть відділення--"],
-            "Вінниця": ["Нова Пошта - Відділення №1, вул. Миру, 25", " Нова Пошта - Відділення №2, вул. Європейська, 34"],
-            "Дніпро": ["Нова Пошта - Відділення №1, пр. Дмитра Яворницького, 117", "Нова Пошта - Відділення №2, вул. Січеславська Набережна, 29"],
-            "Донецьк": ["Нова Пошта - Відділення №1, пр. Панфілова, 4", "Нова Пошта - Відділення №2, вул. Артема, 80"],
-            "Житомир": ["Нова Пошта - Відділення №1, вул. Київська, 77", " Нова Пошта - Відділення №2, вул. Соборна, 15"],
-            "Запоріжжя": ["Нова Пошта - Відділення №1, вул. Соборна, 154", "Нова Пошта - Відділення №2, вул. Шевченка, 97"],
-            "Івано-Франківськ": ["Нова Пошта - Відділення №1, вул. Шевченка, 30", "Нова Пошта - Відділення №2, вул. Мазепи, 24"],
-            "Київ": ["Нова Пошта - Відділення №1, вул. Хрещатик, 15", "Нова Пошта - Відділення №2, вул. Володимирська, 49"],
-            "Кропивницький": ["Нова Пошта - Відділення №1, вул. Першотравнева, 13", "Нова Пошта - Відділення №2, вул. Київська, 61"],
-            "Луганськ": ["Нова Пошта - Відділення №1, вул. Героїв Маріуполя, 30", "Нова Пошта - Відділення №2, вул. Віденська, 93"],
-            "Львів": ["Нова Пошта - Відділення №1, вул. Городоцька, 174", "Нова Пошта - Відділення №2, вул. Коперника, 38"],
-            "Миколаїв": ["Нова Пошта - Відділення №1, вул. Соборна, 60", "Нова Пошта - Відділення №2, вул. Декабристів, 20"],
-            "Одеса": ["Нова Пошта - Відділення №1, вул. Дерибасівська, 27", "Нова Пошта - Відділення №2, вул. Ланжеронівська, 21"],
-            "Полтава": ["Нова Пошта - Відділення №1, вул. Металістів, 16", "Нова Пошта - Відділення №2, вул. Світла, 87"],
-            "Рівне": ["Нова Пошта - Відділення №1, вул. Соборна, 18", "Нова Пошта - Відділення №2, вул. Князя Острозького, 26"],
-            "Суми": ["Нова Пошта - Відділення №1, вул. Червона, 25", "Нова Пошта - Відділення №2 вул. Івана Огієнка 26"]
-        };
-
-        var citySelect = document.getElementById("citySelect");
-        var officeSelect = document.getElementById("officeSelect");
-
-
-        citySelect.addEventListener("change", function () {
-            var selectedCity = citySelect.value;
-            var offices = officesByCities[selectedCity];
-
-            officeSelect.innerHTML = "";
-            for (var i = 0; i < offices.length; i++)
-            {
-            var option = document.createElement("option");
-                option.text = offices[i];
-                option.value = offices[i];
-                officeSelect.add(option);
-            }
-        });        
+                  
         

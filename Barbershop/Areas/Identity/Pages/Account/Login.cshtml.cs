@@ -122,7 +122,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
                 if (user != null)
                 {
                     // Sign in the user with their username
-                    var result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe,  lockoutOnFailure: true);
+                    var result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, true,  lockoutOnFailure: true);
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User logged in.");

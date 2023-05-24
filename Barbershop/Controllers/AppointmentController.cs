@@ -120,7 +120,7 @@ namespace Barbershop.Controllers
 
         //}
 
-        public IActionResult GetAvailableTime(int barberId, DateTime date)
+        public JsonResult GetAvailableTime(int barberId, DateTime date)
         {
             BarberSchedule schedule = _db.BarberSchedule.FirstOrDefault(s => s.BarberId == barberId && s.Date == date);
 
@@ -168,7 +168,7 @@ namespace Barbershop.Controllers
             return Json(new { success = true, availableTimes });
         }
 
-        public IActionResult GetWorkPostiion(int barberId)
+        public JsonResult GetWorkPostiion(int barberId)
         {
             var barber = _db.Barbers.Include(b=> b.WorkPosition).FirstOrDefault(b => b.Id== barberId);
 
@@ -200,23 +200,52 @@ namespace Barbershop.Controllers
 
         }
 
-        public IActionResult SetEndTime(TimeSpan startTime, int addTime, int barberId)
+        public JsonResult SetServicePrice(int serviceId)
         {
-            BarberSchedule barber = _db.BarberSchedule.FirstOrDefault(b => b.BarberId == barberId);
+            var service = _db.Services.FirstOrDefault(s=>s.Id == serviceId);
 
-            TimeSpan lastTime = barber.EndTime;
-
-            TimeSpan endTime = startTime.Add(TimeSpan.FromMinutes(addTime));
-
-            if (endTime < lastTime)
+            if(service != null)
             {
-                return Json(new { success = true, endTime });
+                var traineePrice = service.traineePrice;
+                var barberPrice = service.barberPrice;
+                var seniorPrice = service.seniorPrice;
+
+                return Json(new { success = true, traineePrice, barberPrice, seniorPrice });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Помилка на стороні сервера" });
+            }
+
+        }
+
+        public JsonResult SetEndTime(TimeSpan startTime, int addTime, int barberId, DateTime scheduleDate)
+        {
+            BarberSchedule barber = _db.BarberSchedule.FirstOrDefault(b => b.BarberId == barberId && b.Date == scheduleDate);
+
+            if(barber != null)
+            {
+                TimeSpan lastTime = barber.EndTime;
+
+                TimeSpan endTime = startTime.Add(TimeSpan.FromMinutes(addTime));
+
+                if (endTime <= lastTime)
+                {
+                    return Json(new { success = true, endTime });
+                }
+
+                else
+                {
+                    return Json(new { success = false, message = "Барбер в цей час не працює" });
+                }
             }
 
             else
             {
-                return Json(new { success = false, message = "Барбер в цей час не працює" });
-            }           
+                return Json(new { success = false, message = "Помилка на сервері" });
+            }
+
+                  
         }
 
     }

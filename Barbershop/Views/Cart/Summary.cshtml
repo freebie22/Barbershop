@@ -74,31 +74,6 @@
                                     </div>
                                     <div class="col-9">
                                         <select id="regionSelect" asp-for="BarbershopUser.Region" type="text" class="form-control">
-                                            <option disabled selected value="">--Оберіть область--</option>
-                                            <option value="Вінницька область">Вінницька область</option>
-                                            <option value="Волинська область">Волинська область</option>
-                                            <option value="Дніпропетровська область">Дніпропетровська область</option>
-                                            <option value="Донецька область">Донецька область</option>
-                                            <option value="Житомирська область">Житомирська область</option>
-                                            <option value="Закарпатська область">Закарпатська область</option>
-                                            <option value="Запорізька область">Запорізька область</option>
-                                            <option value="Івано-Франківська область">Івано-Франківська область</option>
-                                            <option value="Київська область">Київська область</option>
-                                            <option value="Кіровоградська область">Кіровоградська область</option>
-                                            <option value="Луганська область">Луганська область</option>
-                                            <option value="Львівська область">Львівська область</option>
-                                            <option value="Миколаївська область">Миколаївська область</option>
-                                            <option value="Одеська область">Одеська область</option>
-                                            <option value="Полтавська область">Полтавська область</option>
-                                            <option value="Рівненська область">Рівненська область</option>
-                                            <option value="Сумська область">Сумська область</option>
-                                            <option value="Тернопільська область">Тернопільська область</option>
-                                            <option value="Харківська область">Харківська область</option>
-                                            <option value="Херсонська область">Херсонська область</option>
-                                            <option value="Хмельницька область">Хмельницька область</option>
-                                            <option value="Черкаська область">Черкаська область</option>
-                                            <option value="Чернівецька область">Чернівецька область</option>
-                                            <option value="Чернігівська область">Чернігівська область</option>
                                             <span asp-validation-for="BarbershopUser.Region" class="text-danger"></span>
                                         </select>
                                         
@@ -110,7 +85,6 @@
                                     </div>
                                     <div class="col-9">
                                         <select id="citySelect" asp-for="BarbershopUser.City" type="text" class="form-control" >
-                                            <option disabled selected value="">--Оберіть місто--</option>
                                             <span asp-validation-for="BarbershopUser.City" class="text-danger"></span>
                                         </select>
                                     </div>
@@ -121,7 +95,6 @@
                                     </div>
                                     <div class="col-9">
                                         <select id="officeSelect" asp-for="BarbershopUser.PostOffice" type="text" class="form-control">
-                                        <option disabled selected value="">--Оберіть відділення--</option>
                                             <span asp-validation-for="BarbershopUser.PostOffice" class="text-danger"></span>
                                         </select>
                                     </div>
@@ -191,60 +164,62 @@
                 </div>               
             </div>
         </div>
+    </div>
 </form>
 
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/Summary.js"></script>
+    <script src="~/js/CartSummary.js"></script>
     <script>
-    </script>
-    <script>
-        function toggleScript() {
-            var paymentTypeSelect = document.querySelector('#payment-type-select');
-            var dropinContainer = document.querySelector('#dropin-container');
+        $(document).ready(function() {
+            function toggleScript() {
+                var paymentTypeSelect = document.querySelector('#payment-type-select');
+                var dropinContainer = document.querySelector('#dropin-container');
 
-            if (paymentTypeSelect.value === '@WC.ReceivePay') {
-                // remove the Braintree script from the page
-                var existingScript = document.querySelector('#braintree-script');
-                if (existingScript) {
-                    existingScript.remove();
+                if (paymentTypeSelect.value === '@WC.ReceivePay') {
+                    // remove the Braintree script from the page
+                    var existingScript = document.querySelector('#braintree-script');
+                    if (existingScript) {
+                        existingScript.remove();
+                    }
+                    // remove the dropin container from the page
+                    if (dropinContainer) {
+                        dropinContainer.remove();
+                    }
                 }
-                // remove the dropin container from the page
-                if (dropinContainer) {
-                    dropinContainer.remove();
-                }
-            }
-            else {
-                // re-add the Braintree script to the page
-                var script = document.createElement('script');
-                script.id = 'braintree-script';
-                script.src = 'https://js.braintreegateway.com/web/dropin/1.34.0/js/dropin.min.js';
-                document.head.appendChild(script);
+                else {
+                    // re-add the Braintree script to the page
+                    var script = document.createElement('script');
+                    script.id = 'braintree-script';
+                    script.src = 'https://js.braintreegateway.com/web/dropin/1.34.0/js/dropin.min.js';
+                    document.head.appendChild(script);
 
-                // add the dropin container back to the page
-                var newDropinContainer = document.createElement('div');
-                newDropinContainer.id = 'dropin-container';
-                document.querySelector('.checkout-container').appendChild(newDropinContainer);
+                    // add the dropin container back to the page
+                    var newDropinContainer = document.createElement('div');
+                    newDropinContainer.id = 'dropin-container';
+                    document.querySelector('.checkout-container').appendChild(newDropinContainer);
 
-                var client_token = "@ViewBag.ClientToken";
-                var form = document.querySelector('#payment-form');
-                braintree.dropin.create({
-                    authorization: client_token,
-                    container: '#dropin-container'
-                }, function (createErr, instance) {
-                    form.addEventListener('submit', function () {
-                        event.preventDefault();
-                        //Add the nonce to the form and submit
-                        instance.requestPaymentMethod(function (err, payload) {
-                            // Submit payload.nonce to your server
-                            document.querySelector('#nonce').value = payload.nonce;
-                            form.submit();
+                    var client_token = "@ViewBag.ClientToken";
+                    var form = document.querySelector('#payment-form');
+                    braintree.dropin.create({
+                        authorization: client_token,
+                        container: '#dropin-container'
+                    }, function (createErr, instance) {
+                        form.addEventListener('submit', function () {
+                            event.preventDefault();
+                            //Add the nonce to the form and submit
+                            instance.requestPaymentMethod(function (err, payload) {
+                                // Submit payload.nonce to your server
+                                document.querySelector('#nonce').value = payload.nonce;
+                                form.submit();
+                            });
                         });
                     });
-                });
+                }
             }
-        }
+        });
+        
     </script>
     
 }

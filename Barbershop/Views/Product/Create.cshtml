@@ -92,7 +92,6 @@
                     </div>
                     <div class="col-8">
                         <select asp-for="Product.ProductCategoryId" asp-items="@Model.ProductCategorySelectList" class="form-control mb-2">
-                            @*<select asp-for="CategoryId" asp-items="@ViewData["CategoryDropDown"] as IEnumerable<SelectListItem>" class="form-control mb-2">*@
                             <option disabled selected>--Оберіть категорію товару--</option>
                         </select>
                         <span asp-validation-for="Product.ProductCategoryId" class="text-danger"></span>
