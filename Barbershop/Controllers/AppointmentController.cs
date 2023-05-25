@@ -219,6 +219,24 @@ namespace Barbershop.Controllers
 
         }
 
+        [HttpPost]
+        public JsonResult CalculateTotalPrice(List<int> selectedServices)
+        {
+            var services = _db.Services.Where(s => selectedServices.Contains(s.Id)).ToList();
+            if (services.Any())
+            {
+                double totalTraineePrice = services.Sum(s => s.traineePrice);
+                double totalBarberPrice = services.Sum(s => s.barberPrice);
+                double totalSeniorPrice = services.Sum(s => s.seniorPrice);
+
+                return Json(new { success = true, totalTraineePrice, totalBarberPrice, totalSeniorPrice });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Помилка на стороні сервера" });
+            }
+        }
+
         public JsonResult SetEndTime(TimeSpan startTime, int addTime, int barberId, DateTime scheduleDate)
         {
             BarberSchedule barber = _db.BarberSchedule.FirstOrDefault(b => b.BarberId == barberId && b.Date == scheduleDate);

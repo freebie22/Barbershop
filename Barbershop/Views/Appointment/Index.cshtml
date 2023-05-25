@@ -59,8 +59,8 @@
                                                     <button type="button" class="btn btn-dark m-3" id="searchButton">Знайти час для запису</button>
                                             </div>
                                             <div class="form-group mt-2">
-                                                <span id="spanEndTime"></span>
-                                                <button type="button" id="buttonEndTime">Перевірити кінцевий час</button>
+                                                <span id="spanPrice"></span>
+                                                <button type="button" id="buttonPrice">Перевірити ціну</button>
                                             </div>
                                             <div class="form-group mt-2">
                                                     <div id="services" style="justify-content: center">
@@ -364,7 +364,7 @@
             var totalPrice = 0;
             var totalDuration = 0;
 
-
+            var specialization;
 
             $('.select-barber').click(function () {
                 var barberId = $(this).data('barber-id');
@@ -372,6 +372,8 @@
 
                 $('#selectedBarber').val(barberName);
                 $('#barberId').val(barberId);
+
+                $(this).removeAttr('data-barber-id');
 
                 $('.specName').each(function () {
                     var specName = $(this);
@@ -387,7 +389,7 @@
                             data: { barberId: barberId },
                             success: function (response) {
                                 if (response.success) {
-                                    var specialization = response.specialization;
+                                    specialization = response.specialization;
 
                                     if (specialization === "Стажер") {
                                         specName.text(traineeName);
@@ -416,21 +418,25 @@
                                                     var seniorPrice = response.seniorPrice;
 
                                                     var PriceService = 0;
+                                                    var SecretPrice = 0;
 
                                                     if (specialization === "Стажер") {
                                                         PriceService = traineePrice;
+                                                        SecretPrice = traineePrice;
                                                         servicePriceElement.text(PriceService + ' грн');
                                                     }
                                                     if (specialization === "Барбер") {
                                                         PriceService = barberPrice;
+                                                        SecretPrice = barberPrice;
                                                         servicePriceElement.text(PriceService + ' грн');
                                                     }
                                                     if (specialization === "Топ-барбер") {
                                                         PriceService = seniorPrice;
+                                                        SecretPrice = seniorPrice;
                                                         servicePriceElement.text(PriceService + ' грн');
                                                     }
 
-                                                    servicePriceElement.data('price', PriceService);
+                                                    servicePriceElement.data('price', SecretPrice);
                                                 }
                                             },
                                             error: function () {
@@ -475,13 +481,13 @@
                     var serviceTime = parseInt(serviceDurationElement.data('service-duration'));
 
                     if (isChecked) {
-                        totalPrice += servicePrice;
+                        //totalPrice += servicePrice;
                         totalDuration += serviceTime;
                         selectedServices.push(serviceId);
                         serviceItem.addClass('selectedItem');
                     serviceItem.removeClass('notSelectedItem');
                     } else {
-                        totalPrice -= servicePrice;
+                        //totalPrice -= servicePrice;
                         totalDuration -= serviceTime;
                         var index = selectedServices.indexOf(serviceId);
                         if(index !== -1)
@@ -492,7 +498,7 @@
                     serviceItem.addClass('notSelectedItem');
                     }
 
-                    totalPriceElement.text(totalPrice + ' грн.');
+                    
                     totalDurationElement.text(totalDuration + ' хв.');
                 });
 
@@ -507,10 +513,32 @@
                 {
                     errorTime.text('');
                     let price = $('#Price');
-                    let totalPrice = $('#totalPrice');
 
-                    price.val(parseInt(totalPrice.text().trim()));
-
+                    $.ajax({
+                        url: '@Url.Action("CalculateTotalPrice","Appointment")',
+                        type: 'POST',
+                        data: { "selectedServices": selectedServices },
+                        success: function (response) {
+                            if (response.success) {
+                                if (specialization === "Стажер") {
+                                    totalPriceElement.text(response.totalTraineePrice + ' грн');
+                                    price.val(response.totalTraineePrice);
+                                }
+                                if (specialization === "Барбер") {
+                                    totalPriceElement.text(response.totalBarberPrice + ' грн');
+                                    price.val(response.totalBarberPrice);
+                                }
+                                if (specialization === "Топ-барбер") {
+                                    totalPriceElement.text(response.totalSeniorPrice + ' грн');
+                                    price.val(response.totalSeniorPrice);
+                                }
+                            }
+                            else {
+                                totalPriceElement.text(response.message);
+                            }
+                        }
+                    });
+   
                     let endTimeElement = $('#EndTime');
 
                     let startTime = $('#selectedTime').val();
@@ -555,6 +583,7 @@
                     }
                 }                    
             });
+
             
             $('#selectServicesButton').click(function() {
                 $('#servicesModal').modal('show');
@@ -678,12 +707,12 @@
                 $('#timeModal').modal('hide');
             });
 
-            $('#buttonEndTime').click(function() {
-                var endTime = $('#EndTime').val();
+            $('#buttonPrice').click(function() {
+                var price = $('#Price').val();
 
-               var testTime = $('#spanEndTime');
+               var testPrice = $('#spanPrice');
 
-               testTime.text(endTime);
+                testPrice.text(price);
 
             });
 
