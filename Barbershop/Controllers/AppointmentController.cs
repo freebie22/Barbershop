@@ -18,7 +18,7 @@ namespace Barbershop.Controllers
             _db = db;
         }
 
-        public IActionResult Index(int? barberId)
+        public IActionResult Index(int barberId = 0)
         {
             List<Barbers> barbers = _db.Barbers.Include(b => b.WorkPosition).OrderBy(b=> b.WorkPosition.PositionName == "Топ-барбер" ? 0 : 
                                                                                             b.WorkPosition.PositionName == "Барбер" ? 1 :
@@ -29,17 +29,74 @@ namespace Barbershop.Controllers
                 {
                     Text = i.FullName,
                     Value = i.Id.ToString(),
-                    Selected = i.Id == barberId,
                 }),
                 Appointment = new Appointment()
                 {
                     Date = DateTime.Now.Date,
+                    BarberId = barberId
                 },
                 BarberDetails = barbers,
                 Services = _db.Services.ToList(),
                               
             };
             return View(appointmentVM);
+        }
+
+        public JsonResult SetSelectedBarber(int barberId)
+        {
+           if (barberId != 0)
+           {
+               var barber = _db.Barbers.FirstOrDefault(b => b.Id == barberId);
+               var barberName = barber.FullName;
+
+               return Json(new { success = true, barberName });
+           }
+
+           else
+           {
+               return Json(new { success = false, message = "Оберіть барбера" });
+           }
+          
+        }
+
+        public JsonResult GetBarberInfo()
+        {
+            var barbers = _db.Barbers.Include(b => b.WorkPosition).OrderBy(b => b.WorkPosition.PositionName == "Топ-барбер" ? 0 :
+                                                                                            b.WorkPosition.PositionName == "Барбер" ? 1 :
+                                                                                            b.WorkPosition.PositionName == "Стажер" ? 2 : 3).AsEnumerable();
+
+            List<int> barbersIds = new List<int>();
+            List<string> barbersNames = new List<string>();
+            List<string> barbersWorkPositions = new List<string>();
+            List<string> barbersPhotos = new List<string>();
+
+            if (barbers.Count() > 0)
+            {
+                foreach (var barber in barbers)
+                {
+                    var Id = barber.Id;
+                    var Name = barber.FullName;
+                    var WorkPosition = barber.WorkPosition.PositionName;
+                    var Photos = barber.BarberImage;
+
+                    barbersIds.Add(Id);
+                    barbersNames.Add(Name);
+                    barbersWorkPositions.Add(WorkPosition);
+                    barbersPhotos.Add(Photos);
+                }
+
+                var barberPath = WC.BarberPath;
+
+                return Json(new { success = true, barbersIds, barbersNames, barbersWorkPositions, barbersPhotos, barberPath });
+            }
+
+
+
+            else
+            {
+                return Json(new { success = false, message = "Помилка на стороні сервера" });
+            }
+
         }
 
         [HttpPost]
@@ -54,10 +111,9 @@ namespace Barbershop.Controllers
 
             appointmentVM.Appointment.AppointmentStatus = WC.AppointmentReceived;
 
-            appointmentVM.Appointment.AppointmentType = "Онлайн";
+            var email = appointmentVM.Appointment.Email;
 
-            appointmentVM.Appointment.PhoneNumber = "+3806850340888";
-            appointmentVM.Appointment.Email = "bojkov755@gmail.com";
+            appointmentVM.Appointment.AppointmentType = "Онлайн";
 
             if (appointmentVM.ServicesIds == null)
             {
@@ -120,13 +176,17 @@ namespace Barbershop.Controllers
 
         //}
 
+
+
+
+        [HttpPost]
         public JsonResult GetAvailableTime(int barberId, DateTime date)
         {
             BarberSchedule schedule = _db.BarberSchedule.FirstOrDefault(s => s.BarberId == barberId && s.Date == date);
 
             if (schedule == null)
             {
-                return Json(new { success = false, message = "На дану дату відсутні години для запису" }) ;
+                return Json(new { success = false, message = "Барбер в цей день не працює" }) ;
             }
 
 
@@ -150,7 +210,7 @@ namespace Barbershop.Controllers
                 bool isAvailable = true;
                 foreach (var appointment in appointments)
                 {
-                    if (currentTime >= appointment.StartTime && currentTime < appointment.EndTime)
+                    if (currentTime >= appointment.StartTime.Subtract(TimeSpan.FromMinutes(15)) && currentTime < appointment.EndTime)
                     {
                         isAvailable = false;
                         break;
@@ -164,9 +224,42 @@ namespace Barbershop.Controllers
 
                 currentTime += TimeSpan.FromMinutes(15);
             }
-           
-            return Json(new { success = true, availableTimes });
+
+            List<TimeSpan> morningTimes = new List<TimeSpan>();
+            List<TimeSpan> dayTimes = new List<TimeSpan>();
+            List<TimeSpan> eveningTimes = new List<TimeSpan>();
+
+            if (availableTimes.Count > 0)
+            {
+                foreach(var time in availableTimes)
+                {
+                    var hour = time.Hours;
+
+                    if (hour >= 6 && hour < 12)
+                    {
+                        morningTimes.Add(time);
+                    }
+                    if (hour >= 12 && hour < 18)
+                    {
+                        dayTimes.Add(time);
+                    }
+                    if (hour >= 18 && hour < 24)
+                    {
+                        eveningTimes.Add(time);
+                    }
+                }
+                
+                
+                return Json(new { success = true, morningTimes, dayTimes, eveningTimes });
+            }           
+            else
+            {
+                return Json(new { success = false, message = "На цей день немає вільних годин для запису" });
+            }
+            
         }
+
+
 
         public JsonResult GetWorkPostiion(int barberId)
         {
@@ -200,17 +293,31 @@ namespace Barbershop.Controllers
 
         }
 
-        public JsonResult SetServicePrice(int serviceId)
+        public JsonResult SetServicePrice(int serviceId, string specialization)
         {
             var service = _db.Services.FirstOrDefault(s=>s.Id == serviceId);
 
             if(service != null)
             {
-                var traineePrice = service.traineePrice;
-                var barberPrice = service.barberPrice;
-                var seniorPrice = service.seniorPrice;
+                double price = 0;
+                switch(specialization)
+                {
+                    case "Стажер":
+                        price = service.traineePrice; 
+                        break;
+                    case "Барбер":
+                        price = service.barberPrice;
+                        break;
+                    case "Топ-барбер":
+                        price = service.seniorPrice;
+                        break;
 
-                return Json(new { success = true, traineePrice, barberPrice, seniorPrice });
+                }
+
+                TimeSpan duration = service.Duration;
+                
+
+                return Json(new { success = true, price, duration });
             }
             else
             {
@@ -220,16 +327,34 @@ namespace Barbershop.Controllers
         }
 
         [HttpPost]
-        public JsonResult CalculateTotalPrice(List<int> selectedServices)
+        public JsonResult CalculateTotalPrice(List<int> selectedServices, string specialization)
         {
             var services = _db.Services.Where(s => selectedServices.Contains(s.Id)).ToList();
             if (services.Any())
             {
-                double totalTraineePrice = services.Sum(s => s.traineePrice);
-                double totalBarberPrice = services.Sum(s => s.barberPrice);
-                double totalSeniorPrice = services.Sum(s => s.seniorPrice);
+                double totalPrice = 0;
+                switch(specialization)
+                {
+                    case "Стажер":
+                        totalPrice = services.Sum(s => s.traineePrice);
+                        break;
+                    case "Барбер": 
+                      totalPrice  = services.Sum(s => s.barberPrice);
+                        break;
+                    case "Топ-барбер":
+                        totalPrice = services.Sum(s => s.seniorPrice);
+                        break;
 
-                return Json(new { success = true, totalTraineePrice, totalBarberPrice, totalSeniorPrice });
+                }
+
+                TimeSpan totalDuration = TimeSpan.Zero;
+
+                foreach(var service in services)
+                {
+                    totalDuration += service.Duration;
+                }
+
+                return Json(new { success = true, totalPrice, totalDuration });
             }
             else
             {
@@ -237,15 +362,26 @@ namespace Barbershop.Controllers
             }
         }
 
-        public JsonResult SetEndTime(TimeSpan startTime, int addTime, int barberId, DateTime scheduleDate)
+        public JsonResult SetStartTime(TimeSpan startTime)
         {
-            BarberSchedule barber = _db.BarberSchedule.FirstOrDefault(b => b.BarberId == barberId && b.Date == scheduleDate);
+            if(!(startTime < DateTime.Now.TimeOfDay.Add(TimeSpan.FromMinutes(15))))
+            {
+                return Json(new {success = true, startTime});
+            }
+            else
+            {
+                return Json(new { success = false, message = "Будь-ласка, оберіть час для запису з наявних" });
+            }
+        }
+        public JsonResult SetEndTime(TimeSpan startTime, TimeSpan addTime, int barberId, DateTime scheduleDate)
+        {
+            BarberSchedule? barber = _db.BarberSchedule.FirstOrDefault(b => b.BarberId == barberId && b.Date == scheduleDate);
 
             if(barber != null)
             {
                 TimeSpan lastTime = barber.EndTime;
 
-                TimeSpan endTime = startTime.Add(TimeSpan.FromMinutes(addTime));
+                TimeSpan endTime = startTime.Add(addTime);
 
                 if (endTime <= lastTime)
                 {
@@ -261,10 +397,11 @@ namespace Barbershop.Controllers
             else
             {
                 return Json(new { success = false, message = "Помилка на сервері" });
-            }
-
-                  
+            }       
         }
+
+        
+
 
     }
 }
