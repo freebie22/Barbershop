@@ -18,17 +18,17 @@ namespace Barbershop.Models
         public virtual Barbers Barber { get; set; }
         [Required, Column(TypeName = "date")]
         public DateTime Date { get; set; }
-        [Required]
+        [Required, Range(typeof(TimeSpan), "07:00", "23:59", ErrorMessage = "Оберіть будь-ласка час для запису")]
         public TimeSpan StartTime { get; set; }
-        [Required]
+        [Required, Range(typeof(TimeSpan), "07:00", "23:59", ErrorMessage = "Оберіть будь-ласка час для запису")]
         public TimeSpan EndTime { get; set; }
-        [Required, Range(1, 10000)]
+        [Required, Range(1, 10000, ErrorMessage = "Оберіть хоча б одну послугу")]
         public decimal TotalPrice { get; set; }
         [Required]
         public virtual ICollection<Services> Services { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Вкажіть свій номер телефону")]
         public string PhoneNumber { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Вкажіть свою електронну пошту")]
         public string Email { get; set; }
         [Required]
         public string AppointmentType { get; set; }

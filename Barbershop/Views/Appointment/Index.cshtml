@@ -1,11 +1,6 @@
 ﻿@model Barbershop.Models.ViewModels.AppointmentVM
 @using System.Globalization
 
-@{
-    DateTime today = DateTime.Today;
-    CultureInfo ukrainianCulture = new CultureInfo("uk-UA");
-    string dayOfWeek = ukrainianCulture.DateTimeFormat.GetDayName(today.DayOfWeek);
-}
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,9 +22,6 @@
     </style>
 </head>
 <body>
-    @*<a href="https://front.codes/" class="logo" target="_blank">
-        <img src="https://assets.codepen.io/1462889/fcy.png" alt="">
-    </a>*@
     <form method="post">
     <div class="section">
         <div class="container text-center p-3 col-6 rounded" style="background-color: #1F2029;">
@@ -47,24 +39,24 @@
                                         <div class="section text-center">
                                             <h4 class="mb-1 p-2" style="color: #FFEBA7; border:solid; border-width: 2px; display: inline-block">Запис до барбера</h4>
                                             <div class="form-group">
-                                                <label class="mt-2" style="color: #FFEBA7" for="barberId">Обраний барбер:</label>
+                                                    <h3 class="mt-2" style="color: #FFEBA7">Барбер</h3>
                                                 <div class="custom-select">
                                                     <input type="button" class="btn" id="selectedBarber" />
-                                                    <select asp-for="@Model.Appointment.BarberId" asp-items="@Model.Barbers" type="text" id="barberId">
-                                                        <option value="0" selected disabled>-Оберіть барбера-</option>
+                                                    <select asp-for="@Model.Appointment.BarberId" asp-items="@Model.Barbers" style="display: none" type="text" id="barberId">
+                                                        <option value="0" selected>-Оберіть барбера-</option>
                                                     </select>
-
                                                 </div>                                                
                                             <div class="form-group mt-4">
-                                                    <label style="color: #FFEBA7" for="date">Оберіть дату</label>
-                                                    <input asp-for="@Model.Appointment.Date" class="form-control-sm" min="" type="date" id="date" />
-                                                    <br />
+                                                <div class="">
+                                                    <h3 style="color: #FFEBA7">Дата та час запису</h3>
+                                                    <button type="button" class="btn btn-dark" id="searchDate">Знайти дату для запису</button>
                                                     <button type="button" class="btn btn-dark m-3" id="searchButton">Знайти час для запису</button>
+                                                </div>
                                             </div>
-                                            <div class="form-group mt-2">
+@*                                            <div class="form-group mt-2 row">
                                                 <span id="spanPrice"></span>
                                                 <button type="button" id="buttonPrice">Перевірити ціну</button>
-                                            </div>
+                                            </div>*@
                                             <div class="form-group mt-2">
                                                     <div id="services" style="justify-content: center">
                                                         <h3 style="color: #FFEBA7">Послуги</h3>
@@ -99,7 +91,7 @@
                                                     <textarea asp-for="@Model.Appointment.Comment" type="text" class="form-style" style="margin: 0px" placeholder="Коментар до запису" id="logpass" autocomplete="off"></textarea>
                                                 <i class="input-icon uil uil-lock-alt"></i>
                                             </div>
-                                            <button type = "submit" class="btn mt-4">Записатись</button>
+                                            <button type = "submit" onclick="return validateInput()" class="btn mt-4">Записатись</button>
                                         </div>
                                     </div>
                                 </div>
@@ -126,11 +118,35 @@
             </div>
         </div>
     </div>
+        <div class="modal fade" id="dateModal" tabindex="-1" aria-labelledby="dateModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="background-color: #1F2029">
+                    <div class="modal-header row text-center" style="justify-content: center; border-bottom-color: #FFEBA7; margin: 0px">
+                        <h5 class="modal-title" id="dateModalLabel" style="color: #FFEBA7">Доступні дні для запису до барберів</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" style="justify-content:center">
+                            <ul id="datePicker" class="form-control text-center" style="border: none; background-color: #1F2029">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center" style="border-top-color: #FFEBA7; justify-content: center">
+                        <div class="row">
+                            <div id="divDateSelector">
+                                <h6 style="color: #FFEBA7" for="selectedTime">Обрана дата для запису</h6>
+                                <input type="date" style="border:solid; border-radius: 1px; border-color: #FFEBA7; color: #FFEBA7; text-align: center" readonly class="form-style p-1" asp-for="@Model.Appointment.Date" id="dateSelect" />
+                            </div>
+                            <button type="button" id="cancelDateButton" class="btn btn-secondary mt-2" data-dismiss="modal">Скасувати</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     <div class="modal fade" id="timeModal" tabindex="-1" aria-labelledby="timeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content" style="background-color: #1F2029">
                 <div class="modal-header row text-center" style="justify-content: center; border-bottom-color: #FFEBA7; margin: 0px">
-                    <h5 class="modal-title" id="timeModalLabel" style="color: #FFEBA7">Доступні години для запису на @dayOfWeek, @DateTime.Today.ToShortDateString()</h5>
+                    <h5 class="modal-title" id="timeModalLabel" style="color: #FFEBA7"></h5>
                     <h6 id="errorStartTime" class="text-danger"></h6>
                 </div>
                 <div class="modal-body">
@@ -145,8 +161,8 @@
                         <h6 style="color: #FFEBA7" for="selectedTime">Обраний час для запису</h6>
                             <input style="border:solid; border-radius: 1px; border-color: #FFEBA7; color: #FFEBA7; text-align: center" readonly class="form-style p-1" asp-for="@Model.Appointment.StartTime" id="selectedTime" />
                       </div>
-                        <button type="button" id="confirmButton" class="btn btn-dark mt-3">Підтвердити</button>
-                        <button type="button" id="cancelButton" class="btn btn-secondary mt-2" data-dismiss="modal">Скасувати</button>
+                        <button type="button" id="confirmTimeButton" class="btn btn-dark mt-3">Підтвердити</button>
+                        <button type="button" id="cancelTimeButton" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Скасувати</button>
                     </div>
                 </div>
             </div>
@@ -187,15 +203,119 @@
     </div>
     </form>
     
-
-
     @{
         <partial name="_ValidationScriptsPartial" />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     }
 
     <script>
         $(document).ready(function () {
 
+
+            if($('#dateSelect').val().toString() === '0001-01-01')
+            {
+                $('#divDateSelector').addClass('d-none');
+            }
+
+            else
+            {
+                $('#divDateSelector').removeClass('d-none');
+            }
+
+            $('#searchDate').click(function () {
+                $('#dateModal').modal('show');
+
+                var testDate = $('#dateTest').val();
+
+                var dateIdentificators = [];
+
+
+                $.ajax({
+                    url: '@Url.Action("GetAvaliableDate", "Appointment")',
+                    type: 'POST',
+                    data: { "barberId": $('#barberId').val() },
+                    success: function (response) {
+                        if (response.success) {
+                            var barbersDates = response.barbersDates;
+                            var barbersIds = response.barbersIds;
+                            var barbersNames = response.barbersNames;
+
+                            var datePicker = $('#datePicker');
+
+                            let containerDate = '';
+
+                            for (let i = 0; i < barbersIds.length; i++) {
+                                let date = new Date(barbersDates[i]);
+                                let formattedDate = date.toLocaleDateString();
+
+                                if (i > 0 && barbersIds[i] !== barbersIds[i - 1]) {
+                                    containerDate += '<h5 class="p-1" style="color: #FFEBA7; border:solid; border-radius: 1px; border-color: #FFEBA7; color: #FFEBA7; text-align: center">' + barbersNames[i] + '<h6>';
+                                } else if (i === 0) {
+                                    containerDate += '<h5 class="p-1" style="color: #FFEBA7; border:solid; border-radius: 1px; border-color: #FFEBA7; color: #FFEBA7; text-align: center"">' + barbersNames[i] + '<h6>';
+                                }
+
+                                if(testDate > 0)
+                                {
+                                    $('#dateModalLabel').text('Доступні дні для запису до барбера - ' + barbersNames[0]);
+                                }
+
+                                dateIdentificators.push(barbersIds[i]);
+
+                                let dateElement = '<input readonly class="btn select-date m-3" value = "'+ formattedDate +'" />';
+                                containerDate += dateElement;
+
+                                datePicker.html(containerDate);
+
+                                $('.select-date').each(function (index) {
+                                    $(this).data('barber-id', dateIdentificators[index]);
+                                    $(this).data('barber-name', barbersNames[index]);
+                                    $(this).data('barber-date', barbersDates[index]);
+                                });
+
+                            }
+                        } else {
+                            datePicker.html(response.message);
+                        }
+                    }
+                });
+
+            });
+
+            var dateSelect = $('#dateSelect');
+
+            $(document).on('click', '.select-date', function() {
+                let idBarber = $(this).data('barber-id');
+                let nameBarber = $(this).data('barber-name');
+                dateSelect = $(this).data('barber-date');
+                let today = new Date(dateSelect);
+                let dd = today.getDate();
+                let mm = today.getMonth() + 1;
+                let yyyy = today.getFullYear();
+
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+
+                let dayString = yyyy + '-' + mm + '-' + dd;
+                $('#dateSelect').val(dayString);
+                $('#barberId').val(idBarber);
+                
+                setServiceInfo($('#barberId').val());
+
+                $('#selectedBarber').val(nameBarber);
+                $('#divDateSelector').removeClass('d-none');
+                $('#dateModal').modal('hide');
+            });
+
+            $('#selectedTime').val('Оберіть час')
+
+            $('#totalPrice').text('Оберіть послуги.')
+
+            $('#totalDuration').text('Оберіть послуги.')
 
             var selectedBarber = $('#selectedBarber');
 
@@ -208,6 +328,8 @@
                 success: function (response) {
                     if (response.success) {
                         selectedBarber.val(response.barberName);
+
+                        setServiceInfo(barberId);
                     }
                     else {
                         selectedBarber.val(response.message);
@@ -298,94 +420,41 @@
 
             var specialization;
 
+            var selectedServices = [];
+
             $(document).on('click','.select-barber',function () {
+
+                $('#Price').val(0);
+
+                $('#time').val('00:00:00');
+
+                $('#EndTime').val('00:00:00');
+
+                $('#selectedTime').val('Оберіть час')
+
+                selectedServices = [];
+
+                $('#totalPrice').text('Оберіть послуги.')
+
+                $('#totalDuration').text('Оберіть послуги.')
+
+                $('#choosenServices').empty();
+
+                $('li[name=listService]').each(function () {
+                    let check = $(this).find('input[name=selectedServices]');
+                    check.prop('checked', false);
+                    $(this).addClass('notSelectedItem');
+                });
+
                 barberId = $(this).data('barber-id');
                 var barberName = $(this).data('barber-name');
+                $('selectedBarber').data('barber-id', $(this).data('barber-id'));
 
                 $('#selectedBarber').val(barberName);
                 $('#barberId').val(barberId);
 
-                $('.specName').each(function () {
-                    var specName = $(this);
-
-                    var traineeName = $(specName).data('trainee-name');
-                    var barberName = $(specName).data('barber-name');
-                    var seniorName = $(specName).data('senior-name');
-
-                    $.ajax(
-                        {
-                            url: '@Url.Action("GetWorkPostiion", "Appointment")',
-                            type: 'GET',
-                            data: { barberId: barberId },
-                            success: function (response) {
-                                if (response.success) {
-                                    specialization = response.specialization;
-
-                                    if (specialization === "Стажер") {
-                                        specName.text(traineeName);
-                                    }
-                                    if (specialization === "Барбер") {
-                                        specName.text(barberName);
-                                    }
-                                    if (specialization === "Топ-барбер") {
-                                        specName.text(seniorName);
-                                    }
-                                    $('.service-price').each(function () {
-                                        var servicePriceElement = $(this);
-                                        let listGroupItem = $(this).closest('.list-group-item');
-                                        let checkBoxService = listGroupItem.find('input[name=selectedServices]');
-                                        let serviceId = checkBoxService.val();
-
-                                        $.ajax({
-                                            url: '@Url.Action("SetServicePrice", "Appointment")',
-                                            type: 'GET',
-                                            data: { "serviceId": serviceId, "specialization" : specialization },
-                                            success: function (response) {
-                                                if (response.success) {
-
-                                                    var price = response.price;
-
-                                                    var duration = response.duration;
-
-                                                    var PriceService = 0;
-                                                    var SecretPrice = 0;
-
-                                                    PriceService = price;
-                                                    SecretPrice = price;
-                                                        servicePriceElement.text(PriceService + ' грн');
-
-                                                    servicePriceElement.data('price', SecretPrice);
-
-                                                    $('.service-duration').each(function () {
-                                                        var serviceDurationElement = $(this);
-                                                        var setDuration = $(this).data('service-duration', duration);
-
-
-                                                        var serviceDuration = $(this).data('service-duration');
-
-                                                        var splitDuration = parseInt(serviceDuration.split(':')[1]);
-                                                        serviceDurationElement.text(splitDuration + ' хв');
-                                                    });
-
-                                                    totalPrice = 0;
-                                                    totalDuration = 0;
-
-                                                }
-                                            },
-                                            error: function () {
-
-                                            }
-                                        });
-
-                                    });
-                                }
-
-                            }
-                        }
-                    );
-                });
-               
-               
+                setServiceInfo($('#barberId').val());
+                              
 
                 $('#barberModal').modal('hide');
             });
@@ -393,7 +462,6 @@
           
                 var totalPriceElement = $('#totalPrice');
                 var totalDurationElement = $('#totalDuration');
-                var selectedServices = [];
 
                 $('input[name="selectedServices"]').change(function () {
                     var isChecked = $(this).is(':checked');
@@ -414,7 +482,7 @@
                         {
                             selectedServices.splice(index, 1);
                         }
-                        erviceItem.removeClass('selectedItem');
+                        serviceItem.removeClass('selectedItem');
                         serviceItem.addClass('notSelectedItem');
                     }
 
@@ -437,41 +505,20 @@
                 }
                 else
                 {
-                    errorTime.text('');
-                    let price = $('#Price');
 
-                    $.ajax({
-                        url: '@Url.Action("CalculateTotalPrice","Appointment")',
-                        type: 'POST',
-                        data: { "selectedServices": selectedServices, "specialization": specialization },
-                        success: function (response) {
-                            if (response.success) {
-                                    totalPriceElement.text(response.totalPrice + ' грн');
-                                    price.val(response.totalPrice);
+                let endTimeElement = $('#EndTime');
 
-                                    getDuration = response.totalDuration;
+                let startTime = $('#selectedTime').val();
 
-                                    var DurationHours = parseInt(getDuration.split(':')[0]);
-                                    var DurationMinutes = parseInt(getDuration.split(':')[1]);
+                let barberId = $('#barberId').val();
 
-                                    var durationString = DurationHours + ' год. ' + DurationMinutes + ' хв.';
-
-                                totalDurationElement.text(durationString);
-                                                    let endTimeElement = $('#EndTime');
-
-                                let startTime = $('#selectedTime').val();
-
-                                let addTime = getDuration;
-
-                                let barberId = $('#barberId').val();
-
-                                let scheduleDate = $('#date').val();
+                    let scheduleDate = $('#dateSelect').val();
 
 
                                 $.ajax({
                                     url: '@Url.Action("SetEndTime", "Appointment")',
-                                    type: 'GET',
-                                    data: { startTime: startTime, addTime: addTime, barberId: barberId, scheduleDate: scheduleDate },
+                                    type: 'POST',
+                                    data: { startTime: startTime, barberId: barberId, scheduleDate: scheduleDate, selectedServices: selectedServices },
                                     success: function (response) {
                                         if (response.success) {
                                             let endTime = response.endTime;
@@ -489,20 +536,71 @@
                                                     selected: true
                                                 }));
                                             }
+
+                                            errorTime.text('');
+                                            let price = $('#Price');
+
+                                            let specialization;
+
+                                            $.ajax({
+                                                url: '@Url.Action("GetWorkPostiion", "Appointment")',
+                                                    type: 'GET',
+                                                    data: { barberId: barberId },
+                                                    success: function (response) {
+                                                        if (response.success) {
+                                                            specialization = response.specialization;
+                                                            $.ajax({
+                                                                url: '@Url.Action("CalculateTotalPrice","Appointment")',
+                                                                type: 'POST',
+                                                                data: { "selectedServices": selectedServices, "specialization": specialization },
+                                                                success: function (response) {
+                                                                    if (response.success) {
+                                                                        totalPriceElement.text(response.totalPrice + ' грн');
+                                                                        price.val(response.totalPrice);
+
+                                                                        getDuration = response.totalDuration;
+
+                                                                        var DurationHours = parseInt(getDuration.split(':')[0]);
+                                                                        var DurationMinutes = parseInt(getDuration.split(':')[1]);
+
+
+                                                                        var durationString;
+
+                                                                        if (DurationHours === 0) {
+                                                                            durationString = DurationMinutes + ' хв.';
+                                                                        }
+
+                                                                        if (DurationMinutes === 0) {
+                                                                            durationString = DurationHours + ' год.';
+                                                                        }
+
+                                                                        if (DurationMinutes > 0 && DurationHours > 0) {
+                                                                            durationString = DurationHours + ' год. ' + DurationMinutes + ' хв.';
+                                                                        }
+
+                                                                        totalDurationElement.text(durationString);
+
+                                                                    }
+                                                                    else {
+                                                                        errorTime.text(response.message);
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                            });
+
+                                                                 
                                         }
                                         else {
-                                            errorTime.text(response.message);
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: response.message,
+                                                text: 'Запис до барбера на цей проміжок не доступний'
+                                            });
                                         }
                                     }
                                 });
-
-                                
-                            }
-                            else {
-                                totalPriceElement.text(response.message);
-                            }
-                        }
-                    });
    
 
                 }                    
@@ -510,20 +608,63 @@
 
             
             $('#selectServicesButton').click(function() {
-                $('#servicesModal').modal('show');
+                if ($('#selectedBarber').val().toString() === 'Оберіть барбера') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Не обрано барбера!',
+                    text: 'Будь-ласка, оберіть барбера'
+                });
+                }
+
+                else if ($('#selectedTime').val().toString() === 'Оберіть час') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Не обрано час для запису!',
+                    text: 'Будь-ласка, оберіть час для запису до барбера'
+                })
+                }
+
+                else
+                {
+                   $('#servicesModal').modal('show');
+                }
+
+          
             });
           
 
             $('#searchButton').click(function () {
-                var barberId = $('#barberId').val();
-                var date = $('#date').val();
+                if ($('#dateSelect').val().toString() === '0001-01-01') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Не обрано дату для запису!',
+                        text: 'Будь-ласка, оберіть дату для вибору часу'
+                    })
+                }
+
+  
+                else
+                {
+                    var barberId = $('#barberId').val();
+                let modalTitle = $('#timeModalLabel');
+
+                $.ajax({
+                    url: '@Url.Action("GetDateAndDayForAppointment", "Appointment")',
+                    type: 'GET',
+                    data: { "date": dateSelect },
+                    success: function (response) {
+                        if (response.success) {
+                            modalTitle.text('Доступні години для запису на ' + response.dayOfWeek + ', ' + response.dayStr);
+                        }
+                    }
+                });
 
                 $.ajax({
                     url: '@Url.Action("GetAvailableTime", "Appointment")',
                     type: 'POST',
                     data: { 
                         "barberId": barberId,
-                        "date": date 
+                        "date": dateSelect
                     },
                     success: function (response) {
                         if (response.success) {
@@ -582,19 +723,21 @@
                                 }
                             }
                             else {
-                                timeOptions += '<p>На жаль, немає вільних годин для запису</p>';
+                                timeOptions += '<p style = "color: #FFEBA7">'+ response.message +'</p>';
                             }
 
                             $('#timePicker').html(timeOptions);
                             $('#timeModal').modal('show');
                         } else {
-                            $('#result').html('<p>' + response.message + '</p>');
+                            $('#timePicker').html('<h5 class = "text-center" style = "color: #FFEBA7">' + response.message + '</h5>');
+                                                        $('#timeModal').modal('show');
                         }
                     },
                     error: function () {
                         $('#result').html('<p>An error occurred</p>');
                     }
                 });
+                }   
             });
 
             $(document).on('click', '.time-button', function () {
@@ -606,7 +749,7 @@
 
             var errorStartTime = $('#errorStartTime');
 
-            $('#confirmButton').click(function () {
+            $('#confirmTimeButton').click(function () {
                 var time = '';
                 $('.time-button').each(function () {
                     if ($(this).hasClass('active')) {
@@ -617,10 +760,12 @@
 
                 let errorStartTime = $('#errorStartTime');
 
+
+
                 $.ajax({
                     url: '@Url.Action("SetStartTime","Appointment")',
                     type: 'GET',
-                    data: {"startTime": time},
+                    data: {"startTime": time, "day": $('#date').val()},
                     success: function(response)
                     {
                         if(response.success)
@@ -636,18 +781,23 @@
                         }
                         else
                         {
-                            errorStartTime.text(response.message);
+                            Swal.fire({
+                                icon: 'error',
+                                title: response.message,
+                                text: 'Будь-ласка, оберіть час для запису з наявних'
+                            });
                         }
                     }
                 });
             });
 
             $('#buttonPrice').click(function() {
-                var price = $('#barberId').val();
+
+                var testDate = $('#dateSelect').val().toString();
 
                var testPrice = $('#spanPrice');
 
-                testPrice.text(price);
+                testPrice.text(testDate);
 
             });
 
@@ -674,6 +824,153 @@
         var todayString = yyyy + '-' + mm + '-' + dd;
 
         $('#date').prop('min',todayString);
+    </script>
+    <script>
+        function setServiceInfo(barberId)
+        {
+            $('.specName').each(function () {
+                var specName = $(this);
+
+                var traineeName = $(specName).data('trainee-name');
+                var barberName = $(specName).data('barber-name');
+                var seniorName = $(specName).data('senior-name');
+
+                $.ajax(
+                    {
+                        url: '@Url.Action("GetWorkPostiion", "Appointment")',
+                        type: 'GET',
+                        data: { barberId: barberId },
+                        success: function (response) {
+                            if (response.success) {
+                                specialization = response.specialization;
+
+                                if (specialization === "Стажер") {
+                                    specName.text(traineeName);
+                                }
+                                if (specialization === "Барбер") {
+                                    specName.text(barberName);
+                                }
+                                if (specialization === "Топ-барбер") {
+                                    specName.text(seniorName);
+                                }
+                                $('.service-price').each(function () {
+                                    var servicePriceElement = $(this);
+                                    let listGroupItem = $(this).closest('.list-group-item');
+                                    let checkBoxService = listGroupItem.find('input[name=selectedServices]');
+                                    let serviceId = checkBoxService.val();
+
+                                    $.ajax({
+                                        url: '@Url.Action("SetServicePrice", "Appointment")',
+                                        type: 'GET',
+                                        data: { "serviceId": serviceId, "specialization": specialization },
+                                        success: function (response) {
+                                            if (response.success) {
+
+                                                var price = response.price;
+
+                                                var duration = response.duration;
+
+                                                var PriceService = 0;
+                                                var SecretPrice = 0;
+
+                                                PriceService = price;
+                                                SecretPrice = price;
+                                                servicePriceElement.text(PriceService + ' грн');
+
+                                                servicePriceElement.data('price', SecretPrice);
+
+                                                $('.service-duration').each(function () {
+                                                    var serviceDurationElement = $(this);
+                                                    var setDuration = $(this).data('service-duration', duration);
+
+
+                                                    var serviceDuration = $(this).data('service-duration');
+
+                                                    var splitDuration = parseInt(serviceDuration.split(':')[1]);
+                                                    serviceDurationElement.text(splitDuration + ' хв');
+                                                });
+
+                                                totalPrice = 0;
+                                                totalDuration = 0;
+
+                                            }
+                                        },
+                                        error: function () {
+
+                                        }
+                                    });
+
+                                });
+                            }
+
+                        }
+                    }
+                );
+            });
+        }
+    </script>
+    <script>
+        function validateInput() {
+            var totalPrice = $('#Price').val();
+            var phoneNumber = $('#logname').val();
+            var eMail = $('#logemail').val();
+            var selectedBarber = $('#selectedBarber').val();
+
+            if ($('#dateSelect').val().toString() === '0001-01-01') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Не обрано дату для запису!',
+                    text: 'Будь-ласка, оберіть дату для вибору часу'
+                })
+            }
+
+            if ($('#selectedTime').val().toString() === 'Оберіть час') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Не обрано час для запису!',
+                    text: 'Будь-ласка, оберіть час для запису до барбера'
+                })
+                return false;
+            }
+
+            if (totalPrice.toString() === '0,00' || totalPrice.toString() === '0') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Не обрано послуги!',
+                    text: 'Будь-ласка, оберіть хоча б одну послугу'
+                })
+                return false;
+            }
+
+            if (phoneNumber.toString() === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Не вказано номер телефону!',
+                    text: 'Будь-ласка, вкажіть Ваш номер телефону'
+                })
+                return false;
+            }
+
+            if (eMail.toString() === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Не вказано електронну пошту!',
+                    text: 'Будь-ласка, вкажіть Ваш E-Mail'
+                })
+                return false;
+            }
+
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Дякуємо за запис до нас!',
+              text: 'Детальну інформацію про запис Ви можете знайти за вказаним Вами E-Mail',
+              showConfirmButton: true,
+              timer: 4000
+            })
+
+            return true;
+        }
     </script>
 </body>
     

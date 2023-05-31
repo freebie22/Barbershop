@@ -172,7 +172,6 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/CartSummary.js"></script>
     <script>
-        $(document).ready(function() {
             function toggleScript() {
                 var paymentTypeSelect = document.querySelector('#payment-type-select');
                 var dropinContainer = document.querySelector('#dropin-container');
@@ -188,7 +187,7 @@
                         dropinContainer.remove();
                     }
                 }
-                else {
+                if (paymentTypeSelect.value === '@WC.CardPay') {
                     // re-add the Braintree script to the page
                     var script = document.createElement('script');
                     script.id = 'braintree-script';
@@ -218,7 +217,6 @@
                     });
                 }
             }
-        });
         
     </script>
     

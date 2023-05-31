@@ -20,7 +20,7 @@ namespace Barbershop.Controllers
 
         public IActionResult Index()
         {
-            var objList = _db.BarberSchedule.Include(b => b.Barber).ToList();
+            var objList = _db.BarberSchedule.Include(b => b.Barber).OrderBy(b=> b.BarberId).ThenBy(b => b.Date).ToList();
             return View(objList);
         }
 
