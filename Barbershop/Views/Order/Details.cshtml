@@ -23,14 +23,14 @@
                                 </h4>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">Name</div>
+                                <div class="col-3">Клієнт</div>
                                 <div class="col-9">
                                     <input asp-for="OrderHeader.FullName" readonly type="text" class="form-control" />
                                     <span asp-validation-for="OrderHeader.FullName" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">Phone</div>
+                                <div class="col-3">Тел.</div>
                                 <div class="col-9">
 
                                     <input asp-for="OrderHeader.PhoneNumber" readonly type="text" class="form-control" />
@@ -38,7 +38,7 @@
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">Address</div>
+                                <div class="col-3">Обл.</div>
                                 <div class="col-9">
 
                                     <input asp-for="OrderHeader.Region" type="text" readonly class="form-control" />
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">City</div>
+                                <div class="col-3">Місто</div>
                                 <div class="col-9">
 
                                     <input asp-for="OrderHeader.City" type="text" readonly class="form-control" />
@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">State</div>
+                                <div class="col-3">Відділ</div>
                                 <div class="col-9">
 
                                     <input asp-for="OrderHeader.PostOffice" type="text" readonly class="form-control" />
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">Email</div>
+                                <div class="col-3">E-Mail</div>
                                 <div class="col-9">
                                     <input asp-for="OrderHeader.Email" type="text" readonly class="form-control" />
                                     <span asp-validation-for="OrderHeader.Email" class="text-danger"></span>
@@ -70,7 +70,7 @@
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">Order Date</div>
+                                <div class="col-3">Дат.зам.</div>
                                 <div class="col-9">
 
                                     <input value="@Model.OrderHeader.OrderDate.ToShortDateString()" type="text" class="form-control" readonly />
@@ -79,25 +79,25 @@
                             </div>
 
                             <div class="row my-1">
-                                <div class="col-3">Shipping Date</div>
+                                <div class="col-3">Дат.приб.</div>
                                 <div class="col-9">
                                     <input value="@Model.OrderHeader.ShippingDate.ToShortDateString()" id="shippingDate" type="text" readonly class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">Shipping Date</div>
+                                <div class="col-3">Дат.отр.</div>
                                 <div class="col-9">
                                     <input value="@Model.OrderHeader.ReceivingDate.ToShortDateString()" id="receivingDate" type="text" readonly class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">Transaction ID</div>
+                                <div class="col-3">Транзакція</div>
                                 <div class="col-9">
                                     <input asp-for="OrderHeader.TransactionId" type="text" readonly class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">Order Status</div>
+                                <div class="col-3">Стат.зам.</div>
                                 <div class="col-9">
                                     <input asp-for="OrderHeader.OrderStatus" type="text" readonly class="form-control" />
                                 </div>
@@ -105,7 +105,7 @@
                         </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
                             <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-info">Order Summary</span>
+                                <span class="text-info">Підсумок по замовленню</span>
                             </h4>
                             <ul class="list-group mb-3">
                                 @foreach (var detail in Model.OrderDetail)
@@ -141,19 +141,19 @@
 
                             @if (Model.OrderHeader.OrderStatus == Barbershop.WC.StatusApproved)
                             {
-                                <input type="submit" value="Start Processing"
+                                <input type="submit" value="В обробку"
                                    formmethod="post" asp-action="StartProcessing"
                                    class="btn btn-info form-control" />
                             }
                             @if (Model.OrderHeader.OrderStatus == Barbershop.WC.StatusInProcess)
                             {
-                                <input type="submit" value="Ship Order"
+                                <input type="submit" value="Замовлення прибуло"
                                    formmethod="post" asp-action="ShipOrder"
                                    class="btn btn-primary form-control" />
                             }
                             @if (Model.OrderHeader.OrderStatus == Barbershop.WC.StatusArrived)
                             {
-                                <input type="submit" value="Receive Order"
+                                <input type="submit" value="Замовлення отримане"
                                    formmethod="post" asp-action="ReceiveOrder"
                                    class="btn btn-primary form-control" />
                             }
@@ -165,7 +165,7 @@
                                         class="btn btn-danger form-control"
                                         asp-action="CancelOrder"
                                         formmethod="post">
-                                        Cancel Order
+                                        Відмінити замовлення
                                     </button>
                                 </div>
                             }

@@ -66,8 +66,14 @@
                                     <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/RegisterBarber">Створити барбера</a>
                                 </div>
                             </li>
-                            <li class="nav-item">
-                                <a style="color:white" class="nav-link" asp-area="" asp-controller="Order" asp-action="Index">Керування замовленнями</a>
+                            <li class="nav-item dropdown">
+                                <a style="color:white" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Керування записами та замовленнями
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="AppointmentList" asp-action="Index">Записи</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Замовлення</a>
+                                </div>
                             </li>
                         }
                     

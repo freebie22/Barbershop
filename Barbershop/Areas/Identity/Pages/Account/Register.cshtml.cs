@@ -149,7 +149,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
 
                 if (existName != null)
                 {
-                    ModelState.AddModelError(string.Empty, "Даний нікнейм вже використоується іншим користувачем.");
+                    ModelState.AddModelError(string.Empty, "Даний нікнейм вже використовується іншим користувачем.");
                     return Page();
                 }
 

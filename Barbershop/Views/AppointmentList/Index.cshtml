@@ -1,0 +1,62 @@
+﻿@model Barbershop.Models.ViewModels.AppointmentListVM
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> userManager
+<div>
+    <form method="get">
+        <div class="container p-4 my-3">
+            <h2 style="color:#FFEBA7">Керування записами</h2>
+            <div class="border bg-white p-3" style="border-radius:15px">
+                <div class="col-12">
+                    <div class="row" style="padding-top:10px">
+                        <div class="col-4">
+                            @Html.Editor("searchDate", new { htmlAttributes = new {@class ="form-control", placeholder="Дата запису..."}})
+                        </div>
+                        <div class="col-4">
+                            @Html.Editor("searchAppointmentDate", new { htmlAttributes = new {@class ="form-control", placeholder="Дата оформлення..."}})
+                        </div>
+                        <div class="col-4">
+                            @Html.Editor("searchPhone", new { htmlAttributes = new {@class ="form-control", placeholder="Номер телефону..."}})
+                        </div>
+                        <div class="col-4">
+                            @Html.Editor("searchEmail", new { htmlAttributes = new {@class ="form-control", placeholder="E-Mail..."}})
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                @Html.DropDownListFor(u=>u.Status, Model.StatusList,"--Статус запису--", new {@class = "form-select"})
+                            </div>
+                            <div class="col-4">
+                                @Html.DropDownListFor(u=>u.Status, Model.StatusList,"--Тип запису--", new {@class = "form-select"})
+                            </div>
+                            <div class="col-4">
+                                <button type="submit" class="h-100 btn btn-info form-control">
+                                    <i class="fa fa-search"></i>Пошук
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="p-3">
+    <ejs-grid id="Grid" dataSource="@Model.AppointmentList" allowFiltering="true" allowSorting="true" allowPaging="true">
+        <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
+        <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
+        <e-grid-pagesettings pageSize="5"></e-grid-pagesettings>
+        <e-grid-columns>
+
+            <e-grid-column field="Id" headerText="ID" isPrimaryKey="true" textAlign="Right" width="100"></e-grid-column>
+            <e-grid-column field="PhoneNumber" headerText="Номер телефону" textAlign="Right"></e-grid-column>
+            <e-grid-column field="Email" headerText="E-Mail" textAlign="Right"></e-grid-column>
+            <e-grid-column field="Barber.FullName" headerText="Барбер" textAlign="Right"></e-grid-column>
+            <e-grid-column field="AppointmentDateAndTime" headerText="Дата оформлення" customFormat="@(new {type="date", format="dd/MM/yyyy"})" textAlign="Right"></e-grid-column>
+            <e-grid-column field="Date" headerText="Дата запису" customFormat="@(new {type="date", format="dd/MM/yyyy"})" textAlign="Right"></e-grid-column>
+            <e-grid-column field="AppointmentType" headerText="Тип запису" textAlign="Right"></e-grid-column>
+            <e-grid-column field="AppointmentStatus" headerText="Статус" textAlign="Right"></e-grid-column>
+            <e-grid-column field="Id" headerText="" width="70" template="<a rel='nofollow' href='AppointmentList/Details/${Id}' class='btn btn-primary'> <i class='fas fa-list'></i></a>"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>
+</div>

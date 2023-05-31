@@ -5,18 +5,18 @@
 <div>
     <form method="get">
         <div class="container p-4 my-3">
-            <h2 class="text-dark">Керування замовленнями</h2>
+            <h2 style="color:#FFEBA7">Керування замовленнями</h2>
             <div class="border bg-white p-3" style="border-radius:15px">
                 <div class="col-12">
                     <div class="row" style="padding-top:10px">
                         <div class="col-4">
-                            @Html.Editor("searchName", new { htmlAttributes = new {@class ="form-control", place="Name..."}})
+                            @Html.Editor("searchName", new { htmlAttributes = new {@class ="form-control", placeholder="Ім'я замовника..."}})
                         </div>
                         <div class="col-4">
-                            @Html.Editor("searchEmail", new { htmlAttributes = new {@class ="form-control", place="Email..."}})
+                            @Html.Editor("searchEmail", new { htmlAttributes = new {@class ="form-control", placeholder="E-Mail..."}})
                         </div>
                         <div class="col-4">
-                            @Html.Editor("searchPhone", new { htmlAttributes = new {@class ="form-control", place="Phone..."}})
+                            @Html.Editor("searchPhone", new { htmlAttributes = new {@class ="form-control", placeholder="Номер телефону..."}})
                         </div>
                         <div class="row">
                             <div class="col-4">
@@ -34,8 +34,8 @@
         </div>
     </form>
 </div>
-<hr>
-<div class="bg-white p-3">
+
+<div class="p-3">
     <ejs-grid id="Grid" dataSource="@Model.OrderHList" allowFiltering="true" allowSorting="true" allowPaging="true">
         <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
         <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>

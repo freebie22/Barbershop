@@ -17,12 +17,12 @@
                 <span asp-validation-for="Input.UserName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.FullName" class="form-control" placeholder="Ім'я та прізвище." />
+                <input asp-for="Input.FullName" oninput="this.value = this.value.replace(/[^а-яА-ЯіІїЇєЄґҐ\s]/g, '')" class="form-control" placeholder="Ім'я та прізвище." />
                 <label asp-for="Input.FullName" class="form-label"></label>
                 <span asp-validation-for="Input.FullName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Ваш номер телефону."/>
+                <input asp-for="Input.PhoneNumber" oninput="this.value = this.value.replace(/[^\d-+]/g, '')" class="form-control" placeholder="Ваш номер телефону." />
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>

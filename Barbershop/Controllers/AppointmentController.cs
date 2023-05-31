@@ -146,7 +146,9 @@ namespace Barbershop.Controllers
 
             var email = appointmentVM.Appointment.Email;
 
-            appointmentVM.Appointment.AppointmentType = "Онлайн";
+            appointmentVM.Appointment.AppointmentType = WC.ClientOnline;
+
+            appointmentVM.Appointment.AppointmentDateAndTime = DateTime.Now;
 
             if (appointmentVM.ServicesIds == null)
             {
