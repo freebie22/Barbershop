@@ -5,7 +5,7 @@
 <div>
     <form method="get">
         <div class="container p-4 my-3">
-            <h2 style="color:#FFEBA7">Керування замовленнями</h2>
+            <h2 class="text-center" style="color:#FFEBA7">Керування замовленнями</h2>
             <div class="border bg-white p-3" style="border-radius:15px">
                 <div class="col-12">
                     <div class="row" style="padding-top:10px">
@@ -19,11 +19,11 @@
                             @Html.Editor("searchPhone", new { htmlAttributes = new {@class ="form-control", placeholder="Номер телефону..."}})
                         </div>
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-4 mt-2">
                                 @Html.DropDownListFor(u=>u.Status, Model.StatusList,"--Статус замовлення--", new {@class = "form-select"})
                             </div>
                             <div class="offset-4 col-4">
-                                <button type="submit" class="h-100 btn btn-info form-control">
+                                <button type="submit" class="h-100 btn btn-info form-control mt-2">
                                     <i class="fa fa-search"></i>Пошук
                                 </button>
                             </div>

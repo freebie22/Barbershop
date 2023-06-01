@@ -1,0 +1,194 @@
+﻿@model Barbershop.Models.Appointment
+
+
+<style>
+    .list-group-item{
+        background-color: transparent;
+    }
+</style>
+
+<form method="post">
+    <input asp-for="@Model.Id" hidden />
+    <br />
+    <div class="backgroundWhite container">
+        <div class="card" style="background-color: #1F2029">
+            <div class="card-header text-light ml-0 row container" style="border-bottom-width: 0px">
+                <div class="col-12 d-none d-md-block col-md-6 pb-1">
+                    <h5 class="mt-2" style="color: #FFEBA7">Запис №@Model.Id</h5>
+                </div>
+                <div class="col-12 col-md-4 offset-md-2 text-right">
+                    <a asp-action="Index" class="btn btn-outline-info form-control btn-sm">До всіх записів</a>
+                </div>
+            </div>
+            <div class="card-body pb-0" style="background-color: #1F2029">
+                <div class="container rounded p-2">
+                    <div class="row">
+                        <div class="col-12 col-lg-6 pb-4">
+                            <div class="row">
+                                <h4 class="d-flex justify-content-center align-items-center mb-3">
+                                    <span class="" style="color: #FFEBA7">Деталі запису</span>
+                                </h4>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3" style="color: #FFEBA7">Клієнт</div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.User.FullName" readonly type="text" class="form-control" />
+                                    <span asp-validation-for="@Model.User.FullName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3" style="color: #FFEBA7">Тел.</div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.PhoneNumber" readonly type="text" class="form-control" />
+                                    <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3" style="color: #FFEBA7">E-Mail</div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.Email" type="text" readonly class="form-control" />
+                                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1" style="color: #FFEBA7">
+                                <div class="col-3">Барбер</div>
+                                <div class="col-9">
+
+                                    <input asp-for="@Model.Barber.FullName" type="text" readonly class="form-control" />
+                                    <span asp-validation-for="@Model.Barber.FullName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1" style="color: #FFEBA7">
+                                <div class="col-3">Дата оформлення запису</div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.AppointmentDateAndTime" type="date" readonly class="form-control" />
+                                    <span asp-validation-for="@Model.AppointmentDateAndTime" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1" style="color: #FFEBA7">
+                                <div class="col-3">Запис на дату</div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.Date" type="date" readonly class="form-control" />
+                                    <span asp-validation-for="@Model.Date" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1" style="color: #FFEBA7">
+                                <div class="col-3">Час початку</div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.StartTime" type="time" disabled class="form-control" />
+                                    <span asp-validation-for="@Model.StartTime" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1" style="color: #FFEBA7">
+                                <div class="col-3">Приблизний час закінчення</div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.EndTime" type="time" disabled class="form-control" />
+                                    <span asp-validation-for="@Model.EndTime" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3" style="color: #FFEBA7">Тип запису</div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.AppointmentType" type="text"  class="form-control" />
+                                    <span asp-validation-for="@Model.AppointmentType" class= "text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1" style="color: #FFEBA7">
+                                <div class="col-3">Статус запису</div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.AppointmentStatus" type="text" readonly class="form-control" />
+                                    <span asp-validation-for="@Model.AppointmentStatus" class=" text-danger"></span>
+                                </div>
+                            </div>           
+                        </div>
+                        <div class="col-12 col-lg-5 offset-lg-1">
+                            <h4 class="d-flex justify-content-center align-items-center mb-3">
+                                <span class="" style="color: #FFEBA7">Замовлені послуги</span>
+                            </h4>
+                            <ul class="list-group mb-3" style="background-color: #1F2029">
+                                @foreach (var services in Model.Services)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between p-2" style="border-color: #FFEBA7; background-color: none">
+                                        @if (Model.Barber.WorkPosition.PositionName == "Стажер")
+                                        {
+                                            <div class="row container">
+                                                <div class="col-8">
+                                                    <h6 class="my-0" style="color: #FFEBA7">@services.serviceName у стажера</h6>
+                                                    <small class="text-muted">Ціна за посулгу : @services.traineePrice грн.</small><br />
+                                                    <small class="text-muted">Тривалість : @services.Duration.Minutes хв.</small>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if(Model.Barber.WorkPosition.PositionName == "Барбер")
+                                        {
+                                            <div class="row container">
+                                                <div class="col-8">
+                                                    <h6 class="my-0" style="color: #FFEBA7">@services.serviceName у барбера</h6>
+                                                    <small class="text-muted">Ціна за посулгу : @services.barberPrice грн.</small><br />
+                                                    <small class="text-muted">Тривалість : @services.Duration.Minutes хв.</small>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (Model.Barber.WorkPosition.PositionName == "Топ-барбер")
+                                        {
+                                            <div class="row container">
+                                                <div class="col-8">
+                                                    <h6 class="my-0" style="color: #FFEBA7">@services.serviceName у топ-барбера</h6>
+                                                    <small class="text-muted">Ціна за посулгу : @services.seniorPrice грн.</small><br />
+                                                    <small class="text-muted">Тривалість : @services.Duration.Minutes хв.</small>
+                                                </div>
+                                            </div>
+                                        }                                        
+                                    </li>
+                                }
+                                <li class="list-group-item" style="color: #FFEBA7; border-color: #FFEBA7">
+                                    <div class="row container">
+                                        <div class="col-6">
+                                            <h5 class="" style="color: #FFEBA7">Ціна до сплати</h5>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <h5 class="" style="color: #FFEBA7">@(Model.TotalPrice) грн</h5>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+
+
+                            <br />
+
+                            @if (Model.AppointmentStatus == Barbershop.WC.AppointmentReceived)
+                            {
+                                <input type="submit" value="Завершити запис"
+                                   formmethod="post" asp-route-id="@Model.Id" asp-action="AppointmentDone"
+                                   class="btn btn-info form-control" />
+                                <input type="submit" value="Відмінити запис"
+                                   formmethod="post" asp-route-id="@Model.Id" asp-action="AppointmentCancelled"
+                                   class="btn btn-info form-control mt-2" />
+                                   
+                            }                            
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            //var shippingDate = $("#shippingDate");
+            //if (shippingDate.val() == '1/1/0001') {
+            //    shippingDate.val() = "";
+            //}
+        })
+    </script>
+
+}@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}

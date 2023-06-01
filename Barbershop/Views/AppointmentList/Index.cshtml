@@ -10,25 +10,25 @@
                 <div class="col-12">
                     <div class="row" style="padding-top:10px">
                         <div class="col-4">
-                            @Html.Editor("searchDate", new { htmlAttributes = new {@class ="form-control", placeholder="Дата запису..."}})
+                            @Html.Editor("searchDate", new { htmlAttributes = new {@class ="form-control", placeholder="Дата запису (у форматі рррр-мм-дд)"}})
                         </div>
                         <div class="col-4">
-                            @Html.Editor("searchAppointmentDate", new { htmlAttributes = new {@class ="form-control", placeholder="Дата оформлення..."}})
+                            @Html.Editor("searchAppointmentDate", new { htmlAttributes = new {@class ="form-control", placeholder="Дата оформлення (у форматі рррр-мм-дд)"}})
                         </div>
                         <div class="col-4">
                             @Html.Editor("searchPhone", new { htmlAttributes = new {@class ="form-control", placeholder="Номер телефону..."}})
                         </div>
-                        <div class="col-4">
+                        <div class="col-4 mt-2">
                             @Html.Editor("searchEmail", new { htmlAttributes = new {@class ="form-control", placeholder="E-Mail..."}})
                         </div>
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-4 mt-2">
                                 @Html.DropDownListFor(u=>u.Status, Model.StatusList,"--Статус запису--", new {@class = "form-select"})
                             </div>
-                            <div class="col-4">
-                                @Html.DropDownListFor(u=>u.Status, Model.StatusList,"--Тип запису--", new {@class = "form-select"})
+                            <div class="col-4 mt-2">
+                                @Html.DropDownListFor(u=>u.Type, Model.AppointmentType,"--Тип запису--", new {@class = "form-select"})
                             </div>
-                            <div class="col-4">
+                            <div class="col-4 mt-2 text-end">
                                 <button type="submit" class="h-100 btn btn-info form-control">
                                     <i class="fa fa-search"></i>Пошук
                                 </button>

@@ -3,10 +3,15 @@
 }
 @model Barbershop.Models.ViewModels.OrderListVM
 
+<style>
+    .e-grid .e-gridheader, .e-grid .e-content .e-rowcell {
+        border: none;
+    }
+</style>
 
 <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/material.css" />
 <div>
-    <form method="get" >
+    @*<form method="get">
         <div class="container p-4 my-3">
             <div class="border bg-white p-3" style="border-radius:15px">
                 <div class="col-12">
@@ -25,19 +30,18 @@
                                 @Html.DropDownListFor(u=>u.Status, Model.StatusList,"--Статус замовлення--", new {@class = "form-select"})
                             </div>
                             <div class="offset-4 col-4">
-                                <button type="submit" class="h-100 btn btn-info form-control" id="search-button" >
+                                <button type="submit" class="h-100 btn btn-info form-control" id="search-button">
                                     <i class="fa fa-search"></i>Пошук
-                                    </button>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </form>*@
 </div>
-<hr>
-<div class="bg-white p-3">
+<div class="p-3">
     <ejs-grid id="Grid" dataSource="@Model.OrderHList" allowFiltering="true" allowSorting="true" allowPaging="true">
         <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
         <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
@@ -50,6 +54,9 @@
             <e-grid-column field="Id" headerText="" width="70" template="<a rel='nofollow' href='#' class='btn btn-primary order-details-link'><i class='fas fa-list'><span style='display: none;'>${Id}</span></i></a>"></e-grid-column>
         </e-grid-columns>
     </ejs-grid>
+    <div id="UserDetails">
+
+    </div>
 </div>
 
 <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
@@ -65,7 +72,8 @@
                 type: "GET",
                 url: "/Order/UserDetails/" + orderId, 
                 success: function(html) {
-                    $('#Grid').html(html);
+                    $('#Grid').addClass('d-none');
+                    $('#UserDetails').html(html);
                     form.hide();
                 }
             });

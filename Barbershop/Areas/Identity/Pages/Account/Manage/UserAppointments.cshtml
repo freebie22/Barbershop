@@ -1,0 +1,27 @@
+﻿@page
+@model Barbershop.Models.ViewModels.AppointmentListVM
+@{
+    ViewData["Title"] = "Мої записи";
+    ViewData["ActivePage"] = ManageNavPages.UserAppointments;
+}
+
+<h3 class="text-center" style="color: #FFEBA7">@ViewData["Title"]</h3>
+<div class="row">
+    <div class="p-3" id="appointmentList"></div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+        <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url: "/AppointmentList/IndexUser", 
+                success: function(html) {
+                    $('#appointmentList').html(html);
+                }
+            });
+        });
+    </script>
+ 
+}

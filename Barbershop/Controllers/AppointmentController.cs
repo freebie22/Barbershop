@@ -1,6 +1,7 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
 using Barbershop.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,6 +16,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Barbershop.Controllers
 {
+    [Authorize]
     public class AppointmentController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -140,7 +142,14 @@ namespace Barbershop.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            appointmentVM.Appointment.UserId = claim.Value;
+            if (claim == null)
+            {
+                appointmentVM.Appointment.UserId = "Гість";
+            }
+            else
+            {
+                appointmentVM.Appointment.UserId = claim.Value;
+            }
 
             appointmentVM.Appointment.AppointmentStatus = WC.AppointmentReceived;
 
