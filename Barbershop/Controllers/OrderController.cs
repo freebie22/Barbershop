@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace Barbershop.Controllers
 {
-    [Authorize(Roles = WC.AdminRole)]
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -27,15 +27,36 @@ namespace Barbershop.Controllers
 
         public IActionResult Index(string searchName = null, string searchEmail = null, string searchPhone = null, string Status = null)
         {
-            OrderListVM orderListVM = new OrderListVM()
+            OrderListVM orderListVM = null;
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (User.IsInRole(WC.AdminRole))
             {
-                OrderHList = _db.OrderHeader,
-                StatusList = WC.listStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                orderListVM = new OrderListVM()
                 {
-                    Text = i,
-                    Value= i
-                })
-            };
+                    OrderHList = _db.OrderHeader,
+                    StatusList = WC.listStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                    {
+                        Text = i,
+                        Value = i
+                    })
+                };
+            }
+
+            if (User.IsInRole(WC.ClientRole))
+            {
+                orderListVM = new OrderListVM()
+                {
+                    OrderHList = _db.OrderHeader.Where(o => o.CreatedByUserId == claim.Value),
+                    StatusList = WC.listStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                    {
+                        Text = i,
+                        Value = i
+                    })
+                };
+            }
 
             if (!string.IsNullOrEmpty(searchName))
             {
@@ -57,41 +78,6 @@ namespace Barbershop.Controllers
             return View(orderListVM);
         }
 
-        [AllowAnonymous]
-        public async Task <IActionResult> IndexUser(int searchId = 0, string searchEmail = null, string searchPhone = null, string Status = null)
-        {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-            OrderListVM orderListVM = new OrderListVM()
-            {
-                OrderHList = _db.OrderHeader.Where(u => u.CreatedByUserId == claim.Value),
-                StatusList = WC.listStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
-                {
-                    Text = i,
-                    Value = i
-                })
-            };
-
-             if (!(searchId == 0))
-            {
-                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.Id == searchId && u.CreatedByUserId == claim.Value);
-            }
-            if (!string.IsNullOrEmpty(searchEmail))
-            {
-                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.Email.ToLower().Contains(searchEmail.ToLower()) && u.CreatedByUserId == claim.Value);
-            }
-            if (!string.IsNullOrEmpty(searchPhone))
-            {
-                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.PhoneNumber.ToLower().Contains(searchPhone.ToLower()) && u.CreatedByUserId == claim.Value);
-            }
-            if (!string.IsNullOrEmpty(Status) && Status != "--Статус замовлення--")
-            {
-                orderListVM.OrderHList = orderListVM.OrderHList.Where(u => u.OrderStatus.ToLower().Contains(Status.ToLower()) && u.CreatedByUserId == claim.Value);
-            }
-
-            return View(orderListVM);
-        }
 
             public IActionResult Details(int id)
             {
@@ -103,16 +89,6 @@ namespace Barbershop.Controllers
                 return View(OrderVM);
             }
 
-        [AllowAnonymous]
-        public IActionResult UserDetails(int id)
-        {
-            OrderVM = new OrderVM()
-            {
-                OrderHeader = _db.OrderHeader.FirstOrDefault(o => o.Id == id),
-                OrderDetail = _db.OrderDetail.Where(d => d.OrderHeaderId == id).Include("Product").ToList()
-            };
-            return View(OrderVM);
-        }
 
 
         [HttpPost]

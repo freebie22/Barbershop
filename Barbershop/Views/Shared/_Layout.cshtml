@@ -53,17 +53,17 @@
                                 <a style="color:white" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Адміністрування
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a  class="nav-link text-dark" asp-area="" asp-controller="Specializations" asp-action="Index">Спеціалізації</a>
-                                    <a  class="nav-link text-dark" asp-area="" asp-controller="WorkPositions" asp-action="Index">Посади</a>
-                                    <a  class="nav-link text-dark" asp-area="" asp-controller="Barbers" asp-action="Index">Барбери</a>
-                                    <a  class="nav-link text-dark" asp-area="" asp-controller="ProductCategory" asp-action="Index">Категорії товарів</a>
-                                    <a  class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Товари</a>
-                                    <a  class="nav-link text-dark" asp-area="" asp-controller="BarberMain" asp-action="Index">Перелік барберів</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="BarberSchedule" asp-action="Index">Розклад роботи барберів</a>
+                                <div class="dropdown-menu" style="background-color:#1F2029" aria-labelledby="navbarDropdown">
+                                    <a  class="nav-link" style="color: #FFEBA7" asp-area="" asp-controller="Specializations" asp-action="Index">Спеціалізації</a>
+                                    <a class="nav-link" style="color: #FFEBA7" asp-area="" asp-controller="WorkPositions" asp-action="Index">Посади</a>
+                                    <a class="nav-link" style="color: #FFEBA7" asp-area="" asp-controller="Barbers" asp-action="Index">Барбери</a>
+                                    <a class="nav-link" style="color: #FFEBA7" asp-area="" asp-controller="ProductCategory" asp-action="Index">Категорії товарів</a>
+                                    <a class="nav-link" style="color: #FFEBA7" asp-area="" asp-controller="Product" asp-action="Index">Товари</a>
+                                    <a class="nav-link"style="color: #FFEBA7" asp-area="" asp-controller="BarberMain" asp-action="Index">Перелік барберів</a>
+                                    <a class="nav-link" style="color: #FFEBA7" asp-area="" asp-controller="BarberSchedule" asp-action="Index">Розклад роботи барберів</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Створити адміністратора</a>
-                                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/RegisterBarber">Створити барбера</a>
+                                    <a class="nav-link" style="color: #FFEBA7" asp-area="Identity" asp-page="/Account/Register">Створити адміністратора</a>
+                                    <a class="nav-link" style="color: #FFEBA7" asp-area="Identity" asp-page="/Account/RegisterBarber">Створити барбера</a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
@@ -85,9 +85,6 @@
                         </li>
                         <li class="nav-item">
                             <a style="color:white" class="nav-link" asp-area="" asp-controller="Appointment" asp-action="Index">Записатись</a>
-                        </li>
-                        <li class="nav-item">
-                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Тест</a>
                         </li>
                         <li>
                             @if (HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null)

@@ -24,7 +24,7 @@ namespace Barbershop
         public const string StatusReturned = "Повернене";
 
         public const string AppointmentReceived = "Очікує на клієнта";
-        public const string AppointmentDone = "Заверешене";
+        public const string AppointmentDone = "Завершене";
         public const string AppointmentCancelled = "Відмінене";
 
         public const string ClientOnline = "Онлайн";

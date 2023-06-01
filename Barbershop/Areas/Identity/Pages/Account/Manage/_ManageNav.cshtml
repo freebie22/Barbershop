@@ -4,17 +4,6 @@
 }
 <ul class="nav nav-pills flex-column">
     <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Особисті дані</a></li>
-
-    @if (User.IsInRole(Barbershop.WC.AdminRole) || User.IsInRole(Barbershop.WC.ClientRole))
-    {
-             <li class="nav-item"><a class="nav-link @ManageNavPages.UserAppointmentsClass(ViewContext)" id="userAppointments" asp-page="./UserAppointments">Мої записи</a></li>
-             <li class="nav-item"><a class="nav-link @ManageNavPages.OrderProductsClass(ViewContext)" id="productOrders" asp-page="./OrderProducts">Мої замовлення</a></li>
-    }
-    @if (User.IsInRole(Barbershop.WC.BarberRole))
-    {
-    <li class="nav-item"><a class="nav-link @ManageNavPages.UserAppointmentsClass(ViewContext)" id="userAppointments" asp-page="./UserAppointments">Записи до мене</a></li>
-    }
-
     <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">E-Mail</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Налаштування паролю</a></li>
     @if (hasExternalLogins)

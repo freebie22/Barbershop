@@ -53,8 +53,11 @@
                             <div class="row my-1" style="color: #FFEBA7">
                                 <div class="col-3">Барбер</div>
                                 <div class="col-9">
-
                                     <input asp-for="@Model.Barber.FullName" type="text" readonly class="form-control" />
+                                    @if(Model.AppointmentStatus == WC.AppointmentDone)
+                                    {
+                                        <input asp-for="@Model.Barber.Id" id="barberId" class="form-control d-none" />
+                                    }
                                     <span asp-validation-for="@Model.Barber.FullName" class="text-danger"></span>
                                 </div>
                             </div>
@@ -166,9 +169,12 @@
                                    formmethod="post" asp-route-id="@Model.Id" asp-action="AppointmentCancelled"
                                    class="btn btn-info form-control mt-2" />
                                    
-                            }                            
+                            }      
+                            @if(User.IsInRole(WC.ClientRole))
+                            {
+                                <button type="button" id="showReview" class="btn mt-2">Залишити відгук</button>
+                            }
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -176,14 +182,69 @@
     </div>
 </form>
 
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #1F2029">
+            <div class="modal-header row" style="justify-content: center; border-bottom-color: #FFEBA7; margin: 0px">
+                <h5 class="modal-title text-center" style="color: #FFEBA7" id="reviewModallLabel">Відгук про барбера @Model.Barber.FullName</h5>
+            </div>
+            <div class="modal-body justify-content-center">
+                <h6 class="text-center" style="color: #FFEBA7">Відгук</h6>
+                <textarea id="commentText" class="form-style" placeholder="Текст відгуку"></textarea>
+                <h6 class="text-center" style="color: #FFEBA7">Ваша оцінка</h6>
+                <select class="form-select" id="rate">
+                    <option value="0" disabled selected>--Оцініть роботу барбера--</option>
+                    <option value="1">Жахливо</option>
+                    <option value="2">В цілому погано</option>
+                    <option value="3">Можна й краще</option>
+                    <option value="4">Добре</option>
+                    <option value="5">Відмінно</option>
+                </select>
+            </div>
+            <div class="modal-footer" style="border-top-color: #FFEBA7">
+                <div class="col-12">
+                    <button type="button" class="btn btn-dark form-control" id="addReviewButton">Залишити відгук</button>
+                    <button type="button" class="btn btn-secondary form-control mt-1" data-bs-dismiss="modal">До замовлення</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
-            //var shippingDate = $("#shippingDate");
-            //if (shippingDate.val() == '1/1/0001') {
-            //    shippingDate.val() = "";
-            //}
+            $('#showReview').click(function() {
+                $('#reviewModal').modal('show');
+            });
+
+            $('#addReviewButton').click(function() {
+                var barberId = $('#barberId').val();
+                var comment = $('#commentText').val();
+                var rate = $('#rate').val();
+
+                $.ajax({
+                    url: '/AppointmentList/LeaveReview',
+                    type: 'POST',
+                    data: { "barberId": parseInt(barberId), "Rate" : rate, "comment" : comment },
+                    success: function(response){
+                        if(response.success)
+                        {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Дякуємо за відгук!',
+                                text: 'Сподіваємось на Ваші подальші візити до нас!',
+                                showConfirmButton: true,
+                                timer: 10000
+                            })
+                            $('#reviewModal').modal('hide');
+                            $('#commentText').val('');
+                        }
+                    }
+                });
+            });
+
         })
     </script>
 

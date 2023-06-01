@@ -3,25 +3,72 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-            <a style="color:white" id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Особистий кабінет</a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button style="color:white" id="logout" type="submit" class="nav-link btn btn-link border-0">Вийти</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-            <a style="color:white" class="nav-link" id="login" asp-area="Identity" asp-page="/Account/Login">Увійти</a>
-    </li>
-    <li class="nav-item">
-            <a style="color:white" class="nav-link " id="register" asp-area="Identity" asp-page="/Account/Register">Зареєструватись</a>
-    </li>
-}
-</ul>
+
+<li class="nav-item dropdown">
+    <a class="btn nav-link dropdown-toggle" id="profileButton" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Профіль
+    </a>
+</li>
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #1F2029">
+            <div class="modal-header row" style="justify-content: center; border-bottom-color: #FFEBA7; margin: 0px">
+                @if(SignInManager.IsSignedIn(User))
+                {
+                                   <h5 class="modal-title text-center" style="color: #FFEBA7" id="profileModalLabel">Профіль користувача</h5>
+                    <h6 class="modal-title text-center" style="color: #FFEBA7">@UserManager.GetUserName(User)</h6>
+                }
+                else
+                {
+                    <h5 class="modal-title text-center" style="color: #FFEBA7" id="profileModalLabel">Авторизуйтесь для подальшої роботи</h5>
+                }
+            </div>
+            <div class="modal-body">
+                    <div class="row" style="background-color:#1F2029" aria-labelledby="navbarDropdown">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <a class="btn" href="~/Identity/Account/Manage/Index">Особистий кабінет</a>
+                            @if(User.IsInRole(WC.BarberRole))
+                            {
+                                <a class="btn mt-2" id="appointmentButton" asp-action="Index" asp-controller="AppointmentList">Записи до мене</a>
+                            }
+                            @if (User.IsInRole(WC.AdminRole) || User.IsInRole(WC.ClientRole))
+                            {
+                                    <a class="btn mt-2" id="appointmentButton" asp-action="Index" asp-controller="AppointmentList">Мої записи</a>
+                            <a class="btn mt-2" id="orderButton" asp-action="Index" asp-controller="Order">Мої замовлення</a>
+                            }
+                            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button class="btn form-control mt-2" type="submit">Вийти</button>
+                            </form>
+                        }
+                        else
+                        {
+                        <a class="btn form-control" href="~/Identity/Account/Login">Увійти</a>
+                        <a class="btn form-control mt-2" href="~/Identity/Account/Register">Зареєструватись</a>
+                        }
+                    </div>
+            </div>
+            <div class="modal-footer" style="border-top-color: #FFEBA7">               
+                <div class="col-12">
+                    <button type="button" class="btn btn-secondary form-control mt-1" data-bs-dismiss="modal">Закрити</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#profileButton').click(function() {
+            $('#profileModal').modal('show');
+        });
+        $('#appointmentButton').click(function () {
+            $('#profileModal').modal('hide');
+        });
+        $('#orderButton').click(function () {
+            $('#profileModal').modal('hide');
+        });
+
+    });
+</script>

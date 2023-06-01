@@ -5,128 +5,24 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <label for="regionSelect">Область:</label>
-    <select id="regionSelect">
-        <option>--Оберіть область--</option>
-    </select>
-
-    <label for="citySelect">Місто:</label>
-    <select id="citySelect">
-        <option>--Оберіть місто--</option>
-    </select>
-
-    <label for="officeSelect">Відділення:</label>
-    <select id="officeSelect">
-        <option>--Оберіть відділення--</option>
-    </select>
-
+    <button type="button" id="sendReview" class="btn mt-2">Залишити відгук</button>
     <script>
-        $(document).ready(function() {
-            var regionSelect = $("#regionSelect");
-            var citySelect = $("#citySelect");
-            var officeSelect = $("#officeSelect");
-            var apiKey = "e2cf44cd7f5c2cbc67892f3427d71234";
-            // Завантаження областей та міст
-            $.ajax({
-                url: "https://api.novaposhta.ua/v2.0/json/Address/getAreas",
-                type: "POST",
-                dataType: "json",
-                data: JSON.stringify({
-                    "apiKey": apiKey,
-                    "modelName": "Address",
-                    "calledMethod": "getAreas"
-                }),
-                success: function (data) {
-                    var areas = data.data;
-
-                    regionSelect.empty();
-                    regionSelect.append($('<option>', {
-                        value: "--Оберіть область--",
-                        text: "--Оберіть область--"
-                    }));
-
-                    for (var i = 0; i < areas.length; i++) {
-                        var option = $('<option>', {
-                            value: areas[i].Description,
-                            text: areas[i].Description
-                        });
-                        regionSelect.append(option);
-                    }
-                }
-            });
-
-            // Завантаження міст для вибраної області
-            regionSelect.on("change", function () {
-                var selectedRegion = regionSelect.val();
-
-                $.ajax({
-                    url: "https://api.novaposhta.ua/v2.0/json/Address/getCities",
-                    type: "POST",
-                    dataType: "json",
-                    data: JSON.stringify({
-                        "apiKey": apiKey,
-                        "modelName": "Address",
-                        "calledMethod": "getCities",
-                        "methodProperties": {
-                            "Area": selectedRegion
+            $(document).ready(function () {
+                $('#sendReview').click(function (event) {
+                    event.preventDefault();
+                    var barberId = 12;
+                    var rate = 4;
+                    var comment = 'Абоба';
+                    $.ajax({
+                        url: "/AppointmentList/LeaveReview",
+                        type: 'POST',
+                        data: { "barberId": parseInt(barberId), "Rate": parseInt(rate), "comment": comment },
+                        success: function (data) {
+                            window.location.href = data.redirectToUrl;
                         }
-                    }),
-                    success: function (data) {
-                        var cities = data.data;
-
-                        citySelect.empty();
-                        citySelect.append($('<option>', {
-                            value: "--Оберіть місто--",
-                            text: "--Оберіть місто--"
-                        }));
-
-                        for (var i = 0; i < cities.length; i++) {
-                            var option = $('<option>', {
-                                value: cities[i].Description,
-                                text: cities[i].Description
-                            });
-                            citySelect.append(option);
-                        }
-                    }
+                    });
                 });
             });
-
-            // Завантаження відділень для вибраного міста
-            citySelect.on("change", function () {
-                var selectedCity = citySelect.val();
-
-                $.ajax({
-                    url: "https://api.novaposhta.ua/v2.0/json/Address/getWarehouses",
-                    type: "POST",
-                    dataType: "json",
-                    data: JSON.stringify({
-                        "apiKey": apiKey,
-                        "modelName": "Address",
-                        "calledMethod": "getWarehouses",
-                        "methodProperties": {
-                            "CityName": selectedCity
-                        }
-                    }),
-                    success: function (data) {
-                        var offices = data.data;
-
-                        officeSelect.empty();
-                        officeSelect.append($('<option>', {
-                            value: "--Оберіть відділення--",
-                            text: "--Оберіть відділення--"
-                        }));
-
-                        for (var i = 0; i < offices.length; i++) {
-                            var option = $('<option>', {
-                                value: offices[i].Description,
-                                text: offices[i].Description
-                            });
-                            officeSelect.append(option);
-                        }
-                    }
-                });
-            });
-        });
         
   </script>
   </body>

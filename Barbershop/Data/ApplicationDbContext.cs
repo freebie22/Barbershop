@@ -23,6 +23,7 @@ namespace Barbershop.Data
         public DbSet<OrderDetail> OrderDetail { get; set; }
         public DbSet<BarberSchedule> BarberSchedule { get; set; }   
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
 
 
