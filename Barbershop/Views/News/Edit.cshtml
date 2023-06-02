@@ -1,0 +1,100 @@
+﻿@model Barbershop.Models.ViewModels.NewsVM
+
+<form method="post" enctype="multipart/form-data">
+    <input hidden asp-for="News.Id" />
+    <div class="p-3" style="border:1px solid #FFEBA7; background-color: #1F2029">
+        <div class="form-group row">
+            <h2 class="pl-3" style="color: #FFEBA7">Редагування публікації</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label>Заголовок</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="News.Title" class="form-control mb-2" />
+                        <span asp-validation-for="News.Title" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label>Вміст публікації</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="News.Description" class="form-control mb-2"></textarea>
+                        <span asp-validation-for="News.Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label>Короткий вміст</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="News.ShortDescription" class="form-control mb-2" ></textarea>
+                        <span asp-validation-for="News.ShortDescription" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label>Категорія</label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="News.Category" class="form-select mb-2">
+                            <option value="Загальна інформація">Загальна інформація</option>
+                            <option value="Про товари">Товари</option>
+                            <option value="Про барберів">Барбери</option>
+                            <option value="Інтерв'ю">Інтерв'ю</option>
+                            <option value="Акції">Акції</option>
+                            <option value="Поради та стиль">Поради та стиль</option>
+                        </select>
+                        <span asp-validation-for="News.Category" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        Основне фото публікації
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files1" id="uploadBox" accept=".png, .jpg, .jpeg" class="form-control mb-2" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        Додаткові фото публікації
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files2" id="uploadBox" multiple accept=".png, .jpg, .jpeg" class="form-control mb-2" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label>Посилання на відео</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="News.VideoUrl" class="form-control mb-2" />
+                    </div>
+                </div>
+                </div>
+            <div class="col-4">
+                <img src="@WC.NewsMainPath@Model.News.MainPhoto" width="100%" style="border-radius:5px; border:1px solid #FFEBA7" />
+            </div>
+            @foreach (var image in Model.NewsImages)
+            {
+                <div class="col-4">
+                    <img src="@WC.NewsGalleryPath@image.Image" width="100%" style="border-radius:5px; border:1px solid #FFEBA7" />
+                </div>
+            }
+            <div class="form-group row">
+                <div class="col-8 row pt-2">
+                    <div class="col">
+                        <button type="submit" class="btn btn-danger w-100" value="Edit">Змінити</button>
+                    </div>
+                    <div class="col">
+                        <a asp-action="Index" class="btn btn-success w-100">Назад</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

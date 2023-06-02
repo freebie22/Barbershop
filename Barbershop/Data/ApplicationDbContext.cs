@@ -24,6 +24,8 @@ namespace Barbershop.Data
         public DbSet<BarberSchedule> BarberSchedule { get; set; }   
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<News> News { get; set; }
+        public DbSet<NewsImages> NewsImages { get; set; }
 
 
 

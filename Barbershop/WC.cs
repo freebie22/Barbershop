@@ -8,6 +8,8 @@ namespace Barbershop
         public static string SpecPath = @"\images\spec_images\";
         public static string ProductPath = @"\images\prod_images\";
         public static string GalleryPath = @"\images\prod_gallery\";
+        public static string NewsMainPath = @"\images\news_main\";
+        public static string NewsGalleryPath = @"\images\news_gallery\";
 
         public const string SessionCart = "ShoppingCartSession";
 

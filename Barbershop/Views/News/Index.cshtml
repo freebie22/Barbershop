@@ -1,0 +1,74 @@
+﻿@model List<Barbershop.Models.News>
+
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> UserManager
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Створені публікації</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> &nbsp; Додати нову публікацію
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Count() > 0)
+    {
+        <table class="table table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        ID новини
+                    </th>
+                    <th>
+                        Заголовок
+                    </th>
+                    <th>
+                        Дата публікації
+                    </th>
+                    <th>
+                        Створено користувачем
+                    </th>
+                    <th>
+                        Категорія новини
+                    </th>
+                    <th class="text-center">
+                        Редагування
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <td width="10%">@obj.Id</td>
+                        <td width="20%">@obj.Title</td>
+                        <td width="20%">@obj.CreatedDate.ToShortDateString()</td>
+                        <td width="10%">@obj.User.UserName</td>
+                        <td width="10%">@obj.Category</td>
+                        <td class="text-center">
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
+                                    <i class="fas fa-edit"></i> &nbsp;
+                                </a>
+                                <a asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
+                                    <i class="fas fa-trash-alt"></i>
+
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Опубліковані новини відсутні.</p>
+    }
+</div>
+

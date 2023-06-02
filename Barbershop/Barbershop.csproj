@@ -33,6 +33,8 @@
     <Folder Include="wwwroot\images\spec_images\" />
     <Folder Include="wwwroot\images\prod_images\" />
     <Folder Include="wwwroot\images\prod_gallery\" />
+    <Folder Include="wwwroot\images\news_main\" />
+    <Folder Include="wwwroot\images\news_gallery\" />
   </ItemGroup>
 
   <ItemGroup>
