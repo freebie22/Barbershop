@@ -105,8 +105,9 @@
     <div class="modal fade" id="barberModal" tabindex="-1" aria-labelledby="barberModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" >
             <div class="modal-content rounded" style="border-radius: 0rem; background-color:#1F2029;">
-                <div class="modal-header" style="justify-content: center;  border-bottom-color: #FFEBA7;">
+                <div class="modal-header row" style="justify-content: center;  border-bottom-color: #FFEBA7; margin: 0px">
                     <h3 class="modal-title text-center" id="barberModalLabel" style="color: #FFEBA7">Наші барбери</h3>
+                    <h6 class="modal-title text-center" style="color: #FFEBA7">*Щоб подивитись відгуки про барбера, клацніть по його зображенню</h6>
                 </div>
                 <div class="modal-body text-center">
                     <div class="row barber-selector">                        
@@ -118,6 +119,23 @@
             </div>
         </div>
     </div>
+        <div class="modal fade" id="reviewsModal" tabindex="-1" aria-labelledby="reviewsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content rounded" style="border-radius: 0rem; background-color:#1F2029;">
+                    <div class="modal-header row" style="justify-content: center;  border-bottom-color: #FFEBA7; margin: 0px">
+                        <h3 class="modal-title text-center" id="reviewsModalLabel" style="color: #FFEBA7">Відгуки про барбера</h3>
+                        <h4 class="text-center" id="reviewsLabel" style="color: #FFEBA7"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="reviews-selector">
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="justify-content: center; border-top-color: #FFEBA7">
+                        <button type="button" id="modal-close" class="btn btn-dark rounded" style="border-radius: 0px" data-bs-dismiss="modal">На головну</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="dateModal" tabindex="-1" aria-labelledby="dateModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content" style="background-color: #1F2029">
@@ -210,6 +228,24 @@
 
     <script>
         $(document).ready(function () {
+
+
+            let testReview = $('#testReview').val();
+
+            $('#testButtonReview').click(function() {
+                $.ajax({
+                    url: '/Appointment/GetBarberReviews',
+                    type: 'GET',
+                    data: {"barberId": testReview},
+                    success: function(response)
+                    {
+                        if(response.success)
+                        {
+
+                        }
+                    }
+                });
+            });
 
 
             if($('#dateSelect').val().toString() === '0001-01-01')
@@ -370,7 +406,7 @@
                         
                             var barberElement = '<div class="col-md-3">' +
                                 '<div class="card mt-3" style="width: 10rem; border: 0; background-color: #1F2029">' +
-                                '<img src="'+ photoPath +'" class="card-img-top rounded-circle" alt="Barber Image">' +
+                                '<img src="'+ photoPath +'" class="card-img-top rounded-circle barber-img" alt="Barber Image">' +
                                 '<div class="card-body">' +
                                 '<h5 style="color: #FFEBA7">' + firstName + '</h5>' +
                                 '<h5 style="color: #FFEBA7">' + lastName + '</h5>' +
@@ -388,6 +424,11 @@
                             $('.select-barber').each(function (index) {
                                 $(this).data('barber-id', identeficators[index]);
                             });
+                            $('.barber-img').each(function(index)
+                            {
+                                $(this).data('barber-id', identeficators[index]);
+                            }
+                            );
                         }
                     }
                     else
@@ -397,6 +438,73 @@
 
                 }
 
+            });
+
+
+            $(document).on('click', '.barber-img', function () {
+                let barberImgId = $(this).data('barber-id');
+
+                $.ajax({
+                    url: '@Url.Action("GetBarberReviews", "Appointment")',
+                    type: 'GET',
+                    data: { "barberId": barberImgId },
+                    success: function (response) {
+                        if (response.success) {
+                            let userNames = response.userNames;
+                            let rates = response.rates;
+                            let comments = response.comments;
+                            let dates = response.dates;
+                            let reviewCount = response.reviewCount;
+
+
+                            let reviewsSelector = $('.reviews-selector');
+
+                            let container = '';
+
+                            for(let i=0; i < parseInt(reviewCount); i++)
+                            {
+                                let name = userNames[i];
+                                let rate = rates[i];
+                                let comment = comments[i];
+                                let date = dates[i];
+
+
+                                var reviewElement = '<div class="card mt-1" style="width: 100%; border: 0; background-color: #1F2029">' +
+                                    '<div class="card-body">' +
+                                    '<h5 style="color: #FFEBA7">' + name + '</h5>' +
+                                    '<h5 style="color: #FFEBA7">' + generateStars(rate) + ' - ' + date +  '</h5>' + 
+                                    '<h5 class="form-style p-0" style="color: #fff">' + comment + '</h5>' +
+                                    '</div>' +
+                                    '</div>';
+
+                                    container += reviewElement;
+
+                                    reviewsSelector.html(container);
+
+
+                            }
+
+                            function generateStars(rate) {
+                                let stars = '';
+                                for (let i = 0; i < rate; i++) {
+                                    stars += '★';
+                                }
+                                return stars;
+                            }
+
+                          
+                            $('#reviewsModal').modal('show');
+                            $('#reviewsLabel').text(response.barberName);
+                        }
+                        else{
+                            let reviewsSelector = $('.reviews-selector');
+                            reviewsSelector.html('');
+                            $('#reviewsLabel').text(response.barberName);
+                            reviewsSelector.html('<h4 class="text-center" style="color: #FFEBA7">' + response.message + '<h4>');
+                            $('#reviewsModal').modal('show');
+                        }
+                    }, 
+                });
             });
 
 

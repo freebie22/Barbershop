@@ -169,11 +169,16 @@
                                    formmethod="post" asp-route-id="@Model.Id" asp-action="AppointmentCancelled"
                                    class="btn btn-info form-control mt-2" />
                                    
-                            }      
-                            @if(User.IsInRole(WC.ClientRole))
+                            } 
+                            @if (Model.AppointmentStatus == Barbershop.WC.AppointmentDone)
                             {
-                                <button type="button" id="showReview" class="btn mt-2">Залишити відгук</button>
+                                @if (User.IsInRole(WC.ClientRole) || User.IsInRole(WC.AdminRole))
+                                {
+                                    <button type="button" id="showReview" class="btn mt-2">Залишити відгук</button>
+                                }
+
                             }
+                            
                         </div>
                     </div>
                 </div>

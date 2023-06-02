@@ -11,6 +11,7 @@ using NuGet.Packaging.Signing;
 using Syncfusion.EJ2.Inputs;
 using System.Drawing;
 using System.Globalization;
+using System.Net.WebSockets;
 using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -584,6 +585,45 @@ namespace Barbershop.Controllers
             else
             {
                 return Json(new { success = false, message = "На цей день немає вільних годин для запису" });
+            }
+
+        }
+
+        public JsonResult GetBarberReviews(int barberId)
+        {
+            var reviews = _db.Reviews.Include(r => r.User).Include(r => r.Barber).Where(r => r.BarberId == barberId).OrderByDescending(r => r.CreatedAt).ToList();
+
+            List<string> userNames = new List<string>();
+            List<int> rates = new List<int>();
+            List<string> comments = new List<string>();
+            List<string> dates = new List<string>();
+
+            var barber = _db.Barbers.FirstOrDefault(b => b.Id == barberId);
+            var barberName = barber.FullName;
+
+            if (reviews.Count() > 0)
+            {
+                var reviewCount = reviews.Count();  
+                foreach (var review in reviews)
+                {
+                    var userName = review.User.FullName;
+                    var rate = review.Rate;
+                    var comment = review.Review_Comment;
+                    var date = review.CreatedAt.ToLongDateString();
+                    
+                    userNames.Add(userName);
+                    rates.Add(rate);
+                    comments.Add(comment);
+                    dates.Add(date);
+                }
+
+
+                return Json(new {success = true, barberName, userNames, rates, comments, dates, reviewCount });
+            }
+
+            else
+            {
+                return Json(new { success = false, barberName, message = "Відгуків для цього барбера немає" });
             }
 
         }
