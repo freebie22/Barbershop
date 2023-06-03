@@ -15,8 +15,9 @@
             <div class="modal-header row" style="justify-content: center; border-bottom-color: #FFEBA7; margin: 0px">
                 @if(SignInManager.IsSignedIn(User))
                 {
-                                   <h5 class="modal-title text-center" style="color: #FFEBA7" id="profileModalLabel">Профіль користувача</h5>
-                    <h6 class="modal-title text-center" style="color: #FFEBA7">@UserManager.GetUserName(User)</h6>
+                    <h5 class="modal-title text-center" style="color: #FFEBA7" id="profileModalLabel">Профіль користувача</h5>
+                    <h6 class="modal-title text-center mt-1" style="color: #FFEBA7">@UserManager.GetUserName(User)</h6>
+                    
                 }
                 else
                 {

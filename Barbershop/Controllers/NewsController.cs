@@ -22,8 +22,15 @@ namespace Barbershop.Controllers
             
         public IActionResult Index()
         {
-            var objList = _db.News.Include(o => o.NewsImages).Include(o => o.User).ToList();
-            return View(objList);
+            if(User.IsInRole(WC.AdminRole))
+            {
+                var objList = _db.News.Include(o => o.NewsImages).Include(o => o.User).ToList();
+                return View(objList);
+            }
+            else
+            {
+                return RedirectToAction("NewsList");
+            }
         }
 
         public IActionResult NewsList()
@@ -44,12 +51,20 @@ namespace Barbershop.Controllers
 
         public IActionResult Create()
         {
-            NewsVM newsVM = new NewsVM()
+            if (User.IsInRole(WC.AdminRole))
             {
-                News = new News(),
-                NewsImages = _db.NewsImages.ToList()
-            };
-            return View(newsVM);
+                NewsVM newsVM = new NewsVM()
+                {
+                    News = new News(),
+                    NewsImages = _db.NewsImages.ToList()
+                };
+                return View(newsVM);
+            }
+            else
+            {
+                return RedirectToAction("NewsList");
+            }
+
         }
 
         [HttpPost]
@@ -59,8 +74,6 @@ namespace Barbershop.Controllers
             var files1 = HttpContext.Request.Form.Files.GetFile("files1");
             var files2 = HttpContext.Request.Form.Files.GetFiles("files2");
             string webRootPath = _webHostEnvironment.WebRootPath;
-
-
 
             string upload = webRootPath + WC.NewsMainPath;
             string fileName = Guid.NewGuid().ToString();
@@ -106,24 +119,32 @@ namespace Barbershop.Controllers
 
         public IActionResult Edit(int? id)
         {
-            NewsVM newsVM = new NewsVM()
+            if (User.IsInRole(WC.AdminRole))
             {
-                News = new News(),
-                NewsImages = _db.NewsImages.ToList()
-            };
+                NewsVM newsVM = new NewsVM()
+                {
+                    News = new News(),
+                    NewsImages = _db.NewsImages.ToList()
+                };
 
 
-            newsVM.News = _db.News.Include(o => o.NewsImages).Include(o => o.User).FirstOrDefault(p => p.Id == id);
+                newsVM.News = _db.News.Include(o => o.NewsImages).Include(o => o.User).FirstOrDefault(p => p.Id == id);
 
-            newsVM.NewsImages = newsVM.News.NewsImages.ToList();
+                newsVM.NewsImages = newsVM.News.NewsImages.ToList();
 
 
-            if (newsVM.News == null)
-            {
-                return NotFound();
+                if (newsVM.News == null)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                return View(newsVM);
             }
 
-            return View(newsVM);
+            else
+            {
+                return RedirectToAction("NewsList");
+            }
         }
 
         //POST - Edit
@@ -140,7 +161,7 @@ namespace Barbershop.Controllers
 
             if (files1 != null)
             {
-                string upload = webRootPath + WC.BarberPath;
+                string upload = webRootPath + WC.NewsMainPath;
                 string fileName = Guid.NewGuid().ToString();
                 string extension = Path.GetExtension(files1.FileName);
 
