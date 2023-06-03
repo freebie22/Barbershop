@@ -15,7 +15,24 @@ namespace Barbershop.Models
         public BarbershopUser()
         {
             DateOfBirth = new DateTime(1900, 1, 1);
+
+            OrderCount = 0;
+            OrderSuccessCount = 0;
+            OrderPoints = 0;
+
+            AppointmentCount = 0;
+            AppointmentSuccessCount = 0;
+            AppointmentPoints = 0;
         }
+
+        public int OrderCount { get; set; } = 0;
+        public int OrderSuccessCount { get; set; } = 0;
+        public int OrderPoints { get; set; } = 0;
+
+        public int AppointmentCount { get; set; } = 0; 
+        public int AppointmentSuccessCount { get; set; } = 0;
+        public int AppointmentPoints { get; set; } = 0;
+
         [NotMapped]
         public string DeliveryMethod { get; set; }
         [NotMapped]

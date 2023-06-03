@@ -36,6 +36,9 @@ namespace Barbershop
         public const string CardPay = "Оплата картою";
         public const string ReceivePay = "Оплата при отриманні";
 
+        public const string PromoAppointment = "Для записів до барбера";
+        public const string PromoOrder = "Для замовлення товарів";
+
         public static readonly IEnumerable<string> listStatus = new ReadOnlyCollection<string>(
            new List<string>
            {

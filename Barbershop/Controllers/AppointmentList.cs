@@ -20,7 +20,7 @@ namespace Barbershop.Controllers
         [BindProperty]
         public AppointmentDetailsVM AppointmentVM { get; set; }
 
-        public IActionResult Index(DateTime? searchDate, DateTime? searchAppointmentDate, string searchEmail = null, string searchPhone = null, string Status = null, string Type = null)
+        public IActionResult Index(int? searchId, DateTime? searchDate, DateTime? searchAppointmentDate, string searchEmail = null, string searchPhone = null, string Status = null, string Type = null)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -42,6 +42,36 @@ namespace Barbershop.Controllers
                         Value = i
                     })
                 };
+                if (searchId > 0)
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Id == searchId);
+                }
+                if (searchDate.HasValue)
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Date == searchDate);
+                }
+                if (searchAppointmentDate.HasValue)
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.AppointmentDateAndTime == searchAppointmentDate);
+                }
+                if (!string.IsNullOrEmpty(searchEmail))
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Email.ToLower().Contains(searchEmail.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(searchPhone))
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.PhoneNumber.ToLower().Contains(searchPhone.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(Status) && Status != "--Статус запису--")
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentStatus.ToLower().Contains(Status.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(Type) && Type != "--Тип запису--")
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentType.ToLower().Contains(Type.ToLower()));
+                }
+
+                return View(appointmentListVM);
             }
             
             if(User.IsInRole(WC.ClientRole))
@@ -60,6 +90,36 @@ namespace Barbershop.Controllers
                         Value = i
                     })
                 };
+                if (searchId > 0)
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Id == searchId);
+                }
+                if (searchDate.HasValue)
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Date == searchDate);
+                }
+                if (searchAppointmentDate.HasValue)
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.AppointmentDateAndTime == searchAppointmentDate);
+                }
+                if (!string.IsNullOrEmpty(searchEmail))
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Email.ToLower().Contains(searchEmail.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(searchPhone))
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.PhoneNumber.ToLower().Contains(searchPhone.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(Status) && Status != "--Статус запису--")
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentStatus.ToLower().Contains(Status.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(Type) && Type != "--Тип запису--")
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentType.ToLower().Contains(Type.ToLower()));
+                }
+
+                return View(appointmentListVM);
             }
 
             if(User.IsInRole(WC.BarberRole))
@@ -78,36 +138,45 @@ namespace Barbershop.Controllers
                         Value = i
                     })
                 };
+                if (searchId > 0)
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Id == searchId);
+                }
+                if (searchDate.HasValue)
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Date == searchDate);
+                }
+                if (searchAppointmentDate.HasValue)
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.AppointmentDateAndTime == searchAppointmentDate);
+                }
+                if (!string.IsNullOrEmpty(searchEmail))
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Email.ToLower().Contains(searchEmail.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(searchPhone))
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.PhoneNumber.ToLower().Contains(searchPhone.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(Status) && Status != "--Статус запису--")
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentStatus.ToLower().Contains(Status.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(Type) && Type != "--Тип запису--")
+                {
+                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentType.ToLower().Contains(Type.ToLower()));
+                }
+
+                return View(appointmentListVM);
             }
 
-            if (searchDate.HasValue)
+            else
             {
-                appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Date == searchDate);
-            }
-            if (searchAppointmentDate.HasValue)
-            {
-                appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.AppointmentDateAndTime == searchAppointmentDate);
-            }
-            if (!string.IsNullOrEmpty(searchEmail))
-            {
-                appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Email.ToLower().Contains(searchEmail.ToLower()));
-            }
-            if (!string.IsNullOrEmpty(searchPhone))
-            {
-                appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.PhoneNumber.ToLower().Contains(searchPhone.ToLower()));
-            }
-            if (!string.IsNullOrEmpty(Status) && Status != "--Статус запису--")
-            {
-                appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentStatus.ToLower().Contains(Status.ToLower()));
-            }
-            if (!string.IsNullOrEmpty(Type) && Type != "--Тип запису--")
-            {
-                appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentType.ToLower().Contains(Type.ToLower()));
+                return RedirectToAction("Index", "Home");
             }
 
-            return View(appointmentListVM);
+            
         }
-
 
         public IActionResult Details(int id)
         {
@@ -125,11 +194,23 @@ namespace Barbershop.Controllers
             }
         }
 
+        private void SetUserAppCount(string userId)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+            var barbershopUser = (BarbershopUser)user;
+
+            barbershopUser.AppointmentSuccessCount++;
+            barbershopUser.AppointmentPoints++;
+            _db.Users.Update(barbershopUser);
+            _db.SaveChanges();
+        }
+
         [HttpPost]
         public IActionResult AppointmentDone(int id)
         {
             Appointment appointment = _db.Appointments.FirstOrDefault(u => u.Id == id);
             appointment.AppointmentStatus = WC.AppointmentDone;
+            SetUserAppCount(appointment.UserId);
             _db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
@@ -161,6 +242,51 @@ namespace Barbershop.Controllers
 
             return Json(new { success = true });
 
+        }
+
+        [HttpPost]
+        public IActionResult ConvertToPromo()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            var PromoCode = new PromoCodes();
+
+            PromoCode.IsActive = true;
+            PromoCode.Code = Guid.NewGuid().ToString();
+            PromoCode.UserId = claim.Value;
+            PromoCode.Discount = 15;
+            PromoCode.Type = WC.PromoAppointment;
+
+            var user = _db.Users.FirstOrDefault(u => u.Id== claim.Value);
+            var barbershopUser = (BarbershopUser)user;
+
+            barbershopUser.AppointmentPoints -= 3;
+             
+
+            _db.PromoCodes.Add(PromoCode);
+            _db.Users.Update(barbershopUser);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");   
+
+        }
+
+        public JsonResult GetMyPromos()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            var promos = _db.PromoCodes.Where(p => p.UserId == claim.Value).Select(p => p.Code);
+
+            if(promos.Count() > 0)
+            {
+                return Json(new {success = true, promos});
+            }
+            else
+            {
+                return Json(new { success = false, message = "На жаль, у Вас ще немає промокодів." });
+            }
         }
     }
 }

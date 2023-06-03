@@ -143,14 +143,8 @@ namespace Barbershop.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            if (claim == null)
-            {
-                appointmentVM.Appointment.UserId = "Гість";
-            }
-            else
-            {
-                appointmentVM.Appointment.UserId = claim.Value;
-            }
+
+            appointmentVM.Appointment.UserId = claim.Value;
 
             appointmentVM.Appointment.AppointmentStatus = WC.AppointmentReceived;
 
@@ -159,6 +153,8 @@ namespace Barbershop.Controllers
             appointmentVM.Appointment.AppointmentType = WC.ClientOnline;
 
             appointmentVM.Appointment.AppointmentDateAndTime = DateTime.Now;
+
+            SetUserAppCount(claim.Value);
 
             if (appointmentVM.ServicesIds == null)
             {
@@ -177,7 +173,33 @@ namespace Barbershop.Controllers
                 }
             }
 
+            var promo = _db.PromoCodes.FirstOrDefault(p => p.UserId == claim.Value && p.Code == appointmentVM.Appointment.UsedPromo);
+            if (promo != null)
+            {
+                appointmentVM.Appointment.TotalPriceWithDiscount = appointmentVM.Appointment.TotalPrice - (appointmentVM.Appointment.TotalPrice * (decimal)(promo.Discount / 100));
+                appointmentVM.Appointment.UsedPromo = promo.Code;
+                _db.PromoCodes.Remove(promo);
+            }
+
+            else
+            {
+                appointmentVM.Appointment.TotalPriceWithDiscount = appointmentVM.Appointment.TotalPrice;
+                appointmentVM.Appointment.UsedPromo = "Не вказано";
+            }
+
             _db.Appointments.Add(appointmentVM.Appointment);
+
+            string priceWithDiscount = "";
+
+            if(appointmentVM.Appointment.TotalPriceWithDiscount != appointmentVM.Appointment.TotalPrice)
+            {
+                priceWithDiscount = $"Ціна зі знижкою: {appointmentVM.Appointment.TotalPriceWithDiscount} грн";
+
+            }
+            else
+            {
+                priceWithDiscount = "";
+            }
 
             var selectedBarber = _db.Barbers.Include(b => b.WorkPosition).FirstOrDefault(b => b.Id == appointmentVM.Appointment.BarberId);
 
@@ -210,6 +232,7 @@ namespace Barbershop.Controllers
                     servicesHtml += $"{service.serviceName} у топ-барбера - {service.seniorPrice} грн. <br />";
                 }
             }
+
 
             string messageBody = $@"
                 <!DOCTYPE html>
@@ -352,6 +375,8 @@ namespace Barbershop.Controllers
                                                                     Ел. пошта &nbsp;: {appointmentVM.Appointment.Email};
                                                                     <br />
                                                                     Номер телефону : {appointmentVM.Appointment.PhoneNumber};
+                                                                    <br />
+                                                                    Промокод : {appointmentVM.Appointment.UsedPromo};                                                              
                                                                 </div>
                                                                 <br />
                                                                 <hr>
@@ -392,6 +417,7 @@ namespace Barbershop.Controllers
                                                                 <div style=""font-size:16px;padding-left:15px;"">
                                                                     {servicesHtml}
                                                                     Загальна ціна за послуги: {appointmentVM.Appointment.TotalPrice} грн.
+                                                                    {priceWithDiscount}
                                                                 </div>
 
                                                                 <br />
@@ -443,6 +469,16 @@ namespace Barbershop.Controllers
 
 
             return RedirectToAction("Index", "Home");
+        }
+
+        private void SetUserAppCount(string userId)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+            var barbershopUser = (BarbershopUser)user;
+
+            barbershopUser.AppointmentCount++;
+            _db.Users.Update(barbershopUser);
+            _db.SaveChanges();
         }
 
         public JsonResult TestDate (DateTime date)

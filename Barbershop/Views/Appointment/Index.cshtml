@@ -53,10 +53,6 @@
                                                     <button type="button" class="btn btn-dark m-3" id="searchButton">Знайти час для запису</button>
                                                 </div>
                                             </div>
-@*                                            <div class="form-group mt-2 row">
-                                                <span id="spanPrice"></span>
-                                                <button type="button" id="buttonPrice">Перевірити ціну</button>
-                                            </div>*@
                                             <div class="form-group mt-2">
                                                     <div id="services" style="justify-content: center">
                                                         <h3 style="color: #FFEBA7">Послуги</h3>
@@ -91,6 +87,10 @@
                                                     <textarea asp-for="@Model.Appointment.Comment" type="text" class="form-style" style="margin: 0px" placeholder="Коментар до запису" id="logpass" autocomplete="off"></textarea>
                                                 <i class="input-icon uil uil-lock-alt"></i>
                                             </div>
+                                                <div class="form-group mt-2">
+                                                    <input asp-for="@Model.Appointment.UsedPromo" type="text" class="form-style" style="margin: 0px" placeholder="Промокод (не обов'язково)" id="logemail" autocomplete="off">
+                                                    <i class="input-icon uil uil-at"></i>
+                                                </div>
                                             <button type = "submit" onclick="return validateInput()" class="btn mt-4">Записатись</button>
                                         </div>
                                     </div>

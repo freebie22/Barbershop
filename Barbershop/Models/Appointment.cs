@@ -24,6 +24,8 @@ namespace Barbershop.Models
         public TimeSpan EndTime { get; set; }
         [Required, Range(1, 10000, ErrorMessage = "Оберіть хоча б одну послугу")]
         public decimal TotalPrice { get; set; }
+        public decimal TotalPriceWithDiscount { get; set; }
+        public string UsedPromo { get; set; }
         [Required]
         public virtual ICollection<Services> Services { get; set; }
         [Required(ErrorMessage = "Вкажіть свій номер телефону")]

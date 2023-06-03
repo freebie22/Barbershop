@@ -50,6 +50,13 @@
                                     <span asp-validation-for="@Model.Email" class="text-danger"></span>
                                 </div>
                             </div>
+                            <div class="row my-1">
+                                <div class="col-3" style="color: #FFEBA7">Промокод/сертифікат</div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.UsedPromo" type="text" readonly class="form-control" />
+                                    <span asp-validation-for="@Model.UsedPromo" class="text-danger"></span>
+                                </div>
+                            </div>
                             <div class="row my-1" style="color: #FFEBA7">
                                 <div class="col-3">Барбер</div>
                                 <div class="col-9">
@@ -146,12 +153,30 @@
                                 }
                                 <li class="list-group-item" style="color: #FFEBA7; border-color: #FFEBA7">
                                     <div class="row container">
+                                        @if (Model.TotalPriceWithDiscount != Model.TotalPrice)
+                                        {
                                         <div class="col-6">
-                                            <h5 class="" style="color: #FFEBA7">Ціна до сплати</h5>
+                                            <h5 class="text-muted">Ціна до сплати</h5>
                                         </div>
                                         <div class="col-6 text-right">
-                                            <h5 class="" style="color: #FFEBA7">@(Model.TotalPrice) грн</h5>
+                                                <h5 class="text-muted" >@(Model.TotalPrice) грн</h5>
                                         </div>
+                                            <div class="col-6">
+                                                <h5 class="" style="color: #FFEBA7">Ціна зі знижкою</h5>
+                                            </div>
+                                            <div class="col-6 text-right">
+                                                <h5 class="" style="color: #FFEBA7">@(Model.TotalPriceWithDiscount) грн</h5>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-6">
+                                                <h5 class="" style="color: #FFEBA7">Ціна до сплати</h5>
+                                            </div>
+                                            <div class="col-6 text-right">
+                                                <h5 class="" style="color: #FFEBA7">@(Model.TotalPrice) грн</h5>
+                                            </div>
+                                        }
                                     </div>
                                 </li>
 
@@ -162,13 +187,16 @@
 
                             @if (Model.AppointmentStatus == Barbershop.WC.AppointmentReceived)
                             {
-                                <input type="submit" value="Завершити запис"
+                                @if (User.IsInRole(WC.BarberRole) || User.IsInRole(WC.AdminRole))
+                                {
+                                    <input type="submit" value="Завершити запис"
                                    formmethod="post" asp-route-id="@Model.Id" asp-action="AppointmentDone"
                                    class="btn btn-info form-control" />
-                                <input type="submit" value="Відмінити запис"
+                                    <input type="submit" value="Відмінити запис"
                                    formmethod="post" asp-route-id="@Model.Id" asp-action="AppointmentCancelled"
                                    class="btn btn-info form-control mt-2" />
-                                   
+                                }
+
                             } 
                             @if (Model.AppointmentStatus == Barbershop.WC.AppointmentDone)
                             {
@@ -209,7 +237,7 @@
             <div class="modal-footer" style="border-top-color: #FFEBA7">
                 <div class="col-12">
                     <button type="button" class="btn btn-dark form-control" id="addReviewButton">Залишити відгук</button>
-                    <button type="button" class="btn btn-secondary form-control mt-1" data-bs-dismiss="modal">До замовлення</button>
+                    <button type="button" class="btn btn-secondary form-control mt-1" data-bs-dismiss="modal">До запису</button>
                 </div>
             </div>
         </div>
