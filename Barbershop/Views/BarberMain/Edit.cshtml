@@ -1,6 +1,6 @@
 ﻿@model Barbershop.Models.ViewModels.BarbersVM
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" id="barberForm" enctype="multipart/form-data">
     <input asp-for="Barber.Id" hidden />
     <div class="border p-3">
         <div class="form-group row">
@@ -101,14 +101,23 @@
                         <label asp-for="SpecializationIds">Спеціалізація</label>
                     </div>
                     <div class="col-8">
-                        <select asp-for="SpecializationIds" asp-items="@(Model.Specializations.Select(s => new SelectListItem { Text = s.SpecName, Value = s.Id.ToString() }))" class="form-control" multiple></select>
+                        <ul id="specializationsList" class="list-group">
+                            @foreach(var specialization in Model.Specializations)
+                            {
+                                <li name="listSpecialization" class="list-group-item my-2" style="border-color: #FFEBA7; border-top-width: 1px; border-top-left-radius: inherit; border-top-right-radius: inherit;  border-bottom-left-radius: inherit;  border-bottom-right-radius: inherit;">
+                                    <input name="specializationCheck" type="checkbox" class="" value="@specialization.Id" @(Model.Barber.Specializations.Contains(specialization) ? "checked" : "") />
+                                    <label class="specializationName" for="specializationCheck">@specialization.SpecName</label>
+                                </li>
+                            }
+                        </ul>
+                        <select asp-for="SpecializationIds" class="form-control" id="specializationSelect"></select>
                         <span asp-validation-for="SpecializationIds" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-8 offset-4 row">
                         <div class="col">
-                            <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100 text-white" value="Оновити" />
+                            <input type="submit" class="btn btn-primary w-100 text-white" value="Оновити" />
                         </div>
                         <div class="col">
                             <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Back</a>
@@ -133,6 +142,57 @@
             $('.summernote').summernote({
                 height: 250
             });
+
+            var selectedSpecializations = [];
+            var specializationSelect = $('#specializationSelect');
+
+            $('input[name=specializationCheck]:checked').each(function() {
+                let specializationId = $(this).val();
+                let closestList = $(this).closest('li[name=listSpecialization]');
+                let specializationName = closestList.find('.specializationName').text();
+                selectedSpecializations.push(specializationId);
+                specializationSelect.append($('<option>', {
+                    value: specializationId,
+                    text: specializationName,
+                    selected: true
+                }));
+            });
+
+
+
+
+            $('input[name=specializationCheck]').change(function () {
+                let isChecked = $(this).is(':checked');
+                let specializationId = $(this).val();
+                let closestList = $(this).closest('li[name=listSpecialization]');
+                let specializationName = closestList.find('.specializationName').text();
+
+                if(isChecked)
+                {
+                    selectedSpecializations.push(specializationId);
+                    console.log(selectedSpecializations);
+                    console.log(specializationName);
+                    specializationSelect.append($('<option>', {
+                        value: specializationId,
+                        text: specializationName,
+                        selected : true
+                    }));
+                }
+
+                else
+                {
+                    let index = selectedSpecializations.indexOf(specializationId);
+                    if(index !== -1)
+                    {
+                        selectedSpecializations.splice(index, 1);
+                        console.log(selectedSpecializations);
+                    }
+                }
+
+            });
+
+            console.log(selectedSpecializations);
+
         });
         //function validateInput() {
         //    if (document.getElementById("uploadBox").value == "") {

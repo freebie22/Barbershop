@@ -26,7 +26,7 @@ namespace Barbershop.Controllers
 
         public IActionResult Index()
         {
-            List<Barbers> objList = _db.Barbers.ToList();
+            List<Barbers> objList = _db.Barbers.Include(o => o.Specializations).ToList();
 
             return View(objList);
         }
@@ -48,11 +48,13 @@ namespace Barbershop.Controllers
                 Specializations = _db.Specializations.ToList()
             };
 
-            barberVM.Barber = _db.Barbers.Find(id);
+            barberVM.Barber = _db.Barbers.Include(b => b.Specializations).FirstOrDefault(b => b.Id == id);
 
             if (barberVM.Barber == null)
             {
-                return NotFound();
+                TempData[WC.Error] = "Барбера з таким ідентифікатором не існує";
+                return RedirectToAction("Index");
+
             }
 
             return View(barberVM);
@@ -66,7 +68,8 @@ namespace Barbershop.Controllers
             var files = HttpContext.Request.Form.Files;
             string webRootPath = _webHostEnvironment.WebRootPath;
 
-            var objFromDb = _db.Barbers.AsNoTracking().FirstOrDefault(u => u.Id == barberVM.Barber.Id);
+            var objFromDb = _db.Barbers.AsNoTracking().Include(u => u.Specializations).FirstOrDefault(u => u.Id == barberVM.Barber.Id);
+ 
 
             if (files.Count > 0)
             {
@@ -95,29 +98,39 @@ namespace Barbershop.Controllers
             }
 
 
-            if (barberVM.SpecializationIds == null)
+            var selectedSpecializations = _db.Specializations.Where(s => barberVM.SpecializationIds.Contains(s.Id)).ToList();
+
+            var newSpecializations = new List<Specializations>();
+
+
+            foreach (var specialization in selectedSpecializations)
             {
-                _db.Entry(barberVM.Barber).Collection(b => b.Specializations).Load();
-            }
+                bool exists = false;
 
-            if (barberVM.SpecializationIds != null)
-            {
-                var selectedSpecializations = _db.Specializations.Where(s => barberVM.SpecializationIds.Contains(s.Id));
-
-                barberVM.Barber.Specializations = new List<Specializations>();
-
-                foreach (var specialization in selectedSpecializations)
+                foreach (var existingSpecialization in objFromDb.Specializations)
                 {
-                    barberVM.Barber.Specializations.Add(specialization);
+                    if (existingSpecialization.Id == specialization.Id)
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists)
+                {
+                    newSpecializations.Add(specialization);
                 }
             }
 
+            if(newSpecializations.Count > 0)
+            {
+                barberVM.Barber.Specializations = newSpecializations;
+            }
+          
             _db.Barbers.Update(barberVM.Barber);
 
-            
 
             _db.SaveChanges();
-
 
             return RedirectToAction("Index");
         }

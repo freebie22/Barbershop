@@ -17,6 +17,11 @@ namespace Barbershop
         public const string BarberRole = "Barber";
         public const string ClientRole = "Client";
 
+        public const string Success = "Success";
+        public const string Error = "Error";
+        public const string Info = "Info";
+        public const string Warning = "Warning";
+
         public const string StatusPending = "В очікуванні";
         public const string StatusApproved = "Прийняте до обробки";
         public const string StatusInProcess = "В дорозі";
@@ -36,8 +41,9 @@ namespace Barbershop
         public const string CardPay = "Оплата картою";
         public const string ReceivePay = "Оплата при отриманні";
 
-        public const string PromoAppointment = "Для записів до барбера";
+        public const string PromoAppointment = "За бонусні бали";
         public const string PromoOrder = "Для замовлення товарів";
+        public const string PromoBirthday = "На день народження";
 
         public static readonly IEnumerable<string> listStatus = new ReadOnlyCollection<string>(
            new List<string>

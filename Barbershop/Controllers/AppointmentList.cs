@@ -247,29 +247,45 @@ namespace Barbershop.Controllers
         [HttpPost]
         public IActionResult ConvertToPromo()
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            var PromoCode = new PromoCodes();
+                var user = _db.Users.FirstOrDefault(u => u.Id == claim.Value);
+                var barbershopUser = (BarbershopUser)user;
 
-            PromoCode.IsActive = true;
-            PromoCode.Code = Guid.NewGuid().ToString();
-            PromoCode.UserId = claim.Value;
-            PromoCode.Discount = 15;
-            PromoCode.Type = WC.PromoAppointment;
+                if(barbershopUser.AppointmentPoints < 3)
+                {
+                    return RedirectToAction("Index");
+                }
 
-            var user = _db.Users.FirstOrDefault(u => u.Id== claim.Value);
-            var barbershopUser = (BarbershopUser)user;
+                if (barbershopUser.LastPromoCodeGeneratedDate != DateTime.MinValue &&
+                    (DateTime.Now - barbershopUser.LastPromoCodeGeneratedDate).TotalDays < 5)
+                {
+                    TempData[WC.Warning] = "Увага! З минулої генерації промокоду ще не минуло 5 днів!";
+                    return RedirectToAction("Index");
+                }
 
-            barbershopUser.AppointmentPoints -= 3;
-             
 
-            _db.PromoCodes.Add(PromoCode);
-            _db.Users.Update(barbershopUser);
-            _db.SaveChanges();
+                var PromoCode = new PromoCodes();
 
-            return RedirectToAction("Index");   
+                PromoCode.IsActive = true;
+                PromoCode.Code = Guid.NewGuid().ToString();
+                PromoCode.UserId = claim.Value;
+                PromoCode.Discount = 15;
+                PromoCode.Type = WC.PromoAppointment;
 
+
+                //barbershopUser.AppointmentPoints -= 3;
+                barbershopUser.LastPromoCodeGeneratedDate = DateTime.Now;
+
+                _db.PromoCodes.Add(PromoCode);
+                _db.Users.Update(barbershopUser);
+                _db.SaveChanges();
+
+            TempData[WC.Success] = "Вітаємо! Переглянути свої активні промокоди ви можете натиснувши на 'Мої промокоди'.";
+            TempData[WC.Info] = "Зверніть увагу, що цей промокод є дійсним лише для Вашого облікового запису.";
+
+            return RedirectToAction("Index");                   
         }
 
         public JsonResult GetMyPromos()

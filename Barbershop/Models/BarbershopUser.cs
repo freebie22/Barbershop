@@ -23,6 +23,8 @@ namespace Barbershop.Models
             AppointmentCount = 0;
             AppointmentSuccessCount = 0;
             AppointmentPoints = 0;
+
+            LastPromoCodeGeneratedDate = DateTime.MinValue;
         }
 
         public int OrderCount { get; set; } = 0;
@@ -32,6 +34,9 @@ namespace Barbershop.Models
         public int AppointmentCount { get; set; } = 0; 
         public int AppointmentSuccessCount { get; set; } = 0;
         public int AppointmentPoints { get; set; } = 0;
+
+
+        public DateTime LastPromoCodeGeneratedDate { get; set; }
 
         [NotMapped]
         public string DeliveryMethod { get; set; }

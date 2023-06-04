@@ -1,34 +1,37 @@
 ﻿@model List<Barbershop.Models.Barbers>
 
 
-<h2 class="text-dark">Перелік барберів</h2>
-<div class="container p-5">
+
+<div class="container p-5" style="color: #FFEBA7; background-color: #1F2029">
+    <h2 class="text-center" style="color: #FFEBA7">Перелік барберів</h2>
     <div class="row pt-4">
         <div class="col-6">
         </div>
     </div>
-
     @if (Model.Count() > 0)
     {
-        <table class="table table-bordered" style="width:100%; font-size:16px">
+        <table class="table table-bordered" style="width:100%; font-size:16px;border-color: #ffeba7">
             <thead>
                 <tr>
-                    <th class="text-center">
+                    <th style="color: #FFEBA7;" class="text-center">
                         Ідентифікатор користувача
                     </th>
-                    <th class="text-center">
+                    <th style="color: #FFEBA7;" class="text-center">
                         Ім'я та прізвище
                     </th>
-                    <th class="text-center">
+                    <th style="color: #FFEBA7;" class="text-center">
                         Номер телефону
                     </th>
-                    <th class="text-center">
+                    <th style="color: #FFEBA7;" class="text-center">
                         Електронна пошта
                     </th>
-                    <th class="text-center">
+                    <th style="color: #FFEBA7;" class="text-center">
                         Чи працює в даний момент ?
                     </th>
-                    <th class="text-center">
+                    <th style="color: #FFEBA7;" class="text-center">
+                        Спеціалізації
+                    </th>
+                    <th  style="color: #FFEBA7;" class="text-center">
                         Редагування
                     </th>
                 </tr>
@@ -37,19 +40,27 @@
                 @foreach (var obj in Model)
                 {
                     <tr>
-                        <td class="text-center" width="35%"><strong>@obj.BarbershopUserId</strong></td>
-                        <td class="text-center" width="10%"><strong>@obj.FullName</strong></td>
-                        <td class="text-center" width="10%"><strong>@obj.PhoneNumber</strong></td>
-                        <td class="text-center" width="10%"><strong>@obj.Email</strong></td>
+                        <td class="text-center" width="35%"><strong style="color: #FFEBA7;">@obj.BarbershopUserId</strong></td>
+                        <td class="text-center" width="10%"><strong style="color: #FFEBA7;">@obj.FullName</strong></td>
+                        <td class="text-center" width="10%"><strong style="color: #FFEBA7;">@obj.PhoneNumber</strong></td>
+                        <td class="text-center" width="10%"><strong style="color: #FFEBA7;">@obj.Email</strong></td>
                         @if(obj.IsActive == true)
                         {
-                            <td class="text-center" width="10%"><strong>Так</strong></td>
+                            <td class="text-center" width="10%"><strong style="color: #FFEBA7;">Так</strong></td>
                         }
                         else
                         {
-                            <td class="text-center" width="10%"><strong>Ні</strong></td>
+                            <td class="text-center" width="10%"><strong style="color: #FFEBA7;">Ні</strong></td>
                         }
-                        <td wdith="35%" class="text-center">
+                                <td wdith="30%">
+                            <ul>
+                                @foreach (var specialization in obj.Specializations)
+                                {
+                                    <p style="color: #FFEBA7;">@specialization.SpecName</p>
+                                }
+                            </ul>
+                        </td>
+                        <td style="color: #FFEBA7;" wdith="35%" class="text-center">
                             <div class="w-75 btn-group" role="group">
                                 <a asp-controller="BarberMain" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
                                     <i class="fas fa-edit"></i> &nbsp;

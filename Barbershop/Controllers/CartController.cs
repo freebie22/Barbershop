@@ -40,6 +40,8 @@ namespace Barbershop.Controllers
                 //session exists
                 shoppingCartList = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).ToList();
             }
+
+
             List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
             IEnumerable<Products> prodListTemp = _db.Products.Where(u => prodInCart.Contains(u.Id));
             IList<Products> prodList = new List<Products>();
@@ -85,25 +87,32 @@ namespace Barbershop.Controllers
             {
                 //session exists
                 shoppingCartList = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).ToList();
+
+                List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
+                IEnumerable<Products> prodList = _db.Products.Where(u => prodInCart.Contains(u.Id));
+
+                ProductUserVM = new ProductUserVM()
+                {
+                    BarbershopUser = _db.BarbershopUser.FirstOrDefault(u => u.Id == claim.Value),
+
+                };
+
+                foreach (var cartObj in shoppingCartList)
+                {
+                    Products prodTemp = _db.Products.FirstOrDefault(u => u.Id == cartObj.ProductId);
+                    prodTemp.TempCount = cartObj.ProductCount;
+                    ProductUserVM.ProductList.Add(prodTemp);
+                }
+
+                return View(ProductUserVM);
             }
 
-            List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
-            IEnumerable<Products> prodList = _db.Products.Where(u => prodInCart.Contains(u.Id));
-
-            ProductUserVM = new ProductUserVM()
+            else
             {
-                BarbershopUser = _db.BarbershopUser.FirstOrDefault(u => u.Id == claim.Value),
-                
-            };
-
-            foreach(var cartObj in shoppingCartList)
-            {
-                Products prodTemp = _db.Products.FirstOrDefault(u=> u.Id == cartObj.ProductId);
-                prodTemp.TempCount = cartObj.ProductCount;
-                ProductUserVM.ProductList.Add(prodTemp);    
+                return RedirectToAction("Index", "Home");
             }
 
-            return View(ProductUserVM);
+            
         }
 
         [HttpPost]
