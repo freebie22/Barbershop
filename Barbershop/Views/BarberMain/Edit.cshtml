@@ -2,15 +2,15 @@
 
 <form method="post" id="barberForm" enctype="multipart/form-data">
     <input asp-for="Barber.Id" hidden />
-    <div class="border p-3">
+    <div class="p-3" style="background-color: #1f2029;border: solid 1px #FFEBA7">
         <div class="form-group row">
-            <h2 class="text-info pl-3">Редагування барбера</h2>
+            <h2 style="color:#FFEBA7" class="text-center pl-3">Редагування барбера</h2>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Barber.FullName"></label>
+                        <label style="color:#FFEBA7" asp-for="Barber.FullName"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Barber.FullName" class="form-control mb-2" />
@@ -18,34 +18,34 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                <div class="col-4">
-                    <label>Ідентифікатор барбера</label>
-                </div>
-                <div class="col-8">
-                    <input readonly asp-for="Barber.BarbershopUserId" class="form-control mb-2" />
-                </div>
-            </div>
-                <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Barber.PhoneNumber"></label>
+                        <label style="color:#FFEBA7">Ідентифікатор барбера</label>
                     </div>
                     <div class="col-8">
-                        <input type="text" id="phone" asp-for="Barber.PhoneNumber" class="form-control mb-2" />
+                        <input disabled asp-for="Barber.BarbershopUserId" class="form-control mb-2" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label style="color:#FFEBA7" asp-for="Barber.PhoneNumber"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" id="phone" disabled asp-for="Barber.PhoneNumber" class="form-control mb-2" />
                         <span asp-validation-for="Barber.PhoneNumber" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Barber.Email"></label>
+                        <label style="color:#FFEBA7" asp-for="Barber.Email"></label>
                     </div>
                     <div class="col-8">
-                        <input readonly asp-for="Barber.Email" class="form-control mb-2" />
+                        <input disabled asp-for="Barber.Email" class="form-control mb-2" />
                         <span asp-validation-for="Barber.Email" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label>Стаж в роках</label>
+                        <label style="color:#FFEBA7">Стаж в роках</label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Barber.Exprerience" class="form-control mb-2" />
@@ -54,7 +54,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label>Рейтинг</label>
+                        <label style="color:#FFEBA7">Рейтинг</label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Barber.Rating" class="form-control mb-2" />
@@ -63,24 +63,16 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Barber.Description"></label>
+                        <label style="color:#FFEBA7" asp-for="Barber.Description"></label>
                     </div>
                     <div class="col-8">
                         <textarea asp-for="Barber.Description" class="form-control summernote"></textarea>
                         <span asp-validation-for="Barber.Description" class="text-danger"></span>
                     </div>
-                </div>
+                </div>                
                 <div class="form-group row">
                     <div class="col-4">
-                        Фото барбера
-                    </div>
-                    <div class="col-8">
-                        <input type="file" name="files" id="uploadBox" accept=".png, .jpg, .jpeg" class="form-control mb-2" />
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label asp-for="Barber.IsActive"></label>
+                        <label style="color:#FFEBA7" asp-for="Barber.IsActive"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Barber.IsActive" type="checkbox" />
@@ -88,7 +80,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Barber.WorkPositionId"></label>
+                        <label style="color:#FFEBA7" asp-for="Barber.WorkPositionId"></label>
                     </div>
                     <div class="col-8">
                         <select asp-for="Barber.WorkPositionId" asp-items="@Model.WorkPostionsSelectList" class="form-control mb-2">
@@ -98,11 +90,11 @@
                         <span asp-validation-for="Barber.WorkPositionId" class="text-danger"></span>
                     </div>
                     <div class="col-4">
-                        <label asp-for="SpecializationIds">Спеціалізація</label>
+                        <label style="color:#FFEBA7" asp-for="SpecializationIds">Спеціалізація</label>
                     </div>
                     <div class="col-8">
                         <ul id="specializationsList" class="list-group">
-                            @foreach(var specialization in Model.Specializations)
+                            @foreach (var specialization in Model.Specializations)
                             {
                                 <li name="listSpecialization" class="list-group-item my-2" style="border-color: #FFEBA7; border-top-width: 1px; border-top-left-radius: inherit; border-top-right-radius: inherit;  border-bottom-left-radius: inherit;  border-bottom-right-radius: inherit;">
                                     <input name="specializationCheck" type="checkbox" class="" value="@specialization.Id" @(Model.Barber.Specializations.Contains(specialization) ? "checked" : "") />
@@ -110,23 +102,26 @@
                                 </li>
                             }
                         </ul>
-                        <select asp-for="SpecializationIds" class="form-control" id="specializationSelect"></select>
+                        <select style="display: none" asp-for="SpecializationIds" class="form-control" id="specializationSelect"></select>
                         <span asp-validation-for="SpecializationIds" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-8 offset-4 row">
-                        <div class="col">
-                            <input type="submit" class="btn btn-primary w-100 text-white" value="Оновити" />
-                        </div>
-                        <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Back</a>
-                        </div>
-                    </div>
-                </div>                               
             </div>
             <div class="col-4">
+                <h4 class="text-center" style="color:#FFEBA7">Фото барбера</h4>
                 <img src="@WC.BarberPath@Model.Barber.BarberImage" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+                <h5 class="mt-1 text-center" style="color:#FFEBA7">Обрати нове фото</h5>
+                <input type="file" name="files" id="uploadBox" accept=".png, .jpg, .jpeg" class="form-control mt-1 mb-2" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="row">
+                <div class="col">
+                    <input type="submit" class="btn btn-primary w-100" value="Оновити" />
+                </div>
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-success w-100">До переліку</a>
+                </div>
             </div>
         </div>
     </div>
@@ -139,9 +134,11 @@
     }
     <script>
         $(document).ready(function () {
-            $('.summernote').summernote({
-                height: 250
-            });
+             $('.summernote').summernote();
+        var noteBar = $('.note-toolbar');
+        noteBar.find('[data-toggle]').each(function() {
+            $(this).attr('data-bs-toggle', $(this).attr('data-toggle')).removeAttr('data-toggle');
+        });
 
             var selectedSpecializations = [];
             var specializationSelect = $('#specializationSelect');

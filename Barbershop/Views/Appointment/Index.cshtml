@@ -24,11 +24,11 @@
 <body>
     <form method="post">
     <div class="section">
-        <div class="container text-center p-3 col-6 rounded" style="background-color: #1F2029;">
+            <div class="container text-center p-3 col-md-8 col-lg-6 rounded" style="background-color: #1F2029;">
             <div class="row full-height justify-content-center">
                 <div class="col-12 text-center align-self-center">
                     <div class="section pb-5 pt-5 pt-sm-2 text-center">
-                        <img class="" src="~/images/Oasis-Appointment.jpg" alt="Logo.jpg" style="width: 320px; height: 320px" />
+                  <h3 class="mb-5 p-2" style="color: #FFEBA7; border:solid; border-width: 2px; display: inline-block">Запис до барбера</h3>
                         <h6 class="mb-0 pb-3"><span style="color: #FFEBA7">Деталі запису </span><span style="color: #FFEBA7">Деталі клієнта</span></h6>
                         <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
                         <label for="reg-log"></label>
@@ -37,7 +37,6 @@
                                 <div class="card-front" style="font-size: 16px">
                                     <div class="center-wrap">
                                         <div class="section text-center">
-                                            <h4 class="mb-1 p-2" style="color: #FFEBA7; border:solid; border-width: 2px; display: inline-block">Запис до барбера</h4>
                                             <div class="form-group">
                                                     <h3 class="mt-2" style="color: #FFEBA7">Барбер</h3>
                                                 <div class="custom-select">
@@ -404,7 +403,8 @@
 
                             let photoPath = barberPath + photo;
                         
-                            var barberElement = '<div class="col-md-3">' +
+                            var barberElement = '<div class="col-6 col-md-4 col-lg-3">' +
+                            '<div class="col-md-3">' +
                                 '<div class="card mt-3" style="width: 10rem; border: 0; background-color: #1F2029">' +
                                 '<img src="'+ photoPath +'" class="card-img-top rounded-circle barber-img" alt="Barber Image">' +
                                 '<div class="card-body">' +
@@ -412,6 +412,7 @@
                                 '<h5 style="color: #FFEBA7">' + lastName + '</h5>' +
                                 '<p class="card-text" style="color: #FFEBA7">'+ workPosition +'</p>' +
                                 '<button type="button" class="btn btn-dark select-barber rounded" style="border-radius: 0"  data-barber-name="' + fullName.join(' ') + '">Обрати</button>' +
+                                '</div>' +
                                 '</div>' +
                                 '</div>' +
                                 '</div>';

@@ -22,7 +22,7 @@
                         <label>Вміст публікації</label>
                     </div>
                     <div class="col-8">
-                        <textarea asp-for="News.Description" class="form-control mb-2"></textarea>
+                        <textarea asp-for="News.Description" class="form-control mb-2 summernote"></textarea>
                         <span asp-validation-for="News.Description" class="text-danger"></span>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                         <label>Короткий вміст</label>
                     </div>
                     <div class="col-8">
-                        <textarea asp-for="News.ShortDescription" class="form-control mb-2" ></textarea>
+                        <textarea asp-for="News.ShortDescription" class="form-control mb-2 summernote"></textarea>
                         <span asp-validation-for="News.ShortDescription" class="text-danger"></span>
                     </div>
                 </div>
@@ -98,3 +98,12 @@
         </div>
     </div>
 </form>
+<script>
+    $(document).ready(function() {
+            $('.summernote').summernote();
+            var noteBar = $('.note-toolbar');
+            noteBar.find('[data-toggle]').each(function () {
+                $(this).attr('data-bs-toggle', $(this).attr('data-toggle')).removeAttr('data-toggle');
+            });
+    });
+</script>

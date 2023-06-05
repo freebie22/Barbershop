@@ -116,24 +116,22 @@
     </div>
 </div>
 
-<div class="p-3 mt-2" style="background-color: #1F2029">
-    <ejs-grid id="Grid" dataSource="@Model.AppointmentList" allowFiltering="true" allowSorting="true" allowPaging="true">
-        <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
-        <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
+<div class="p-3 mt-2" style="background-color: #1F2029;">
+    <ejs-grid id="adaptivebrowser" dataSource="@Model.AppointmentList" enableAdaptiveUI="true"  allowFiltering="true" allowSorting="true" allowPaging="true">
         <e-grid-pagesettings pageSize="5"></e-grid-pagesettings>
+        <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
         <e-grid-columns>
-
-            <e-grid-column field="Id" headerText="ID" isPrimaryKey="true" textAlign="Right" width="100"></e-grid-column>
-            <e-grid-column field="PhoneNumber" headerText="Номер телефону" textAlign="Right"></e-grid-column>
-            <e-grid-column field="Email" headerText="E-Mail" textAlign="Right"></e-grid-column>
-            <e-grid-column field="Barber.FullName" headerText="Барбер" textAlign="Right"></e-grid-column>
-            <e-grid-column field="AppointmentDateAndTime" headerText="Дата оформлення" customFormat="@(new {type="date", format="dd/MM/yyyy"})" textAlign="Right"></e-grid-column>
+            <e-grid-column field="Id" headerText="Ідентифікатор запису" isPrimaryKey="true" width="180"></e-grid-column>
+            <e-grid-column field="PhoneNumber" headerText="Номер телефону" width="180"></e-grid-column>
+            <e-grid-column field="Email" headerText="E-Mail" width="180"></e-grid-column>
+            <e-grid-column field="Barber.FullName" headerText="Барбер" width="180"></e-grid-column>
+            <e-grid-column field="AppointmentDateAndTime" width="180" headerText="Дата оформлення" customFormat="@(new {type="date", format="dd/MM/yyyy"})"></e-grid-column>
             @if(User.IsInRole(WC.AdminRole))
             {
-                <e-grid-column field="Date" headerText="Дата запису" customFormat="@(new {type="date", format="dd/MM/yyyy"})" textAlign="Right"></e-grid-column>
-                <e-grid-column field="AppointmentType" headerText="Тип запису" textAlign="Right"></e-grid-column>
+                <e-grid-column field="Date" width="180" headerText="Дата запису" customFormat="@(new {type="date", format="dd/MM/yyyy"})" ></e-grid-column>
+                <e-grid-column field="AppointmentType" width="180" headerText="Тип запису" ></e-grid-column>
             }
-            <e-grid-column field="AppointmentStatus" headerText="Статус" textAlign="Right"></e-grid-column>
+            <e-grid-column field="AppointmentStatus" width="180" headerText="Статус" ></e-grid-column>
             <e-grid-column field="Id" headerText="" width="70" template="<a rel='nofollow' href='AppointmentList/Details/${Id}' class='btn btn-primary'> <i class='fas fa-list'></i></a>"></e-grid-column>
         </e-grid-columns>
     </ejs-grid>

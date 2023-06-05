@@ -26,9 +26,17 @@ namespace Barbershop.Controllers
 
         public IActionResult Index()
         {
-            List<Barbers> objList = _db.Barbers.Include(o => o.Specializations).ToList();
+            if(User.IsInRole(WC.AdminRole))
+            {
+                List<Barbers> objList = _db.Barbers.Include(o => o.Specializations).ToList();
 
-            return View(objList);
+                return View(objList);
+            }
+
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
 
@@ -36,28 +44,35 @@ namespace Barbershop.Controllers
         //GET - Edit
         public IActionResult Edit(int? id)
         {
-            BarbersVM barberVM = new BarbersVM()
+            if (User.IsInRole(WC.AdminRole))
             {
-                Barber = new Barbers(),
-                WorkPostionsSelectList = _db.WorkPositions.Select(i => new SelectListItem
+                BarbersVM barberVM = new BarbersVM()
                 {
-                    Text = i.PositionName,
-                    Value = i.Id.ToString()
-                }
+                    Barber = new Barbers(),
+                    WorkPostionsSelectList = _db.WorkPositions.Select(i => new SelectListItem
+                    {
+                        Text = i.PositionName,
+                        Value = i.Id.ToString()
+                    }
                 ),
-                Specializations = _db.Specializations.ToList()
-            };
+                    Specializations = _db.Specializations.ToList()
+                };
 
-            barberVM.Barber = _db.Barbers.Include(b => b.Specializations).FirstOrDefault(b => b.Id == id);
+                barberVM.Barber = _db.Barbers.Include(b => b.Specializations).FirstOrDefault(b => b.Id == id);
 
-            if (barberVM.Barber == null)
-            {
-                TempData[WC.Error] = "Барбера з таким ідентифікатором не існує";
-                return RedirectToAction("Index");
+                if (barberVM.Barber == null)
+                {
+                    TempData[WC.Error] = "Барбера з таким ідентифікатором не існує";
+                    return RedirectToAction("Index");
 
+                }
+
+                return View(barberVM);
             }
-
-            return View(barberVM);
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         //POST - Edit
@@ -130,6 +145,62 @@ namespace Barbershop.Controllers
             _db.Barbers.Update(barberVM.Barber);
 
 
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (User.IsInRole(WC.AdminRole))
+            {
+                BarbersVM barberVM = new BarbersVM()
+                {
+                    Barber = new Barbers(),
+                    WorkPostionsSelectList = _db.WorkPositions.Select(i => new SelectListItem
+                    {
+                        Text = i.PositionName,
+                        Value = i.Id.ToString()
+                    }
+                ),
+                    Specializations = _db.Specializations.ToList()
+                };
+
+                barberVM.Barber = _db.Barbers.Find(id);
+                if (barberVM.Barber == null)
+                {
+                    return NotFound();
+                }
+
+                return View(barberVM);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        public IActionResult DeletePost(int? id)
+        {
+            var obj = _db.Barbers.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            string upload = _webHostEnvironment.WebRootPath + WC.BarberPath;
+
+            var oldFile = Path.Combine(upload, obj.BarberImage);
+
+            if (System.IO.File.Exists(oldFile))
+            {
+                System.IO.File.Delete(oldFile);
+            }
+
+            _db.Barbers.Remove(obj);
             _db.SaveChanges();
 
             return RedirectToAction("Index");
