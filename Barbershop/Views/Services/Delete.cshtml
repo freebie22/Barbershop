@@ -2,15 +2,15 @@
 
 <form method="post" asp-action="DeletePost">
     <input asp-for="Id" hidden />
-    <div class="border p-3">
+    <div class="p-3" style="border:1px solid #FFEBA7; background-color: #1F2029">
         <div class="form-group row">
-            <h2 class="text-info pl-3">Видалення послуги</h2>
+            <h2 class="text-center pl-3" style="color: #FFEBA7">Видалення послуги</h2>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="serviceName"></label>
+                        <label style="color: #FFEBA7">Назва послуги</label>
                     </div>
                     <div class="col-8">
                         <input asp-for="serviceName" disabled class="form-control" />
@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-group row pt-2">
                     <div class="col-4">
-                        <label asp-for="traineePrice"></label>
+                        <label style="color: #FFEBA7" asp-for="traineePrice"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="traineePrice" disabled class="form-control" />
@@ -27,7 +27,7 @@
                 </div>
                 <div class="form-group row pt-2">
                     <div class="col-4">
-                        <label asp-for="barberPrice"></label>
+                        <label style="color: #FFEBA7" asp-for="barberPrice"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="barberPrice" disabled class="form-control" />
@@ -35,30 +35,26 @@
                 </div>
                 <div class="form-group row pt-2">
                     <div class="col-4">
-                        <label asp-for="seniorPrice"></label>
+                        <label style="color: #FFEBA7" asp-for="seniorPrice"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="seniorPrice" disabled class="form-control" />
                     </div>
-                </div>
-                <div class="form-group row pt-3">
-                    <div class="col-8 offset-4 row">
-
+                </div>                
+            </div>
+        </div>
+        <div class="form-group row pt-3">
+                    <div class="row">
                         <div class="col">
                             <input type="submit" class="btn btn-danger w-100" value="Видалити" />
                         </div>
-                        <div class="col">
+                <div class="col">
                             <a asp-action="Index" class="btn btn-success w-100">
                                 Повернутись до послуг
                             </a>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-4">
-                @* Keep this empty *@
-            </div>
-        </div>
     </div>
 </form>
 @section Scripts{

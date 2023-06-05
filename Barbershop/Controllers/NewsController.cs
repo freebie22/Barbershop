@@ -223,5 +223,77 @@ namespace Barbershop.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult Delete(int? id)
+        {
+            if (User.IsInRole(WC.AdminRole))
+            {
+                NewsVM newsVM = new NewsVM()
+                {
+                    News = new News(),
+                    NewsImages = _db.NewsImages.ToList()
+                };
+
+
+                newsVM.News = _db.News.Include(o => o.NewsImages).Include(o => o.User).FirstOrDefault(p => p.Id == id);
+
+                newsVM.NewsImages = newsVM.News.NewsImages.ToList();
+
+
+                if (newsVM.News == null)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                return View(newsVM);
+            }
+
+            else
+            {
+                return RedirectToAction("NewsList");
+            }
+        }
+
+        //POST - Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        public IActionResult DeletePost(int? id)
+        {
+            var obj = _db.News.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            string upload = _webHostEnvironment.WebRootPath + WC.NewsMainPath;
+
+
+            var oldFile = Path.Combine(upload, obj.MainPhoto);
+
+            if (System.IO.File.Exists(oldFile))
+            {
+                System.IO.File.Delete(oldFile);
+            }
+
+            string uploads = _webHostEnvironment.WebRootPath + WC.NewsGalleryPath;
+
+            var imagesToDelete = _db.NewsImages.Where(pi => pi.News.Any(p => p.Id == obj.Id)).ToList();
+
+            foreach (var imageToDelete in imagesToDelete)
+            {
+                var imageFile = Path.Combine(uploads, imageToDelete.Image);
+                if (System.IO.File.Exists(imageFile))
+                {
+                    System.IO.File.Delete(imageFile);
+                }
+               _db.NewsImages.Remove(imageToDelete);
+            }
+
+            _db.News.Remove(obj);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
     }
 }

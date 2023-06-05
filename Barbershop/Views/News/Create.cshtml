@@ -5,15 +5,15 @@
 @inject UserManager<IdentityUser> UserManager
 
 <form method="post" enctype="multipart/form-data">
-    <div class="border p-3">
+    <div class="p-3" style="border:1px solid #FFEBA7; background-color: #1F2029">
         <div class="form-group row">
-            <h2 class="text-info pl-3">Додати публікацію</h2>
+            <h2 class="text-center" style="color: #FFEBA7">Додати публікацію</h2>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="form-group row">
                     <div class="col-4">
-                        <label>Заголовок</label>
+                        <label style="color: #FFEBA7">Заголовок</label>
                     </div>
                     <div class="col-8">
                         <input asp-for="News.Title" class="form-control mb-2" />
@@ -22,25 +22,25 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label>Короткий вміст</label>
+                        <label style="color: #FFEBA7">Короткий вміст</label>
                     </div>
                     <div class="col-8">
-                        <textarea asp-for="News.ShortDescription" class="form-control mb-2" ></textarea>>
+                        <textarea asp-for="News.ShortDescription" class="form-control mb-2 summernote" ></textarea>
                         <span asp-validation-for="News.ShortDescription" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label>Вміст публікації</label>
+                        <label style="color: #FFEBA7">Вміст публікації</label>
                     </div>
                     <div class="col-8">
-                        <textarea asp-for="News.Description" class="form-control mb-2" ></textarea>>
+                        <textarea asp-for="News.Description" class="form-control mb-2 summernote"></textarea>
                         <span asp-validation-for="News.Description" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label>Категорія</label>
+                        <label style="color: #FFEBA7">Категорія</label>
                     </div>
                     <div class="col-8">
                         <select asp-for="News.Category" class="form-select mb-2" >
@@ -56,7 +56,7 @@
                 </div>               
                 <div class="form-group row">
                     <div class="col-4">
-                        Основне фото публікації
+                        <label style="color: #FFEBA7">Основне фото публікації</label>
                     </div>
                     <div class="col-8">
                         <input type="file" name="files1" id="uploadBox" accept=".png, .jpg, .jpeg" class="form-control mb-2" />
@@ -64,7 +64,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        Додаткові фото публікації
+                         <label style="color: #FFEBA7">Додаткові фото публікації</label>
                     </div>
                     <div class="col-8">
                         <input type="file" name="files2" id="uploadBox" multiple accept=".png, .jpg, .jpeg" class="form-control mb-2" />
@@ -72,14 +72,16 @@
                 </div>  
                 <div class="form-group row">
                     <div class="col-4">
-                        <label>Посилання на відео</label>
+                        <label style="color: #FFEBA7">Посилання на відео</label>
                     </div>
                     <div class="col-8">
                         <input asp-for="News.VideoUrl" class="form-control mb-2" />
                     </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-8 offset-4 row">
+                </div>                
+            </div>
+        </div>
+        <div class="form-group row">
+                    <div class="row">
                         <div class="col">
                             <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100 text-white" value="Опублікувати" />
                         </div>
@@ -88,9 +90,15 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
     </div>
 </form>
-
+<script>
+    $(document).ready(function () {
+        $('.summernote').summernote();
+        var noteBar = $('.note-toolbar');
+        noteBar.find('[data-toggle]').each(function () {
+            $(this).attr('data-bs-toggle', $(this).attr('data-toggle')).removeAttr('data-toggle');
+        });
+    });
+</script>
 

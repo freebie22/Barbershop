@@ -4,7 +4,7 @@
     <input hidden asp-for="News.Id" />
     <div class="p-3" style="border:1px solid #FFEBA7; background-color: #1F2029">
         <div class="form-group row">
-            <h2 class="pl-3" style="color: #FFEBA7">Редагування публікації</h2>
+            <h2 class="pl-3" style="color: #FFEBA7">Видалення публікації</h2>
         </div>
         <div class="row">
             <div class="col-8">
@@ -13,7 +13,7 @@
                         <label style="color: #FFEBA7">Заголовок</label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="News.Title" class="form-control mb-2" />
+                        <input disabled asp-for="News.Title" class="form-control mb-2" />
                         <span asp-validation-for="News.Title" class="text-danger"></span>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
                         <label style="color: #FFEBA7">Вміст публікації</label>
                     </div>
                     <div class="col-8">
-                        <textarea asp-for="News.Description" class="form-control mb-2 summernote"></textarea>
+                        <textarea disabled asp-for="News.Description" class="form-control mb-2"></textarea>
                         <span asp-validation-for="News.Description" class="text-danger"></span>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                         <label style="color: #FFEBA7">Короткий вміст</label>
                     </div>
                     <div class="col-8">
-                        <textarea asp-for="News.ShortDescription" class="form-control mb-2 summernote"></textarea>
+                        <textarea disabled asp-for="News.ShortDescription" class="form-control mb-2"></textarea>
                         <span asp-validation-for="News.ShortDescription" class="text-danger"></span>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                         <label style="color: #FFEBA7">Категорія</label>
                     </div>
                     <div class="col-8">
-                        <select asp-for="News.Category" class="form-select mb-2">
+                        <select disabled asp-for="News.Category" class="form-select mb-2">
                             <option value="Загальна інформація">Загальна інформація</option>
                             <option value="Про товари">Товари</option>
                             <option value="Про барберів">Барбери</option>
@@ -51,12 +51,13 @@
                         <span asp-validation-for="News.Category" class="text-danger"></span>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <div class="col-4">
-                        <label>Посилання на відео</label>
+                        <label style="color: #FFEBA7">Посилання на відео</label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="News.VideoUrl" class="form-control mb-2" />
+                        <input disabled asp-for="News.VideoUrl" class="form-control mb-2" />
                     </div>
                 </div>
                 <div class="form-group row">
@@ -69,23 +70,17 @@
                             </div>
                         }
                     </div>
-                    <div class="col-8">
-                        <h5 class="mt-1" style="color:#FFEBA7">Завантажити нові фото</h5>
-                        <input type="file" name="files2" id="uploadBox" multiple accept=".png, .jpg, .jpeg" class="form-control mt-2 mb-2" />
-                    </div>
                 </div>
-                </div>
+            </div>
             <div class="col-4">
                 <h5 class="text-center" style="color:#FFEBA7">Основне фото публікації</h5>
                 <img src="@WC.NewsMainPath@Model.News.MainPhoto" width="100%" style="border-radius:5px; border:1px solid #FFEBA7" />
-                <h5 class="text-center mt-1" style="color:#FFEBA7">Завантажити нове фото</h5>
-                <input type="file" name="files1" id="uploadBox" accept=".png, .jpg, .jpeg" class="form-control mb-2" />
-            </div>     
+            </div>
         </div>
         <div class="form-group row">
             <div class="row pt-2">
                 <div class="col">
-                    <button type="submit" class="btn btn-danger w-100" value="Edit">Змінити</button>
+                    <button type="submit" class="btn btn-danger w-100" value="Delete">Видалити</button>
                 </div>
                 <div class="col">
                     <a asp-action="Index" class="btn btn-success w-100">Назад</a>
@@ -95,16 +90,16 @@
     </div>
 </form>
 <script>
-    $(document).ready(function() {
-            $('.summernote').summernote();
-            var noteBar = $('.note-toolbar');
-            noteBar.find('[data-toggle]').each(function () {
-                $(this).attr('data-bs-toggle', $(this).attr('data-toggle')).removeAttr('data-toggle');
-            });
+    $(document).ready(function () {
+        $('.summernote').summernote();
+        var noteBar = $('.note-toolbar');
+        noteBar.find('[data-toggle]').each(function () {
+            $(this).attr('data-bs-toggle', $(this).attr('data-toggle')).removeAttr('data-toggle');
+        });
     });
 </script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         if ($('.slider').children().length > 0) {
             $('.slider').slick({
                 slidesToShow: 1, // Кількість відображуваних слайдів

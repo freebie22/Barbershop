@@ -1,7 +1,14 @@
 ﻿@model List<Barbershop.Models.BarberSchedule>
 
-<div class="container p-5" style="background-color: white">
-    <h2 class="text-dark text-center">Розклад роботи барберів</h2>
+<style>
+    .table-responsive {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+</style>
+
+<div class="container p-5" style="background-color: #1F2029">
+    <h2 class="text-center" style="color: #FFEBA7">Розклад роботи барберів</h2>
     <div class="row pt-4 pb-4 text-center">
         <div>
             <a asp-action="Create" class="btn btn-primary">
@@ -12,50 +19,53 @@
 
     @if (Model.Count() > 0)
     {
-        <table class="table table-bordered" style="width:100%; font-size:16px">
-            <thead>
-                <tr>
-                    <th class="text-center">
-                        Ім'я барбера
-                    </th>
-                    <th class="text-center">
-                        Розклад на дату
-                    </th>
-                    <th class="text-center">
-                        Початок робочого дня
-                    </th>
-                    <th class="text-center">
-                        Кінець робочого дня
-                    </th>
-                    <th class="text-center">
-                        Редагування
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var obj in Model)
-                {
+        <div class="table-responsive">
+            <table class="table table-bordered" style="width:100%; font-size:16px; border-color: #ffeba7">
+                <thead>
                     <tr>
-                        <td class="text-center" width="35%"><strong>@obj.Barber.FullName</strong></td>
-                        <td class="text-center" width="10%"><strong>@obj.Date.ToShortDateString()</strong></td>
-                        <td class="text-center" width="10%"><strong>@obj.StartTime</strong></td>
-                        <td class="text-center" width="10%"><strong>@obj.EndTime</strong></td>     
-                        
-                        <td wdith="35%" class="text-center">
-                            <div class="w-75 btn-group" role="group">
-                                <a asp-controller="BarberSchedule" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
-                                    <i class="fas fa-edit"></i> &nbsp;
-                                </a>
-                            </div>
-                        </td>
+                        <th style="color: #FFEBA7" class="text-center">
+                            Ім'я барбера
+                        </th>
+                        <th style="color: #FFEBA7" class="text-center">
+                            Розклад на дату
+                        </th>
+                        <th style="color: #FFEBA7" class="text-center">
+                            Початок робочого дня
+                        </th>
+                        <th style="color: #FFEBA7" class="text-center">
+                            Кінець робочого дня
+                        </th>
+                        <th style="color: #FFEBA7" class="text-center">
+                            Редагування
+                        </th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var obj in Model)
+                    {
+                        <tr>
+                            <td class="text-center" width="35%"><strong style="color: #FFEBA7">@obj.Barber.FullName</strong></td>
+                            <td class="text-center" width="10%"><strong style="color: #FFEBA7">@obj.Date.ToShortDateString()</strong></td>
+                            <td class="text-center" width="10%"><strong style="color: #FFEBA7">@obj.StartTime</strong></td>
+                            <td class="text-center" width="10%"><strong style="color: #FFEBA7">@obj.EndTime</strong></td>
+
+                            <td wdith="35%" class="text-center">
+                                <div class="w-75 btn-group" role="group">
+                                    <a asp-controller="BarberSchedule" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
+                                        <i class="fas fa-edit"></i> &nbsp;
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        
     }
     else
     {
-        <p>Користувачі тимчасово відсутні.</p>
+        <h2 class="text-center" style="color: #FFEBA7">Розклад тимчасово відсутній.</h2>
     }
 </div>
 

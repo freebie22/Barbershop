@@ -1,15 +1,15 @@
 ﻿@model Barbershop.Models.ViewModels.BarberScheduleVM
 
 <form method="post">
-    <div class="border p-3" style="background-color: #ffffff">
+    <div class="border p-3" style="background-color: #1f2029">
         <div class="form-group row text-center">
-            <h2 class="text-info pl-3">Додати новий розклад</h2>
+            <h2 class="pl-3" style="color:#FFEBA7">Додати новий розклад</h2>
         </div>
         <div class="row text-center">
             <div class="col-12">
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="BarberSchedule.Date"></label>
+                        <label style="color:#FFEBA7" asp-for="BarberSchedule.Date"></label>
                     </div>
                     <div class="col-8">
                         <input type="date" asp-for="BarberSchedule.Date" class="form-control mb-2" id="datePicker" />
@@ -18,7 +18,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="BarberSchedule.StartTime"></label>
+                        <label style="color:#FFEBA7" asp-for="BarberSchedule.StartTime"></label>
                     </div>
                     <div class="col-8">
                         <input type="time" asp-for="BarberSchedule.StartTime" class="form-control mb-2" />
@@ -27,7 +27,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="BarberSchedule.EndTime"></label>
+                        <label style="color:#FFEBA7" asp-for="BarberSchedule.EndTime"></label>
                     </div>
                     <div class="col-8">
                         <input type="time" asp-for="BarberSchedule.EndTime" class="form-control mb-2" />
@@ -36,28 +36,28 @@
                 </div>
                 <div class="form-group row">
                      <div class="col-4">
-                    <label for="barberId">Для барбера:</label>
+                        <label style="color:#FFEBA7" for="barberId">Для барбера:</label>
                     </div>
                     <div class="col-8">
-                         <select asp-for="BarberSchedule.BarberId" asp-items="@Model.BarbershopUserSelectList" class="form-control mb-2" id="barberId">
+                         <select asp-for="BarberSchedule.BarberId" asp-items="@Model.BarbershopUserSelectList" class="form-select mb-2" id="barberId">
                         <option disabled selected>--Оберіть барбера для формування розкладу--</option>
                     </select>
                     <span asp-validation-for="BarberSchedule.BarberId" class="text-danger"></span>
                     </div>
                 </div>
 
-            </div>
-            <div class="form-group row">
-                <div class="col-8 offset-4 row">
+            </div>         
+        </div>
+        <div class="form-group row">
+                <div class="row">
                     <div class="col">
-                        <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100 text-white" value="Додати" />
+                        <input type="submit" class="btn btn-primary w-100" value="Додати" />
                     </div>
                     <div class="col">
                         <a asp-action="Index" class="btn btn-success w-100"> До переліку</a>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </form>
 @section Scripts{
