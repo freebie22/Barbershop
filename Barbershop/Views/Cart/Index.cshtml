@@ -1,27 +1,43 @@
 ﻿@model List<Barbershop.Models.Products>
 @using Barbershop.Utility
 
+<style>
+    .container {
+        opacity: 0;
+        transform: translate3d(0, -50px, 0); /* ADDED - start x position as -50px */
+        transition: 0.7s all ease-in-out;
+    }
+
+    .show {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+</style>
+
 @if (Model.Count() > 0)
 {
     <form method="post">
         <br />
             <div class="container row">
-                <div class="col -8">
+                <div class="col-12">
                     <div class="card mt-4">
-                        <div class="card-header bg-dark text-light ml-0 row" style="overflow: hidden">
-                            <div class="col-6">
+                        <div class="card-header ml-0" style="overflow: hidden; background-color: #1f2029">
+                            <div class="row text-end">
+                                <div class="col-6">
                                 <i class="fa fa-shopping-cart"></i> &nbsp;
                                 Кошик
                             </div>
-                            <div class="col-6 text-right">
+                            <div class="col-6">
                                 <a asp-action="Index" asp-controller="Stock" class="btn btn-outline-info btn-sm">Продовжити покупки</a>
-                                    <a asp-action="Remove" asp-controller="Stock" class="btn btn-outline-info btn-sm">Очистити кошик</a>
+                                    <a asp-action="Clear" class="btn btn-outline-info btn-sm">Очистити кошик</a>
+                            </div>
                             </div>
                         </div>
-                        <div class="card-body">
+                    <div class="card-body" style="background-color: #1f2029">
                             <div class=" d-none d-lg-block">
-                                <div class="row" style="color:#821f3d">
+                                <div class="row" style="color:#FFEBA7">
                                     <div class="col-lg-2">
+                                        Фото товару
                                     </div>
                                     <div class="col-12 col-lg-3">
                                         Інформація про товар
@@ -52,7 +68,7 @@
                                         <img src="@WC.ProductPath@Model[i].ProductImage" class="rounded" width="100%" />
                                     </div>
                                     <div class="col-8 col-lg-3">
-                                        <h5>@Model[i].ProductName</h5>
+                                    <a asp-controller="Stock" asp-action="Details" asp-route-id="@Model[i].Id" style="text-decoration: none"><h5 style="color: #FFEBA7">@Model[i].ProductName</h5></a>
                                     </div>
                                     <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
                                         <span style="font-size:17px;"> @Model[i].Price грн</span>/ за од.
@@ -73,17 +89,17 @@
                                 <hr />
                             }
                             <div class="row">
-                                <div class="col-12 text-right pr-4">
+                                <div class="col-12 text-right pr-4" style="color:#FFEBA7">
                                     Загальна ціна: @string.Format("{0:c}",orderTotal);
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer">
+                    <div class="card-footer" style=" background-color: #1f2029">
                             <div class="row">
-                                <div class="col-6 col-md-3 offset-md-6">
-                                    <input type="submit" asp-action="UpdateCart" formmethod="post" name="Update" value="Update Cart" class="btn btn-info form-control"/>
+                                <div class="col-6">
+                                    <input type="submit" asp-action="UpdateCart" formmethod="post" name="Update" value="Оновити" class="btn btn-info form-control"/>
                                 </div>
-                                <div class="col-6 col-md-3">
+                                <div class="col-6">
                                     <button type="submit" class="btn btn-success form-control ">
                                         <span>Продовжити</span>
                                     </button>

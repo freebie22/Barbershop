@@ -39,21 +39,26 @@ namespace Barbershop.Controllers
             {
                 //session exists
                 shoppingCartList = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).ToList();
+                List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
+                IEnumerable<Products> prodListTemp = _db.Products.Where(u => prodInCart.Contains(u.Id));
+                IList<Products> prodList = new List<Products>();
+
+                foreach (var cartObj in shoppingCartList)
+                {
+                    Products prodTemp = prodListTemp.FirstOrDefault(u => u.Id == cartObj.ProductId);
+                    prodTemp.TempCount = cartObj.ProductCount;
+                    prodList.Add(prodTemp);
+                }
+
+                return View(prodList);
             }
-
-
-            List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
-            IEnumerable<Products> prodListTemp = _db.Products.Where(u => prodInCart.Contains(u.Id));
-            IList<Products> prodList = new List<Products>();
-
-            foreach(var cartObj in shoppingCartList)
+            else
             {
-                Products prodTemp = prodListTemp.FirstOrDefault(u => u.Id == cartObj.ProductId);
-                prodTemp.TempCount = cartObj.ProductCount;
-                prodList.Add(prodTemp);
+                TempData[WC.Info] = "Будь-ласка, додайте хоча б один товар у кошик, щоб перейти до нього.";
+                return RedirectToAction("Index", "Stock");
             }
 
-            return View(prodList);
+           
         }
 
         [HttpPost]
