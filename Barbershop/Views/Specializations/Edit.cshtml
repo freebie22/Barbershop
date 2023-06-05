@@ -2,15 +2,15 @@
 
 <form method="post" enctype="multipart/form-data">
     <input asp-for="Id" hidden />
-    <div class="border p-3">
+    <div class="p-3" style="background-color: #1F2029; border: solid 1px #FFEBA7">
         <div class="form-group row">
-            <h2 class="text-center text-info pl-3">Редагування спеціалізації</h2>
+            <h2 class="text-center pl-3" style="color:#FFEBA7">Редагування спеціалізації</h2>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="form-group row text-center">
                     <div class="col-4">
-                        <label asp-for="SpecName"></label>
+                        <label style="color:#FFEBA7" asp-for="SpecName"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="SpecName" class="form-control mb-2" />
@@ -18,26 +18,23 @@
                     </div>
                 </div>
                 <div class="form-group row text-center">
-                    <div class="col-4">
-                        Зображення спеціалізації
-                    </div>
                     <div class="col-8">
-                        <input type="file" name="files" id="uploadBox" multiple class="form-control mb-2" />
+                <h4 class="text-center" style="color:#FFEBA7">Зображення спеціалізації</h4>
+                <img src="@WC.SpecPath@Model.SpecImage"/>
+                <input type="file" name="files" id="uploadBox" class="form-control mt-2" />
                     </div>
                 </div>
-                <div class="form-group row text-center">
-                    <div class="col-8 offset-4 row">
-                        <div class="col">
-                            <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100 text-white" value="Оновити" />
-                        </div>
-                        <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> До переліку</a>
-                        </div>
-                    </div>
+                
+            </div>         
+        </div>
+        <div class="form-group row text-center">
+            <div class="row">
+                <div class="col">
+                    <input type="submit" class="btn btn-primary w-100 mt-2" value="Оновити" />
                 </div>
-            </div>
-            <div class="col-4">
-                <img src="@WC.SpecPath@Model.SpecImage" width="100%" />
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-success w-100 mt-2">До переліку</a>
+                </div>
             </div>
         </div>
     </div>
@@ -54,16 +51,5 @@
                 height: 250
             });
         });
-        function validateInput() {
-            if (document.getElementById("uploadBox").value == "") {
-                Swal.fire(
-                    'Error!',
-                    'Please, upload the image!',
-                    'error'
-                )
-                return false;
-            }
-            return true;
-        }
     </script>
 }

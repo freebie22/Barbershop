@@ -1,16 +1,16 @@
 ﻿@model Barbershop.Models.Specializations
 
 <form method="post" asp-action="Create" enctype="multipart/form-data">
-    <div class="border p-3">
+    <div class="p-3" style="background-color: #1F2029; border: solid 1px #FFEBA7">
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group row">
-            <h2 class="text-info pl-3 text-center">Додати спеціалізацію</h2>
+            <h2 class="pl-3 text-center" style="color: #FFEBA7">Додати спеціалізацію</h2>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="SpecName"></label>
+                        <label style="color:#FFEBA7" asp-for="SpecName"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="SpecName" class="form-control" />
@@ -19,29 +19,24 @@
 
                 </div>
                 <div class="form-group row mt-2">
-                    <div class="col-4">
-                        Зображення спеціалізації
-                    </div>
                     <div class="col-8">
+                        <h4 style="color:#FFEBA7">Зображення спеціалізації</h4>
                         <input type="file" name="files" id="uploadBox" width="128px" height="128px" multiple class="form-control mb-2" />
                     </div>
                 </div>
-                <div class="form-group row pt-3">
-                    <div class="col-8 offset-4 row">
-
-                        <div class="col">
-                            <input type="submit" class="btn btn-info w-100" value="Додати" />
-                        </div>
-                        <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100">
-                                <i class="fas fa-sign-out-alt"></i> До переліку
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
-            <div class="col-4">
-                @* Keep this empty *@
+        </div>
+        <div class="form-group row pt-3">
+            <div class="row">
+                <div class="col">
+                    <input type="submit" class="btn btn-info w-100" value="Додати" />
+                </div>
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-success w-100">
+                        До переліку
+                    </a>
+                </div>
             </div>
         </div>
     </div>
