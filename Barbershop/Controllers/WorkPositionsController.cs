@@ -45,6 +45,7 @@ namespace Barbershop.Controllers
                 await Task.Run(() =>
                 {
                     _db.WorkPositions.AddAsync(obj);
+                    obj.StandardPay = 10;
                     _db.SaveChangesAsync();
 
                 });

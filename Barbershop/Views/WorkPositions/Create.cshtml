@@ -1,48 +1,36 @@
 ﻿@model Barbershop.Models.WorkPositions
 
 <form method="post" asp-action="Create">
-    <div class="border p-3">
+    <div class="p-3" style="background-color: #1F2029; border: solid 1px #FFEBA7">
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group row">
-            <h2 class="text-info pl-3 text-center">Додати посаду</h2>
+            <h2 class="pl-3 text-center" style="color:#FFEBA7">Додати посаду</h2>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="PositionName"></label>
+                        <label style="color:#FFEBA7" asp-for="PositionName"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="PositionName" class="form-control" />
                         <span asp-validation-for="PositionName" class="text-danger"></span>
                     </div>
-                </div>
-                <div class="form-group row mt-2">
-                    <div class="col-4">
-                        <label asp-for="StandardPay"></label>
-                    </div>
-                    <div class="col-8">
-                        <input asp-for="StandardPay" class="form-control" />
-                        <span asp-validation-for="StandardPay" class="text-danger"></span>
-                    </div>
-                </div>
-                    <div class="col-8 offset-4 row mt-2">
-                        <div class="col">
-                            <input type="submit" class="btn btn-info w-100" value="Додати" />
-                        </div>
-                        <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100">
-                                <i class="fas fa-sign-out-alt"></i> До переліку
-                            </a>
-                        </div>
-                    </div>
+                </div>               
+                    
                 </div>
             </div>
-            <div class="col-4">
-                @* Keep this empty *@
+        <div class="row mt-2">
+            <div class="col">
+                <input type="submit" class="btn btn-info w-100" value="Додати" />
+            </div>
+            <div class="col">
+                <a asp-action="Index" class="btn btn-success w-100">
+                    <i class="fas fa-sign-out-alt"></i> До переліку
+                </a>
             </div>
         </div>
-    </div>
+        </div>
 </form>
 @section Scripts{
     @{

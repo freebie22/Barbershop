@@ -1,97 +1,129 @@
 ﻿@model Barbershop.Models.ViewModels.ProductsVM
 
-<form method="post">
-    <input asp-for="Product.Id" hidden />
-    <div class="border p-3">
+<form method="post" enctype="multipart/form-data">
+    <input hidden asp-for="Product.Id" />
+    <div class="p-3" style="background-color: #1F2029; border: solid 1px #FFEBA7">
         <div class="form-group row">
-            <h2 class="text-info pl-3">Видалити товар</h2>
+            <h2 class="text-center pl-3" style="color: #FFEBA7">Видалення товару</h2>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.ProductName"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.ProductName"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.ProductName" disabled class="form-control mb-2" />
+                        <input disabled asp-for="Product.ProductName" class="form-control mb-2" />
+                        <span asp-validation-for="Product.ProductName" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Price"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Price"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Price" disabled class="form-control mb-2" />
+                        <input disabled asp-for="Product.Price" class="form-control mb-2" />
+                        <span asp-validation-for="Product.Price" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Producer"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Producer"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Volume" disabled class="form-control mb-2" />
+                        <input disabled asp-for="Product.Producer" class="form-control mb-2" />
+                        <span asp-validation-for="Product.Producer" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Consist"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Volume"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Consist" disabled class="form-control " />
+                        <input disabled asp-for="Product.Volume" class="form-control mb-2" />
+                        <span asp-validation-for="Product.Volume" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Description"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Consist"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Description" disabled class="form-control " />
+                        <input disabled asp-for="Product.Consist" class="form-control " />
+                        <span asp-validation-for="Product.Consist" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Usage"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Description"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Usage" disabled class="form-control " />
+                        <input asp-for="Product.Description" class="form-control " />
+                        <span asp-validation-for="Product.Description" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-8 offset-4 row pt-2">
-                        <div class="col">
-                            <button type="submit" class="btn btn-danger w-100" value="Delete">Delete</button>
-                        </div>
-                        <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Back</a>
-                        </div>
+                    <div class="col-4">
+                        <label style="color: #FFEBA7" asp-for="Product.Usage"></label>
                     </div>
+                    <div class="col-8">
+                        <input disabled asp-for="Product.Usage" class="form-control " />
+                        <span asp-validation-for="Product.Usage" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label style="color: #FFEBA7" asp-for="Product.ProductCategoryId"></label>
+                    </div>
+                    <div class="col-8">
+                        <select disabled asp-for="Product.ProductCategoryId" asp-items="@Model.ProductCategorySelectList" class="form-select mb-2">
+                            @*<select asp-for="CategoryId" asp-items="@ViewData["CategoryDropDown"] as IEnumerable<SelectListItem>" class="form-control mb-2">*@
+                            <option disabled selected>--Оберіть категорію товару--</option>
+                        </select>
+                        <span asp-validation-for="Product.ProductCategoryId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <h5 style="color: #FFEBA7">Галерея товару</h5>
+                    <div class="row col-8 slider">
+                        @foreach (var image in Model.Images)
+                        {
+                            <div class="col-4">
+                                <img src="@WC.GalleryPath@image.Image" width="100%" style="border-radius:5px;" />
+                            </div>
+                        }
+                    </div>                  
                 </div>
             </div>
+
+
             <div class="col-4">
-                <img src="@WC.ProductPath@Model.Product.ProductImage" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+                <h5 class="text-center" style="color: #FFEBA7">Основне фото товару</h5>
+                <img src="@WC.ProductPath@Model.Product.ProductImage" width="100%" style="border-radius:5px; border:1px solid #FFEBA7" />
             </div>
-            @foreach (var image in Model.Images)
-            {
-                <div class="col-4">
-                    <img src="@WC.GalleryPath@image.Image" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+
+        </div>
+        <div class="form-group row">
+            <div class="row pt-2">
+                <div class="col">
+                    <button type="submit" class="btn btn-danger w-100" value="Delete">Видалити</button>
                 </div>
-            }
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-success w-100">Назад</a>
+                </div>
+            </div>
         </div>
     </div>
 </form>
-
-@section Scripts{
-
-    @{
-        <partial name="_ValidationScriptsPartial" />
-    }
-    <script>
-        $(document).ready(function () {
-            $('.summernote').summernote({
-                height: 250
-                                disabled: true;
+<script>
+    $(document).ready(function () {
+        if ($('.slider').children().length > 0) {
+            $('.slider').slick({
+                slidesToShow: 1, // Кількість відображуваних слайдів
+                slidesToScroll: 1, // Кількість прокручуваних слайдів за раз
+                autoplay: true, // Автоматичне прокручування слайдів
+                autoplaySpeed: 2000 // Швидкість автоматичного прокручування (в мілісекундах)
             });
-        });
-    </script>
-}
-
+        }
+    });
+</script>

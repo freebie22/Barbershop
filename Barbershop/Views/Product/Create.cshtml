@@ -1,15 +1,15 @@
 ﻿@model Barbershop.Models.ViewModels.ProductsVM
 
 <form method="post" enctype="multipart/form-data">
-    <div class="border p-3">
+    <div class="p-3" style="background-color: #1F2029; border: solid 1px #FFEBA7">
         <div class="form-group row">
-            <h2 class="text-info pl-3">Додати товар</h2>
+            <h2 class="text-center pl-3" style="color: #FFEBA7">Додати товар</h2>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.ProductName"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.ProductName"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.ProductName" class="form-control mb-2" />
@@ -18,7 +18,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Price"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Price"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Price" class="form-control mb-2" />
@@ -27,7 +27,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Producer"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Producer"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Producer" class="form-control mb-2" />
@@ -36,7 +36,7 @@
                 </div>               
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Volume"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Volume"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Volume" class="form-control"/>
@@ -45,34 +45,34 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Consist"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Consist"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Consist" class="form-control" />
+                        <textarea asp-for="Product.Consist" class="form-control summernote"></textarea>
                         <span asp-validation-for="Product.Consist" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Description"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Description"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Description" class="form-control" />
+                        <textarea  asp-for="Product.Description" class="form-control summernote"></textarea>
                         <span asp-validation-for="Product.Description" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Usage"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Usage"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Usage" class="form-control" />
+                        <textarea  asp-for="Product.Usage" class="form-control summernote"></textarea>
                         <span asp-validation-for="Product.Usage" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        Основне фото товару
+                        <label style="color: #FFEBA7">Основне фото товару</label> 
                     </div>
                     <div class="col-8">
                         <input type="file" name="files1" id="uploadBox"  accept=".png, .jpg, .jpeg" class="form-control mb-2" />
@@ -80,7 +80,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        Додаткові фото товару
+                        <label style="color: #FFEBA7">Додаткові фото товару</label>
                     </div>
                     <div class="col-8">
                         <input type="file" name="files2" id="uploadBox" multiple accept=".png, .jpg, .jpeg" class="form-control mb-2" />
@@ -88,28 +88,36 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.ProductCategoryId"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.ProductCategoryId"></label>
                     </div>
                     <div class="col-8">
-                        <select asp-for="Product.ProductCategoryId" asp-items="@Model.ProductCategorySelectList" class="form-control mb-2">
+                        <select asp-for="Product.ProductCategoryId" asp-items="@Model.ProductCategorySelectList" class="form-select mb-2">
                             <option disabled selected>--Оберіть категорію товару--</option>
                         </select>
                         <span asp-validation-for="Product.ProductCategoryId" class="text-danger"></span>
                     </div>                   
-                </div>
-                <div class="form-group row">
-                    <div class="col-8 offset-4 row">
+                </div>          
+            </div>
+        </div>
+        <div class="form-group row">
+                    <div class="row">
                         <div class="col">
-                            <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100 text-white" value="Create" />
+                            <input type="submit" class="btn btn-primary w-100" value="Додати" />
                         </div>
                         <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Back</a>
+                            <a asp-action="Index" class="btn btn-success w-100">До переліку</a>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
     </div>
 </form>
+ <script>
+        $(document).ready(function () {
+             $('.summernote').summernote();
+        var noteBar = $('.note-toolbar');
+        noteBar.find('[data-toggle]').each(function() {
+            $(this).attr('data-bs-toggle', $(this).attr('data-toggle')).removeAttr('data-toggle');
+        });
+</script>
 
 

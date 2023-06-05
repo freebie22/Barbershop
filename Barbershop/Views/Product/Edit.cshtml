@@ -1,16 +1,16 @@
 ﻿@model Barbershop.Models.ViewModels.ProductsVM
 
 <form method="post" enctype="multipart/form-data">
-    <input asp-for="Product.Id" />
-    <div class="border p-3">
+    <input hidden asp-for="Product.Id" />
+    <div class="p-3" style="background-color: #1F2029; border: solid 1px #FFEBA7">
         <div class="form-group row">
-            <h2 class="text-info pl-3">Редагування товару</h2>
+            <h2 class="text-center pl-3" style="color: #FFEBA7">Редагування товару</h2>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.ProductName"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.ProductName"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.ProductName"  class="form-control mb-2" />
@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Price"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Price"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Price"  class="form-control mb-2" />
@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Producer"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Producer"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Producer" class="form-control mb-2" />
@@ -37,7 +37,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Volume"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Volume"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Volume" class="form-control mb-2" />
@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Consist"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Consist"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Consist"  class="form-control " />
@@ -55,7 +55,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Description"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Description"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Description"  class="form-control " />
@@ -64,62 +64,71 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Usage"></label>
+                        <label style="color: #FFEBA7" asp-for="Product.Usage"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Usage" class="form-control " />
                         <span asp-validation-for="Product.Usage" class="text-danger"></span>
                     </div>
-                </div>               
+                </div>                                              
                 <div class="form-group row">
                     <div class="col-4">
-                        Основне фото товару
+                        <label style="color: #FFEBA7" asp-for="Product.ProductCategoryId"></label>
                     </div>
                     <div class="col-8">
-                        <input type="file" name="files1" id="uploadBox" accept=".png, .jpg, .jpeg" class="form-control mb-2" />
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-4">
-                        Додаткові фото товару
-                    </div>
-                    <div class="col-8">
-                        <input type="file" name="files2" id="uploadBox" multiple accept=".png, .jpg, .jpeg" class="form-control mb-2" />
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label asp-for="Product.ProductCategoryId"></label>
-                    </div>
-                    <div class="col-8">
-                        <select asp-for="Product.ProductCategoryId" asp-items="@Model.ProductCategorySelectList" class="form-control mb-2">
+                        <select asp-for="Product.ProductCategoryId" asp-items="@Model.ProductCategorySelectList" class="form-select mb-2">
                             @*<select asp-for="CategoryId" asp-items="@ViewData["CategoryDropDown"] as IEnumerable<SelectListItem>" class="form-control mb-2">*@
                             <option disabled selected>--Оберіть категорію товару--</option>
                         </select>
                         <span asp-validation-for="Product.ProductCategoryId" class="text-danger"></span>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <h5 style="color: #FFEBA7">Галерея товару</h5>
+                    <div class="row col-8 slider">
+                        @foreach (var image in Model.Images)
+                        {
+                            <div class="col-4">
+                                <img src="@WC.GalleryPath@image.Image" width="100%" style="border-radius:5px;" />
+                            </div>
+                        }
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files2" id="uploadBox" multiple accept=".png, .jpg, .jpeg" class="form-control mt-2 mb-2" />
+                    </div>
+                </div>
             </div>
            
+
             <div class="col-4">
-                <img src="@WC.ProductPath@Model.Product.ProductImage" width="100%" style="border-radius:5px; border:1px solid #bbb" />
-            </div>
-            @foreach (var image in Model.Images)
-            {
-                <div class="col-4">
-                    <img src="@WC.GalleryPath@image.Image" width="100%" style="border-radius:5px; border:1px solid #bbb" />
-                </div>
-            }
-             <div class="form-group row">
-                    <div class="col-8 row pt-2">
+                <h5 class="text-center" style="color: #FFEBA7">Основне фото товару</h5>
+                <img src="@WC.ProductPath@Model.Product.ProductImage" width="100%" style="border-radius:5px; border:1px solid #FFEBA7" />
+                <h5 class="text-center" style="color: #FFEBA7">Завантажити нове фото</h5>
+                <input type="file" name="files1" id="uploadBox" accept=".png, .jpg, .jpeg" class="form-control mb-2" />
+            </div>       
+             
+        </div>
+        <div class="form-group row">
+                    <div class="row pt-2">
                         <div class="col">
-                            <button type="submit" class="btn btn-danger w-100" value="Edit">Edit</button>
+                            <button type="submit" class="btn btn-danger w-100" value="Edit">Оновити</button>
                         </div>
                         <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa-solid fa-arrow-left"></i> Назад</a>
+                            <a asp-action="Index" class="btn btn-success w-100">Назад</a>
                         </div>
                     </div>
                 </div>
-        </div>
     </div>
 </form>
+<script>
+    $(document).ready(function() {
+        if ($('.slider').children().length > 0) {
+            $('.slider').slick({
+                slidesToShow: 1, // Кількість відображуваних слайдів
+                slidesToScroll: 1, // Кількість прокручуваних слайдів за раз
+                autoplay: true, // Автоматичне прокручування слайдів
+                autoplaySpeed: 2000 // Швидкість автоматичного прокручування (в мілісекундах)
+            });
+        }
+    });
+</script>
