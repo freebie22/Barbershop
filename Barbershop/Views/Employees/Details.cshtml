@@ -1,38 +1,34 @@
 ﻿@model Barbershop.Models.ViewModels.DetailsVM
-<div class="">
     <form method="post">
-        <input asp-for="@Model.Barbers.Id" hidden></input>
-        <div class="container backgroundWhite pt-4">
+        <input asp-for="@Model.Barbers.Id" hidden/>
+        <div class="container pt-4">
             <div class="card">
-                <div class="card-header bg-dark text-light d-flex justify-content-between" style="border-radius: 0px;">
+                <div class="card-header text-light d-flex justify-content-between" style="border-radius: 0px;background-color: #1f2029 ">
                     <div class="col-12 col-md-6">
-                        <h1 class="text-white">@Model.Barbers.FullName</h1>
-                    </div>
-                    <div class="col-12 col-md-6 text-right">
-                        <h1 class="text-warning"> @Model.Barbers.WorkPosition.PositionName</h1>
+                        
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="container rounded p-2">
+                <div class="card-body" style="background-color: #1f2029">
+                    <div class="container rounded p-2" style="background-color: #1f2029">
                         <div class="row">
                             <div class="col-12 col-lg-4 p-1 text-center">
                                 <img src="@WC.BarberPath@Model.Barbers.BarberImage" width="100%" class="rounded" />
                             </div>
                             <div class="col-12 col-lg-8">
-                                <div class="pl-3">
-
-                                    <div class="col-12">
-                                        <span class="badge p-3 border" style="background-color:lavenderblush;color:black">@Model.Barbers.WorkPosition.PositionName</span>
-                                        @foreach(var spec in Model.Barbers.Specializations)
-                                        {
-                                            <span class="badge p-3 border" style="background-color:azure;color:black">@spec.SpecName</span>
-                                        }
-                                       
-                                        <h3 class="text-success"></h3>
-
-                                        <p class="text-secondary">@Html.Raw(Model.Barbers.Description)</p>
-                                    </div>
-
+                            <div class="pl-3">
+                                <div class="col-12">
+                                    <h1 class="text-center mt-1" style="color:#FFEBA7">@Model.Barbers.FullName</h1>
+                                    @foreach (var spec in Model.Barbers.Specializations)
+                                    {
+                                        <div class="d-flex align-items-start">
+                                            <img src="@WC.SpecPath@spec.SpecImage" class="mr-2" alt="Specialization Image" />
+                                            <h5 class="p-3" style="color:#FFEBA7">@spec.SpecName</h5>
+                                        </div>
+                                    }
+                                     <a asp-action="Index" asp-controller="Appointment" asp-route-barberId = "@Model.Barbers.Id" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Записатись</a>
+                                </div>
+                                <div class="col-12">
+                                    <h5 style="color:#FFFFFF; font-size: 20px">@Html.Raw(Model.Barbers.Description)</h5>
                                 </div>
                             </div>
                         </div>
@@ -50,5 +46,5 @@
                 </div>
             </div>
         </div>
+        </div>
     </form>
-</div>

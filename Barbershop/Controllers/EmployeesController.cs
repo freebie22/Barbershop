@@ -31,7 +31,17 @@ namespace Barbershop.Controllers
                 Barbers = _db.Barbers.Include(u => u.WorkPosition).Include(u => u.Specializations).Where(u => u.Id == id).FirstOrDefault()
             };
 
-            return View(DetailsVM);
+            if(DetailsVM.Barbers == null)
+            {
+                TempData[WC.Error] = "Такого барбера не існує";
+                return RedirectToAction("Index");
+            }
+
+            else
+            {
+                return View(DetailsVM);
+            }
+
         }
     }
 }

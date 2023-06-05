@@ -2,7 +2,7 @@
 
 <div class="container">
     <div class="text-center">
-        <button class="btn btn-dark filter-button" data-filter="all">All</button>
+        <button class="btn btn-dark filter-button" data-filter="all">Всі</button>
         @foreach (var obj in Model.WorkPositions)
         {
             <button class="btn btn-outline-secondary filter-button" data-filter="@obj.PositionName.Replace(' ','_')">
@@ -11,7 +11,7 @@
         }
         <br></br>
         <div class="row">
-            @foreach (var barber in Model.Barbers)
+            @foreach (var barber in Model.Barbers.OrderBy(b => b.WorkPosition.PositionName == "Топ-барбер" ? 0 : b.WorkPosition.PositionName == "Барбер" ? 1 : b.WorkPosition.PositionName == "Стажер" ? 2 : 3))
             {
                 <partial name="_IndividualBarberCard" model="barber"></partial>
                 //Відобразити всіх барберів

@@ -22,7 +22,7 @@
                         <label style="color:#FFEBA7">Ідентифікатор барбера</label>
                     </div>
                     <div class="col-8">
-                        <input disabled asp-for="Barber.BarbershopUserId" class="form-control mb-2" />
+                        <input readonly asp-for="Barber.BarbershopUserId" class="form-control mb-2" />
                     </div>
                 </div>
                 <div class="form-group row">
@@ -30,7 +30,7 @@
                         <label style="color:#FFEBA7" asp-for="Barber.PhoneNumber"></label>
                     </div>
                     <div class="col-8">
-                        <input type="text" id="phone" disabled asp-for="Barber.PhoneNumber" class="form-control mb-2" />
+                        <input type="text" id="phone" readonly asp-for="Barber.PhoneNumber" class="form-control mb-2" />
                         <span asp-validation-for="Barber.PhoneNumber" class="text-danger"></span>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         <label style="color:#FFEBA7" asp-for="Barber.Email"></label>
                     </div>
                     <div class="col-8">
-                        <input disabled asp-for="Barber.Email" class="form-control mb-2" />
+                        <input readonly asp-for="Barber.Email" class="form-control mb-2" />
                         <span asp-validation-for="Barber.Email" class="text-danger"></span>
                     </div>
                 </div>
