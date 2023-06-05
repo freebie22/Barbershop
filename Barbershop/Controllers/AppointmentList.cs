@@ -275,7 +275,7 @@ namespace Barbershop.Controllers
                 PromoCode.Type = WC.PromoAppointment;
 
 
-                //barbershopUser.AppointmentPoints -= 3;
+                barbershopUser.AppointmentPoints -= 3;
                 barbershopUser.LastPromoCodeGeneratedDate = DateTime.Now;
 
                 _db.PromoCodes.Add(PromoCode);

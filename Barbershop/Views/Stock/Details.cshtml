@@ -60,23 +60,29 @@
     .quantity-decrease {
         margin-bottom: 3px;
     }
-
-    
-
-
-
 </style>
-<div class="">
+@*<style>
+    .container {
+        opacity: 0;
+        transform: translate3d(0, 50px, 0);
+        transition: 0.7s all ease-in-out;
+    }
+
+    .show {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+</style>*@
     <form method="post">
-        <input asp-for="@Model.Product.Id" hidden></input>
-        <div class="container pt-4">
+        <input asp-for="@Model.Product.Id" hidden/>
+        <div class="container pt-4" style="border: solid 1px #ffeba7">
             <div class="d-flex flex-column flex-md-row justify-content-between p-3" style="border-radius: 0px;">
                 <div class="col-md-3 text-center mb-3 mb-md-0">
                     <img src="@WC.ProductPath@Model.Product.ProductImage" width="100%" />
                 </div>
                 <div class="col-md-8 d-flex flex-column justify-content align-items-md-start">
-                    <p id="product-header" class="text-black mb-0">@Model.Product.ProductName</p>
-                    <p id="product-price" class="text-black">@Model.Product.Price грн</p>
+                    <p id="product-header" class="mb-0" style="color: #FFEBA7">@Model.Product.ProductName</p>
+                    <p id="product-price" class="" style="color: #FFEBA7">@Model.Product.Price грн</p>
                 </div>
             </div>
                     <div class="container p-3">
@@ -84,40 +90,46 @@
                             <div class="col-12">
                                 <div class="pl-3">
                                     <div class="col-12">
-                                        <span class="badge p-3 border" style="color:black">@Model.Product.ProductCategory.Name</span>
-                                        <h3 class="text-success"></h3>
-                                        <p class="text-secondary"><strong>Опис товару:</strong> @Html.Raw(Model.Product.Description)</p>
-                                        <p class="text-secondary"><strong>Виробник:</strong> @Html.Raw(Model.Product.Producer)</p>
-                                        <p class="text-secondary"><strong>Об'єм:</strong> @Html.Raw(Model.Product.Volume)</p>
-                                        <p class="text-secondary"><strong>Склад:</strong> @Html.Raw(Model.Product.Consist)</p>
-                                        <p class="text-secondary"><strong>Застосування:</strong> @Html.Raw(Model.Product.Usage)</p>
+                                        <h5 style="color: #FFEBA7"><strong>Категорія товару: <h6 style="color: #FFF">@Html.Raw(Model.Product.ProductCategory.Name)</h6> </strong> </h5>
+                                        <h5 style="color: #FFEBA7"><strong>Опис товару:</strong> <h6 style="color: #FFF">@Html.Raw(Model.Product.Description)</h6></h5>
+                                        <h5 style="color: #FFEBA7"><strong>Виробник:</strong> <h6 style="color: #FFF">@Html.Raw(Model.Product.Producer)</h6></h5>
+                                        <h5 style="color: #FFEBA7"><strong>Об'єм:</strong> <h6 style="color: #FFF">@Html.Raw(Model.Product.Volume)</h6></h5>
+                                        <h5 style="color: #FFEBA7"><strong>Склад:</strong> <h6 style="color: #FFF">@Html.Raw(Model.Product.Consist)</h6></h5>
+                                        <h5 style="color: #FFEBA7"><strong>Застосування:</strong> <h6 style="color: #FFF">@Html.Raw(Model.Product.Usage)</h6></h5>
                                     </div>
                                     <hr>
-                            <div class="d-flex justify-content-center text-center">
+                            <div class="d-flex justify-content-center text-center largeScreen">
                                 <div class="row-cols-4 justify-content-center">
                                     @foreach (var image in Model.Product.ProductImages)
                                     {
-                                        <img src="@WC.GalleryPath@image.Image" width="100%" />
+                                            <img src="@WC.GalleryPath@image.Image" width="100%" />
                                     }
-                                    
+                                </div>
+                            </div>
+
+                            <div class="form-group justify-content-center text-center smallMediumScreen">
+                                <div class="row col-8 justify-content-center slider mx-auto">
+                                    @foreach (var image in Model.Product.ProductImages)
+                                    {
+                                        <div class="slide">
+                                            <img src="@WC.GalleryPath@image.Image" width="100%" />
+                                        </div>
+                                    }
                                 </div>
                             </div>
                                     
                                 </div>
                         <div class="row p-3 justify-content-center text-center ">
-                            <div class="col-12 col-md-6 pb-1">
-                                
-
-                                    <button type="button" class="btn btn-dark form-control btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <div class="col-12 col-md-6 pb-1">                               
+                                    <button type="button" id="modalButton" class="btn btn-dark form-control btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                         Додати в кошик
                                     </button>
-
                                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content" style="border-radius: 0rem">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">@Model.Product.ProductName</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <div class="modal-dialog modal-dialog-centered modal-transparent">
+                                            <div class="modal-content" style="border-radius: 0rem; background-color: #1f2029">
+                                                <div class="modal-header" style="border-bottom-color: #FFEBA7">
+                                                    <h5 class="modal-title" style="color:#FFEBA7" id="exampleModalLabel">@Model.Product.ProductName</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="d-flex flex-column flex-md-row justify-content-between p-3" style="border-radius: 0px;">
@@ -125,23 +137,23 @@
                                                             <img src="@WC.ProductPath@Model.Product.ProductImage" width="100%" />
                                                         </div>
                                                         <div class="col-md-8 d-flex flex-column justify-content align-items-md-start">
-                                                            <p id="product-header-modal" class="text-black mb-0">@Model.Product.ProductName</p>
-                                                            <p id="product-price-modal" class="text-black">@Model.Product.Price грн</p>
+                                                    <p id="product-header-modal" style="color:#FFEBA7" class="mb-0">@Model.Product.ProductName</p>
+                                                    <p id="product-price-modal" style="color:#FFEBA7">@Model.Product.Price грн</p>
                                                         </div>
                                                     </div>
                                                     <div class="quantity-input justify-content-center">
                                                     <div class="quantity-controls" style="display: inline-block;">
-                                                            <h6>Кількість товару для замовлення:</h6>
-                                                            <span class="quantity-control quantity-decrease" onclick="decreaseQuantity()" >-</span>
-                                                            <input readonly asp-for=@Model.Product.TempCount type="number" min="1" value="1" id="quantity" style="width: 50px;">                                                            
-                                                            <span class="quantity-control quantity-increase" onclick="increaseQuantity()" >+</span>
+                                                    <h6 style="color:#FFEBA7">Кількість товару для замовлення:</h6>
+                                                            <span style="color:#FFEBA7" class="quantity-control quantity-decrease" onclick="decreaseQuantity()" >-</span>
+                                                    <input style="color:#FFEBA7" readonly asp-for=@Model.Product.TempCount type="number" min="1" value="1" id="quantity" style="width: 50px;">
+                                                    <span style="color:#FFEBA7" class="quantity-control quantity-increase" onclick="increaseQuantity()">+</span>
                                                             <span asp-validation-for="@Model.Product.TempCount" class="text-danger"></span>
-                                                            <h6>Обрано товару на суму:</h6>
-                                                            <h6 id="total-price" class="text-black">@Model.Product.Price грн</h6>
+                                                    <h6 style="color:#FFEBA7">Обрано товару на суму:</h6>
+                                                    <h6 style="color:#FFEBA7" id="total-price" >@Model.Product.Price грн</h6>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="modal-footer">
+                                        <div class="modal-footer" style="border-top-color: #FFEBA7">
                                                 <button type="submit" asp-route-id="@Model.Product.Id" class="btn btn-dark form-control btn-lg" style="height:50px;">Додати в кошик</button>
                                                 <button type="button" class="btn btn-secondary form-control btn-lg" data-bs-dismiss="modal">Продовжити покупки</button>
                                                 </div>
@@ -152,10 +164,11 @@
                         </div>
                             </div>
                         </div>
-                    </div>
+                </div>
         </div>
     </form>
-</div>
+<style>
+</style>
 @section Scripts
 {
     <script>
@@ -172,14 +185,53 @@
         }
 
         function updateTotalPrice() {
-        var price = parseFloat(document.getElementById('product-price-modal').innerText);
-        var quantity = parseInt(document.getElementById('quantity').value);
-        var totalPrice = price * quantity;
-        document.getElementById('total-price').innerText = totalPrice.toFixed(2) + ' грн';
-    }
+            var price = parseFloat(document.getElementById('product-price-modal').innerText);
+            var quantity = parseInt(document.getElementById('quantity').value);
+            var totalPrice = price * quantity;
+            document.getElementById('total-price').innerText = totalPrice.toFixed(2) + ' грн';
+        }
 
     document.getElementById('quantity').addEventListener('change', updateTotalPrice);
     
 </script>
+<script>
+            $(document).ready(function() {
+            if ($('.slider').children().length > 0) {
+                $('.slider').slick({
+                    slidesToShow: 1, // Кількість відображуваних слайдів
+                    slidesToScroll: 1, // Кількість прокручуваних слайдів за раз
+                    arrows: false
+                });
+            }
+        });
+</script>
+    <script>
+        $(document).ready(function () {
+            checkScreenSize(); // Перевірити розмір екрану при завантаженні сторінки
+
+            $(window).resize(function () {
+                checkScreenSize(); // Перевірити розмір екрану при зміні розміру вікна
+            });
+
+            function checkScreenSize() {
+                var windowWidth = $(window).width();
+                if (windowWidth >= 992) {
+                    // Великий екран
+                    $('.largeScreen').removeClass('d-none');
+                    $('.smallMediumScreen').addClass('d-none');
+                }
+                if(windowWidth < 991) {
+                    // Середній та малий екран
+                    $('.largeScreen').addClass('d-none');
+                    $('.smallMediumScreen').removeClass('d-none');
+                }
+            }
+        });
+    </script>
+    <script>
+        //$(document).ready(function() {
+        //    $('.container').addClass('show');
+        //});
+    </script>
 }
 

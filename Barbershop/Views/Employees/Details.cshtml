@@ -1,8 +1,21 @@
 ﻿@model Barbershop.Models.ViewModels.DetailsVM
+<style>
+    .container {
+        opacity: 0;
+        transform: translate3d(50px, 0, 0); /* ADDED - start x position as -50px */
+        cursor: pointer;
+        transition: 0.7s all ease-in-out;
+    }
+
+    .show {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+</style>
     <form method="post">
         <input asp-for="@Model.Barbers.Id" hidden/>
         <div class="container pt-4">
-            <div class="card">
+            <div class="card" style="border-color: #FFEBA7">
                 <div class="card-header text-light d-flex justify-content-between" style="border-radius: 0px;background-color: #1f2029 ">
                     <div class="col-12 col-md-6">
                         
@@ -12,7 +25,7 @@
                     <div class="container rounded p-2" style="background-color: #1f2029">
                         <div class="row">
                             <div class="col-12 col-lg-4 p-1 text-center">
-                                <img src="@WC.BarberPath@Model.Barbers.BarberImage" width="100%" class="rounded" />
+                                <img class="barber-image" src="@WC.BarberPath@Model.Barbers.BarberImage" width="100%" class="rounded" />
                             </div>
                             <div class="col-12 col-lg-8">
                             <div class="pl-3">
@@ -37,10 +50,10 @@
                 <div class="card-footer bg-dark">
                     <div class="row">
                         <div class="col-12 col-md-6 pb-1 ">
-                            <a asp-action="Index" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Назад до переліку</a>
+                            <a asp-action="Index" asp-controller="Appointment" asp-route-barberId = "@Model.Barbers.Id" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Записатись</a>
                         </div>
                         <div class="col-12 col-md-6 pb-1 ">
-                            <a asp-action="Index" asp-controller="Appointment" asp-route-barberId = "@Model.Barbers.Id" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Записатись</a>
+                            <a asp-action="Index" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Назад до переліку</a>
                         </div>
                     </div>
                 </div>
@@ -48,3 +61,8 @@
         </div>
         </div>
     </form>
+    <script>
+        $(document).ready(function() {
+            $('.container').addClass('show');
+        })
+    </script>

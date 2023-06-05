@@ -8,7 +8,21 @@
         max-width: 100%;
         overflow-x: auto;
     }
+
+    .container {
+        opacity: 0;
+        transform: translate3d(0, 50px, 0); /* ADDED - start x position as -50px */
+        cursor: pointer;
+        transition: 0.7s all ease-in-out;
+    }
+
+    .show {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
 </style>
+
+
 
 @{
     var today = DateTime.Today;
@@ -145,4 +159,9 @@
         <p>Послуги тимчасово відсутні.</p>
     }
 </div>
+<script>
+    $(document).ready(function() {
+        $('.container').addClass('show');
+    });
+</script>
 

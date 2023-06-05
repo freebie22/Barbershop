@@ -1,16 +1,30 @@
 ﻿@model Barbershop.Models.ViewModels.EmployeesVM
 
+
+<style>
+    .filter-button {
+        opacity: 0;
+        transform: translate3d(-50px, 0, 0); /* ADDED - start x position as -50px */
+        transition: 0.7s all ease-in-out;
+    }
+
+    .show {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+</style>
+
 <div class="container">
     <div class="text-center">
         <button class="btn btn-dark filter-button" data-filter="all">Всі</button>
         @foreach (var obj in Model.WorkPositions)
         {
-            <button class="btn btn-outline-secondary filter-button" data-filter="@obj.PositionName.Replace(' ','_')">
+            <button class="btn btn-outline-secondary m-1 filter-button" data-filter="@obj.PositionName.Replace(' ','_')">
                 @obj.PositionName
             </button>
         }
-        <br></br>
-        <div class="row">
+        <br>
+        <div id="barberContainer" class="row">
             @foreach (var barber in Model.Barbers.OrderBy(b => b.WorkPosition.PositionName == "Топ-барбер" ? 0 : b.WorkPosition.PositionName == "Барбер" ? 1 : b.WorkPosition.PositionName == "Стажер" ? 2 : 3))
             {
                 <partial name="_IndividualBarberCard" model="barber"></partial>
@@ -18,9 +32,19 @@
             }
         </div>
     </div>
+    <button id="showMoreButton" style="display: none;">Показати ще</button>
 </div>
 
 @section Scripts{
+    <script>
+        $(document).ready(function () {
+            var $barberCards = $('#barberContainer .barber-card');
+
+                // Додаємо клас "show" для всіх карток з анімацією появи
+                $barberCards.addClass('show');
+                $('.filter-button').addClass('show');
+        });
+    </script>
     <script>
         $(document).ready(function () {
 
