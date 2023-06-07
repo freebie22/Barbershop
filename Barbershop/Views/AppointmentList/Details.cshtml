@@ -29,13 +29,16 @@
                                     <span class="" style="color: #FFEBA7">Деталі запису</span>
                                 </h4>
                             </div>
-                            <div class="row my-1">
-                                <div class="col-3" style="color: #FFEBA7">Клієнт</div>
-                                <div class="col-9">
-                                    <input asp-for="@Model.User.FullName" readonly type="text" class="form-control" />
-                                    <span asp-validation-for="@Model.User.FullName" class="text-danger"></span>
+                            @if (User.IsInRole(WC.AdminRole) || User.IsInRole(WC.BarberRole))
+                            {
+                                <div class="row my-1">
+                                    <div class="col-3" style="color: #FFEBA7">Клієнт</div>
+                                    <div class="col-9">
+                                        <input asp-for="@Model.User.FullName" readonly type="text" class="form-control" />
+                                        <span asp-validation-for="@Model.User.FullName" class="text-danger"></span>
+                                    </div>
                                 </div>
-                            </div>
+                            }                            
                             <div class="row my-1">
                                 <div class="col-3" style="color: #FFEBA7">Тел.</div>
                                 <div class="col-9">
@@ -51,7 +54,7 @@
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3" style="color: #FFEBA7">Промокод/сертифікат</div>
+                                <div class="col-3" style="color: #FFEBA7">Вказаний промокод</div>
                                 <div class="col-9">
                                     <input asp-for="@Model.UsedPromo" type="text" readonly class="form-control" />
                                     <span asp-validation-for="@Model.UsedPromo" class="text-danger"></span>
@@ -90,7 +93,7 @@
                                 </div>
                             </div>
                             <div class="row my-1" style="color: #FFEBA7">
-                                <div class="col-3">Приблизний час закінчення</div>
+                                <div class="col-3">Час закінчення</div>
                                 <div class="col-9">
                                     <input asp-for="@Model.EndTime" type="time" disabled class="form-control" />
                                     <span asp-validation-for="@Model.EndTime" class="text-danger"></span>
@@ -202,7 +205,7 @@
                             {
                                 @if (User.IsInRole(WC.ClientRole) || User.IsInRole(WC.AdminRole))
                                 {
-                                    <button type="button" id="showReview" class="btn mt-2">Залишити відгук</button>
+                                    <button type="button" id="showReview" class="col-12 btn mt-2">Залишити відгук</button>
                                 }
 
                             }

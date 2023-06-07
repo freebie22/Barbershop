@@ -13,7 +13,7 @@
 }
 <div>
     <form method="get">
-        <div class="container p-4 my-3" style="background-color: #1F2029">
+        <div class="container p-4 my-3" style="background-color: #1F2029; margin-bottom: 50px">
                 <h2 class="text-center" style="color:#FFEBA7">Записи до барберів</h2>
             <div class="border bg-white p-3" style="border-radius:15px">
                 <div class="col-12">
@@ -118,10 +118,15 @@
 
 <div class="p-3 mt-2" style="background-color: #1F2029;">
     <ejs-grid id="adaptivebrowser" dataSource="@Model.AppointmentList" enableAdaptiveUI="true"  allowFiltering="true" allowSorting="true" allowPaging="true">
+        <e-grid-editSettings allowAdding="true" allowDeleting="true" allowEditing="true" mode="Dialog"></e-grid-editSettings>
         <e-grid-pagesettings pageSize="5"></e-grid-pagesettings>
         <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
         <e-grid-columns>
             <e-grid-column field="Id" headerText="Ідентифікатор запису" isPrimaryKey="true" width="180"></e-grid-column>
+            @if(User.IsInRole(WC.AdminRole))
+            {
+                <e-grid-column field="UserId" headerText="Ідентифікатор користувача" width="250"></e-grid-column>
+            }
             <e-grid-column field="PhoneNumber" headerText="Номер телефону" width="180"></e-grid-column>
             <e-grid-column field="Email" headerText="E-Mail" width="180"></e-grid-column>
             <e-grid-column field="Barber.FullName" headerText="Барбер" width="180"></e-grid-column>

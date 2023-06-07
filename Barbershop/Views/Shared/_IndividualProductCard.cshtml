@@ -10,7 +10,7 @@
 </style>
 
 <div class="col-lg-4 col-md-6 pb-4 mt-3 filter @Model.ProductCategory.Name.Replace(' ', '_')">
-    <div id="barber-card" class="card m-2" style="border: solid 1px #ffeba7; background-color:#1f2029">
+    <div id="card product-card" class="card m-2" style="border: solid 1px #ffeba7; background-color:#1f2029">
         <div class="row g-0">
             <div class="col-md-5">
                 <a asp-action="Details" asp-route-id="@Model.Id"><img src="@WC.ProductPath@Model.ProductImage" class="card-img-top h-100 img-fluid zoom" style="object-fit: cover; object-position: center;" alt="..."></a>               

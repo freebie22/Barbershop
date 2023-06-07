@@ -4,7 +4,28 @@
     var productsCount = Model.Products.Count();
 }
 
-<div class="container">
+<style>
+    .filter-button {
+        opacity: 0;
+        transform: translate3d(-50px, 0, 0); /* ADDED - start x position as -50px */
+        transition: 0.7s all ease-in-out;
+    }
+
+    .product-card {
+        opacity: 0;
+        transform: translate3d(-50px, 0, 0); /* ADDED - start x position as -50px */
+        cursor: pointer;
+        transition: 0.7s all ease-in-out;
+    }
+
+
+    .show {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+</style>
+
+<div class="container" style="margin-bottom: 30px">
     <div class="text-center">
         <button class="btn btn-dark filter-button m-2" data-filter="all">Всі товари</button>
         @foreach (var obj in Model.Categories)
@@ -14,7 +35,7 @@
             </button>
         }
         <br/>
-        <div class="d-flex flex-wrap">
+        <div id="productContainer" class="d-flex flex-wrap">
             @if (productsCount > 0) 
         {
             @for (int i = 0; i < productsCount; i++)
@@ -38,7 +59,6 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-
             $(".filter-button").click(function () {
 
                 var value = $(this).attr('data-filter');
@@ -54,4 +74,11 @@
 
         });
     </script>
+    <script>
+        $(document).ready(function () {
+                var $productCards = $('.product-card');
+                    $productCards.addClass('show');
+                    $('.filter-button').addClass('show');
+            });
+        </script>
 }

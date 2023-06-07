@@ -75,7 +75,7 @@
 </style>*@
     <form method="post">
         <input asp-for="@Model.Product.Id" hidden/>
-        <div class="container pt-4" style="border: solid 1px #ffeba7">
+        <div class="container pt-4" style="border: solid 1px #ffeba7; margin-bottom: 30px">
             <div class="d-flex flex-column flex-md-row justify-content-between p-3" style="border-radius: 0px;">
                 <div class="col-md-3 text-center mb-3 mb-md-0">
                     <img src="@WC.ProductPath@Model.Product.ProductImage" width="100%" />
@@ -164,7 +164,7 @@
                         </div>
                             </div>
                         </div>
-                </div>
+                </div>       
         </div>
     </form>
 <style>
@@ -198,8 +198,8 @@
             $(document).ready(function() {
             if ($('.slider').children().length > 0) {
                 $('.slider').slick({
-                    slidesToShow: 1, // Кількість відображуваних слайдів
-                    slidesToScroll: 1, // Кількість прокручуваних слайдів за раз
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
                     arrows: false
                 });
             }
@@ -207,21 +207,19 @@
 </script>
     <script>
         $(document).ready(function () {
-            checkScreenSize(); // Перевірити розмір екрану при завантаженні сторінки
+            checkScreenSize();
 
             $(window).resize(function () {
-                checkScreenSize(); // Перевірити розмір екрану при зміні розміру вікна
+                checkScreenSize();
             });
 
             function checkScreenSize() {
                 var windowWidth = $(window).width();
                 if (windowWidth >= 992) {
-                    // Великий екран
                     $('.largeScreen').removeClass('d-none');
                     $('.smallMediumScreen').addClass('d-none');
                 }
                 if(windowWidth < 991) {
-                    // Середній та малий екран
                     $('.largeScreen').addClass('d-none');
                     $('.smallMediumScreen').removeClass('d-none');
                 }
