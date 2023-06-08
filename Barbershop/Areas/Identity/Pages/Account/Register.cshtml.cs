@@ -104,7 +104,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
             /// </summary>
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Compare("Password", ErrorMessage = "Паролі не співпадають. Введіть їх заново.")]
             public string ConfirmPassword { get; set; }
 
             public string FullName { get; set; }
@@ -160,7 +160,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-
+                    TempData[WC.Success] = "Вітаємо з реєстрацією на нашому веб-сервісі. Перейдіть до вашого E-Mail, щоб підтвердити його";
                     if (User.IsInRole(WC.AdminRole))
                     {
                         await _userManager.AddToRoleAsync(user, WC.AdminRole);

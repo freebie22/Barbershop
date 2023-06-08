@@ -1,6 +1,8 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
 using Barbershop.Models.ViewModels;
+using Mailjet.Client.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,13 +10,16 @@ using System.Security.Claims;
 
 namespace Barbershop.Controllers
 {
+    [Authorize]
     public class AppointmentList : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public AppointmentList(ApplicationDbContext db)
+        public AppointmentList(ApplicationDbContext db, UserManager<IdentityUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -76,50 +81,62 @@ namespace Barbershop.Controllers
             
             if(User.IsInRole(WC.ClientRole))
             {
-                appointmentListVM = new AppointmentListVM()
-                {
-                    AppointmentList = _db.Appointments.Include(a => a.Barber).Where(a => a.UserId == claim.Value),
-                    StatusList = WC.listAppointmentStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
-                    {
-                        Text = i,
-                        Value = i
-                    }),
-                    AppointmentType = WC.listAppointmentType.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
-                    {
-                        Text = i,
-                        Value = i
-                    })
-                };
-                if (searchId > 0)
-                {
-                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Id == searchId);
-                }
-                if (searchDate.HasValue)
-                {
-                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Date == searchDate);
-                }
-                if (searchAppointmentDate.HasValue)
-                {
-                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.AppointmentDateAndTime == searchAppointmentDate);
-                }
-                if (!string.IsNullOrEmpty(searchEmail))
-                {
-                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Email.ToLower().Contains(searchEmail.ToLower()));
-                }
-                if (!string.IsNullOrEmpty(searchPhone))
-                {
-                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.PhoneNumber.ToLower().Contains(searchPhone.ToLower()));
-                }
-                if (!string.IsNullOrEmpty(Status) && Status != "--Статус запису--")
-                {
-                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentStatus.ToLower().Contains(Status.ToLower()));
-                }
-                if (!string.IsNullOrEmpty(Type) && Type != "--Тип запису--")
-                {
-                    appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentType.ToLower().Contains(Type.ToLower()));
-                }
+                var user = _db.Users.FirstOrDefault(u => u.Id == claim.Value);
+                var barbershopUser = (BarbershopUser)user;
 
-                return View(appointmentListVM);
+                if(barbershopUser.EmailConfirmed)
+                {
+                    appointmentListVM = new AppointmentListVM()
+                    {
+                        AppointmentList = _db.Appointments.Include(a => a.Barber).Where(a => a.Email == user.Email),
+                        StatusList = WC.listAppointmentStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                        {
+                            Text = i,
+                            Value = i
+                        }),
+                        AppointmentType = WC.listAppointmentType.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                        {
+                            Text = i,
+                            Value = i
+                        })
+                    };
+                    if (searchId > 0)
+                    {
+                        appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Id == searchId);
+                    }
+                    if (searchDate.HasValue)
+                    {
+                        appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Date == searchDate);
+                    }
+                    if (searchAppointmentDate.HasValue)
+                    {
+                        appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.AppointmentDateAndTime == searchAppointmentDate);
+                    }
+                    if (!string.IsNullOrEmpty(searchEmail))
+                    {
+                        appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.Email.ToLower().Contains(searchEmail.ToLower()));
+                    }
+                    if (!string.IsNullOrEmpty(searchPhone))
+                    {
+                        appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(a => a.PhoneNumber.ToLower().Contains(searchPhone.ToLower()));
+                    }
+                    if (!string.IsNullOrEmpty(Status) && Status != "--Статус запису--")
+                    {
+                        appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentStatus.ToLower().Contains(Status.ToLower()));
+                    }
+                    if (!string.IsNullOrEmpty(Type) && Type != "--Тип запису--")
+                    {
+                        appointmentListVM.AppointmentList = appointmentListVM.AppointmentList.Where(u => u.AppointmentType.ToLower().Contains(Type.ToLower()));
+                    }
+
+                    return View(appointmentListVM);
+                }
+                else
+                {
+                    TempData[WC.Info] = "Для того, щоб переглянути свої записи, потрібно активувати електронну пошту, вказану при реєстрації. Перевірте Ваш E-Mail на наявність відповідного повідомлення. У випадку відсутності, перейдіть в особистий кабінет для повторного відправлення.";
+                    return RedirectToAction("Index", "Home");
+                }
+                
             }
 
             if(User.IsInRole(WC.BarberRole))

@@ -38,7 +38,11 @@
                                             <h5 class="p-3" style="color:#FFEBA7">@spec.SpecName</h5>
                                         </div>
                                     }
-                                     <a asp-action="Index" asp-controller="Appointment" asp-route-barberId = "@Model.Barbers.Id" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Записатись</a>
+                                    @if (User.IsInRole(WC.ClientRole) || User.IsInRole(WC.AdminRole))
+                                    {
+                                         <a asp-action="Index" asp-controller="Appointment" asp-route-barberId = "@Model.Barbers.Id" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Записатись</a>
+                                    }
+                                   
                                 </div>
                                 <div class="col-12">
                                     <h5 style="color:#FFFFFF; font-size: 20px">@Html.Raw(Model.Barbers.Description)</h5>
@@ -49,9 +53,13 @@
                 </div>
                 <div class="card-footer bg-dark">
                     <div class="row">
-                        <div class="col-12 col-md-6 pb-1 ">
-                            <a asp-action="Index" asp-controller="Appointment" asp-route-barberId = "@Model.Barbers.Id" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Записатись</a>
-                        </div>
+                        @if(User.IsInRole(WC.ClientRole) || User.IsInRole(WC.AdminRole))
+                        {
+                            <div class="col-12 col-md-6 pb-1 ">
+                                <a asp-action="Index" asp-controller="Appointment" asp-route-barberId="@Model.Barbers.Id" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Записатись</a>
+                            </div>
+                        }
+
                         <div class="col-12 col-md-6 pb-1 ">
                             <a asp-action="Index" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Назад до переліку</a>
                         </div>

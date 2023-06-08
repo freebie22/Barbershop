@@ -190,20 +190,23 @@
 
                             @if (Model.AppointmentStatus == Barbershop.WC.AppointmentReceived)
                             {
-                                @if (User.IsInRole(WC.BarberRole) || User.IsInRole(WC.AdminRole))
+                                @if (User.IsInRole(WC.ClientRole))
                                 {
-                                    <input type="submit" value="Завершити запис"
-                                   formmethod="post" asp-route-id="@Model.Id" asp-action="AppointmentDone"
-                                   class="btn btn-info form-control" />
                                     <input type="submit" value="Відмінити запис"
                                    formmethod="post" asp-route-id="@Model.Id" asp-action="AppointmentCancelled"
                                    class="btn btn-info form-control mt-2" />
+                                }
+                                @if(User.IsInRole(WC.BarberRole))
+                                {
+                                  <input type="submit" value="Завершити запис"
+                                   formmethod="post" asp-route-id="@Model.Id" asp-action="AppointmentDone"
+                                   class="btn btn-info form-control" />                                    
                                 }
 
                             } 
                             @if (Model.AppointmentStatus == Barbershop.WC.AppointmentDone)
                             {
-                                @if (User.IsInRole(WC.ClientRole) || User.IsInRole(WC.AdminRole))
+                                @if (User.IsInRole(WC.ClientRole))
                                 {
                                     <button type="button" id="showReview" class="col-12 btn mt-2">Залишити відгук</button>
                                 }

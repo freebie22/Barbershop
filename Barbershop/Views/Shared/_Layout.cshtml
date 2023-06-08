@@ -91,9 +91,18 @@
                         <li class="nav-item">
                             <a style="color:white" class="nav-link" asp-area="" asp-controller="Home" asp-action="ContactUs">Контакти</a>
                         </li>
-                        <li class="nav-item">
-                            <a style="color:white" class="nav-link" asp-area="" asp-controller="Appointment" asp-action="Index">Записатись</a>
-                        </li>
+                        @if(User.IsInRole(WC.BarberRole))
+                        {
+                            <li class="nav-item">
+                                <a style="color:white" class="nav-link" asp-area="" asp-controller="Appointment" asp-action="Index">Записати клієнта</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a style="color:white" class="nav-link" asp-area="" asp-controller="Appointment" asp-action="Index">Записатись</a>
+                            </li>
+                        }
                         <li>
                             @if (HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null)
                             {

@@ -97,9 +97,23 @@ namespace Barbershop.Controllers
 
         public JsonResult GetBarberInfo()
         {
-            var barbers = _db.Barbers.Include(b => b.WorkPosition).OrderBy(b => b.WorkPosition.PositionName == "Топ-барбер" ? 0 :
-                                                                                            b.WorkPosition.PositionName == "Барбер" ? 1 :
-                                                                                            b.WorkPosition.PositionName == "Стажер" ? 2 : 3).ToList();
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            List<Barbers> barbers = new List<Barbers>();
+
+            if (User.IsInRole(WC.BarberRole))
+            {
+                barbers = _db.Barbers.Include(b => b.WorkPosition).Where(b => b.BarbershopUserId == claim.Value).ToList();
+            }
+
+            else
+            {
+                barbers = _db.Barbers.Include(b => b.WorkPosition).OrderBy(b => b.WorkPosition.PositionName == "Топ-барбер" ? 0 :
+                                                                                b.WorkPosition.PositionName == "Барбер" ? 1 :
+                                                                                b.WorkPosition.PositionName == "Стажер" ? 2 : 3).ToList();
+            }
+
 
             List<int> barbersIds = new List<int>();
             List<string> barbersNames = new List<string>();
@@ -149,8 +163,20 @@ namespace Barbershop.Controllers
             appointmentVM.Appointment.AppointmentStatus = WC.AppointmentReceived;
 
             var email = appointmentVM.Appointment.Email;
+            if(User.IsInRole(WC.ClientRole))
+            {
+                appointmentVM.Appointment.AppointmentType = WC.AppointmentClient;
+            }
 
-            appointmentVM.Appointment.AppointmentType = WC.ClientOnline;
+            if (User.IsInRole(WC.BarberRole))
+            {
+                appointmentVM.Appointment.AppointmentType = WC.AppointmentBarber;
+            }
+
+            if (User.IsInRole(WC.AdminRole))
+            {
+                appointmentVM.Appointment.AppointmentType = WC.AppointmentAdmin;
+            }
 
             appointmentVM.Appointment.AppointmentDateAndTime = DateTime.Now;
 
@@ -576,7 +602,7 @@ namespace Barbershop.Controllers
                 bool isAvailable = true;
                 foreach (var appointment in appointments)
                 {
-                    if (currentTime >= appointment.StartTime.Subtract(TimeSpan.FromMinutes(15)) && currentTime < appointment.EndTime)
+                    if (appointment.AppointmentStatus != WC.AppointmentCancelled && currentTime >= appointment.StartTime.Subtract(TimeSpan.FromMinutes(15)) && currentTime < appointment.EndTime)
                     {
                         isAvailable = false;
                         break;

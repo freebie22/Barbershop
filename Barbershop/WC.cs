@@ -34,9 +34,9 @@ namespace Barbershop
         public const string AppointmentDone = "Завершене";
         public const string AppointmentCancelled = "Відмінене";
 
-        public const string ClientOnline = "Онлайн";
-        public const string ClientPhone = "По телефону";
-        public const string ClientOnPlace = "В салоні";
+        public const string AppointmentClient = "Записано клієнтом";
+        public const string AppointmentBarber = "Записано барбером";
+        public const string AppointmentAdmin = "Записано адміністратором";
 
         public const string CardPay = "Оплата картою";
         public const string ReceivePay = "Оплата при отриманні";
@@ -58,7 +58,7 @@ namespace Barbershop
         public static readonly IEnumerable<string> listAppointmentType = new ReadOnlyCollection<string>(
            new List<string>
            {
-                 ClientOnline, ClientPhone, ClientOnPlace
+                 AppointmentClient, AppointmentBarber, AppointmentAdmin
            });
     }
 
