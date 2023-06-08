@@ -1,6 +1,7 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
 using Barbershop.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Barbershop.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext db;
@@ -19,10 +21,23 @@ namespace Barbershop.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? searchName)
         {
-            IEnumerable<Products> objList = db.Products.Include(p => p.ProductCategory).Include(p => p.ProductImages);
-            return View(objList);
+            if(User.IsInRole(WC.AdminRole))
+            {
+                IEnumerable<Products> objList = db.Products.Include(p => p.ProductCategory).Include(p => p.ProductImages);
+
+                if(!string.IsNullOrEmpty(searchName))
+                {
+                    objList = db.Products.Include(p => p.ProductCategory).Include(p => p.ProductImages).Where(p => p.ProductName.ToLower().Contains(searchName)); 
+                }
+
+                return View(objList);
+            }
+           else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public IActionResult Details()

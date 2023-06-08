@@ -1,13 +1,16 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
 using Barbershop.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Barbershop.Controllers
 {
+    [Authorize]
     public class BarberScheduleController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -18,10 +21,32 @@ namespace Barbershop.Controllers
             RemoveSchedule();
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? searchName)
         {
-            var objList = _db.BarberSchedule.Include(b => b.Barber).OrderBy(b=> b.BarberId).ThenBy(b => b.Date).ToList();
-            return View(objList);
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            List<BarberSchedule> schedules = new List<BarberSchedule>();
+
+            if (User.IsInRole(WC.AdminRole))
+            {
+                schedules = _db.BarberSchedule.Include(b => b.Barber).OrderBy(b => b.BarberId).ThenBy(b => b.Date).ToList();
+                if(!string.IsNullOrEmpty(searchName))
+                {
+                    schedules = _db.BarberSchedule.Include(b => b.Barber).Where(b => b.Barber.FullName.ToLower().Contains(searchName)).OrderBy(b => b.BarberId).ThenBy(b => b.Date).ToList();
+                }
+            }
+
+            if (User.IsInRole(WC.BarberRole))
+            {
+                schedules = _db.BarberSchedule.Include(b => b.Barber).Where(b => b.Barber.BarbershopUserId == claim.Value).OrderBy(b => b.BarberId).ThenBy(b => b.Date).ToList();
+            }
+
+            if (User.IsInRole(WC.ClientRole))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View(schedules);
         }
 
         private void RemoveSchedule()

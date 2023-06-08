@@ -1,10 +1,12 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Barbershop.Controllers
 {
+    [Authorize]
     public class ServicesController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -15,10 +17,23 @@ namespace Barbershop.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? searchName)
         {
-            IEnumerable<Services> objList = _db.Services;
-            return View(objList);
+            if(User.IsInRole(WC.AdminRole))
+            {
+                IEnumerable<Services> objList = _db.Services;
+                if (!string.IsNullOrEmpty(searchName))
+                {
+                    objList = _db.Services.Where(o => o.serviceName.ToLower().Contains(searchName));
+                }
+
+                return View(objList);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
 
         //GET - Create

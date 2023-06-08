@@ -8,7 +8,7 @@ using System.Data;
 
 namespace Barbershop.Controllers
 {
-    [Authorize(Roles = WC.AdminRole)]
+    [Authorize]
     public class SpecializationsController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -20,10 +20,22 @@ namespace Barbershop.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? searchName)
         {
-            IEnumerable<Specializations> objList = _db.Specializations;
-            return View(objList);
+            if(User.IsInRole(WC.AdminRole))
+            {
+                IEnumerable<Specializations> objList = _db.Specializations;
+                if(!string.IsNullOrEmpty(searchName))
+                {
+                    objList = _db.Specializations.Where(o => o.SpecName.ToLower().Contains(searchName));
+                }
+                return View(objList);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
         //GET - Create
         public IActionResult Create()

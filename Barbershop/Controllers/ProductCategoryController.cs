@@ -1,11 +1,13 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Barbershop.Controllers
 {
+    [Authorize]
     public class ProductCategoryController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -15,10 +17,21 @@ namespace Barbershop.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? searchName)
         {
-            IEnumerable<ProductCategory> objList = _db.ProductCategory;
-            return View(objList);
+            if(User.IsInRole(WC.AdminRole))
+            {
+                IEnumerable<ProductCategory> objList = _db.ProductCategory;
+                if(!string.IsNullOrEmpty(searchName))
+                {
+                    objList = _db.ProductCategory.Where(o => o.Name.ToLower().Contains(searchName));
+                }
+                return View(objList);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
         
         public IActionResult Create() 

@@ -1,55 +1,64 @@
 ﻿@model IEnumerable<Barbershop.Models.ProductCategory>
 
 
-<div class="container p-5" style="background-color: #1F2029; margin-bottom: 30px">
-    <h2 class="text-center" style="color: #FFEBA7">Категорії товарів</h2>
-    <div class="row pt-4">
-        <div class="text-center mb-4">
-            <a asp-controller="ProductCategory" asp-action="Create" class="btn btn-primary">
-                <i class="fas fa-plus"></i> &nbsp; Додати нову категорію товарів
-            </a>
+<form method="get">
+    <div class="container p-5" style="background-color: #1F2029; margin-bottom: 30px">
+        <h2 class="text-center" style="color: #FFEBA7">Категорії товарів</h2>
+        <div class="col-4 d-lfex justify-content-center align-items-center">
+            @Html.Editor("searchName", new { htmlAttributes = new {@class ="form-control", placeholder="Введіть назву товару для пошуку"}})
+            <button type="submit" class="btn btn-info mt-1 mb-2 form-control">
+                <i class="fa fa-search"></i>Пошук
+            </button>
         </div>
-    </div>
-
-    @if (Model.Count() > 0)
-    {
-        <div class="table-responsive">
-            <table class="table table-bordered" style="width:100%; font-size:16px; border-color: #FFEBA7">
-                <thead>
-                    <tr>
-                        <th style="color: #FFEBA7">
-                            Назва категорії
-                        </th>
-                        <th style="color: #FFEBA7" class="text-center">
-                            Редагування
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var obj in Model)
-                    {
-                        <tr>
-                            <td width="45%"><strong style="color: #FFEBA7">@obj.Name</strong></td>
-                            <td wdith="45%" class="text-center">
-                                <div class="w-75 btn-group" role="group">
-                                    <a asp-controller="ProductCategory" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
-                                        <i class="fas fa-edit"></i> &nbsp;
-                                    </a>
-                                    <a asp-controller="ProductCategory" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="row pt-4">
+            <div class="text-center mb-4">
+                <a asp-controller="ProductCategory" asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> &nbsp; Додати нову категорію товарів
+                </a>
             </div>
-        
-    }
-    else
-    {
-        <h1 class="text-center" style="color: #FFEBA7">Категорії тимчасово відсутні.</h1>
-    }
-</div>
+        </div>
+
+        @if (Model.Count() > 0)
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered" style="width:100%; font-size:16px; border-color: #FFEBA7">
+                    <thead>
+                        <tr>
+                            <th style="color: #FFEBA7">
+                                Назва категорії
+                            </th>
+                            <th style="color: #FFEBA7" class="text-center">
+                                Редагування
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <td width="45%"><strong style="color: #FFEBA7">@obj.Name</strong></td>
+                                <td wdith="45%" class="text-center">
+                                    <div class="w-75 btn-group" role="group">
+                                        <a asp-controller="ProductCategory" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
+                                            <i class="fas fa-edit"></i> &nbsp;
+                                        </a>
+                                        <a asp-controller="ProductCategory" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        }
+        else
+        {
+            <h1 class="text-center" style="color: #FFEBA7">Категорії тимчасово відсутні.</h1>
+        }
+    </div>
+</form>
+
 

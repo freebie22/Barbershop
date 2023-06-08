@@ -24,11 +24,16 @@ namespace Barbershop.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? searchName)
         {
             if(User.IsInRole(WC.AdminRole))
             {
                 List<Barbers> objList = _db.Barbers.Include(o => o.Specializations).ToList();
+
+                if(!string.IsNullOrEmpty(searchName))
+                {
+                    objList = _db.Barbers.Include(o => o.Specializations).Where(o => o.FullName.Contains(searchName)).ToList();
+                }
 
                 return View(objList);
             }

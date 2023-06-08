@@ -7,71 +7,80 @@
     }
 </style>
 
-<div class="container p-3" style="background-color: #1F2029; margin-bottom: 30px">
-    <h2 class="text-center" style="color:#FFEBA7">Перелік товарів</h2>
-    <div class="row pt-4">
-        <div class="text-center mb-4">
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="fas fa-plus"></i> &nbsp; Додати новий товар
-            </a>
+<form method="get">
+    <div class="container p-3" style="background-color: #1F2029; margin-bottom: 30px">
+        <h2 class="text-center" style="color:#FFEBA7">Перелік товарів</h2>
+        <div class="col-4 d-lfex justify-content-center align-items-center">
+            @Html.Editor("searchName", new { htmlAttributes = new {@class ="form-control", placeholder="Введіть назву товару для пошуку"}})
+            <button type="submit" class="btn btn-info mt-1 mb-2 form-control">
+                <i class="fa fa-search"></i>Пошук
+            </button>
+            </div>
+        <div class="row pt-4">
+            <div class="text-center mb-4">
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> &nbsp; Додати новий товар
+                </a>
+            </div>
         </div>
-    </div>
 
-    @if (Model.Count() > 0)
-    {
+        @if (Model.Count() > 0)
+        {
             <div class="table-responsive">
-            <table class="table table-bordered" style="width:100%; font-size:16px; border-color: #FFEBA7">
-                <thead>
-                    <tr>
-                        <th style="color:#FFEBA7">
-                            Назва товару
-                        </th>
-                        <th style="color:#FFEBA7">
-                            Ціна
-                        </th>
-                        <th style="color:#FFEBA7">
-                            Виробник
-                        </th>
-                        <th style="color:#FFEBA7">
-                            Об'єм
-                        </th>
-                        <th style="color:#FFEBA7">
-                            Категорія товару
-                        </th>
-                        <th style="color:#FFEBA7" class="text-center">
-                            Редагування
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var obj in Model)
-                    {
+                <table class="table table-bordered" style="width:100%; font-size:16px; border-color: #FFEBA7">
+                    <thead>
                         <tr>
-                            <td style="color:#FFEBA7" width="10%">@obj.ProductName</td>
-                            <td style="color:#FFEBA7" width="10%">@obj.Price</td>
-                            <td style="color:#FFEBA7" width="10%">@obj.Producer</td>
-                            <td style="color:#FFEBA7" width="10%">@obj.Volume</td>
-                            <td style="color:#FFEBA7" width="10%">@obj.ProductCategory.Name</td>
-                            <td style="color:#FFEBA7" class="text-center">
-                                <div class="w-75 btn-group" role="group">
-                                    <a asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary">
-                                        <i class="fas fa-edit"></i> &nbsp;
-                                    </a>
-                                    <a asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                </div>
-                            </td>
+                            <th style="color:#FFEBA7">
+                                Назва товару
+                            </th>
+                            <th style="color:#FFEBA7">
+                                Ціна
+                            </th>
+                            <th style="color:#FFEBA7">
+                                Виробник
+                            </th>
+                            <th style="color:#FFEBA7">
+                                Об'єм
+                            </th>
+                            <th style="color:#FFEBA7">
+                                Категорія товару
+                            </th>
+                            <th style="color:#FFEBA7" class="text-center">
+                                Редагування
+                            </th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-                </div>
-        
-    }
-    else
-    {
-        <p>Товари тимчасово відсутні.</p>
-    }
-</div>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <td style="color:#FFEBA7" width="10%">@obj.ProductName</td>
+                                <td style="color:#FFEBA7" width="10%">@obj.Price</td>
+                                <td style="color:#FFEBA7" width="10%">@obj.Producer</td>
+                                <td style="color:#FFEBA7" width="10%">@obj.Volume</td>
+                                <td style="color:#FFEBA7" width="10%">@obj.ProductCategory.Name</td>
+                                <td style="color:#FFEBA7" class="text-center">
+                                    <div class="w-75 btn-group" role="group">
+                                        <a asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary">
+                                            <i class="fas fa-edit"></i> &nbsp;
+                                        </a>
+                                        <a asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        }
+        else
+        {
+            <p>Товари тимчасово відсутні.</p>
+        }
+    </div>
+</form>
+
 

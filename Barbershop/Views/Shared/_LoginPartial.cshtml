@@ -32,12 +32,14 @@
                             @if(User.IsInRole(WC.BarberRole))
                             {
                                 <a class="btn mt-2" id="appointmentButton" asp-action="Index" asp-controller="AppointmentList">Записи до мене</a>
+                                <a class="btn mt-2" id="scheduleButton" asp-action="Index" asp-controller="BarberSchedule">Мій розклад</a>
                             }
                             @if (User.IsInRole(WC.AdminRole) || User.IsInRole(WC.ClientRole))
                             {
                                     <a class="btn mt-2" id="appointmentButton" asp-action="Index" asp-controller="AppointmentList">Мої записи</a>
                             <a class="btn mt-2" id="orderButton" asp-action="Index" asp-controller="Order">Мої замовлення</a>
                             }
+
                             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                                 <button class="btn form-control mt-2" type="submit">Вийти</button>
                             </form>
@@ -68,6 +70,9 @@
             $('#profileModal').modal('hide');
         });
         $('#orderButton').click(function () {
+            $('#profileModal').modal('hide');
+        });
+        $('#scheduleButton').click(function () {
             $('#profileModal').modal('hide');
         });
 

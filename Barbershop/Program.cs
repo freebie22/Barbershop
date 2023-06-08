@@ -25,6 +25,12 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<BrainTreeSettings>(builder.Configuration.GetSection("BrainTree"));
 builder.Services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
+var apiKey = builder.Configuration.GetSection("Twillio").GetValue<string>("VerifyApiKey");
+builder.Services.AddHttpClient<TwilioVerifyClient>(client =>
+{
+    client.BaseAddress = new Uri("https://api.authy.com/");
+    client.DefaultRequestHeaders.Add("X-Authy-API-Key", apiKey);
+});
 builder.Services.AddAuthentication().AddFacebook(Options =>
 {
     Options.AppId = "779058353446737";
