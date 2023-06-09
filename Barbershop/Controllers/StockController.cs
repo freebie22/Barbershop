@@ -42,17 +42,26 @@ namespace Barbershop.Controllers
                 Product = _db.Products.Include(p => p.ProductCategory).Include(p => p.ProductImages).Where(p => p.Id == id).FirstOrDefault(),
             };
 
-            foreach (var item in shoppingCartList)
+            if(productsDetails.Product == null)
             {
-                if (item.ProductId == id)
-                {
-                    productsDetails.ExistsInCart = true;
-                }
+                    TempData[WC.Error] = "Такого товару не існує.";
+                    return RedirectToAction("Index", "Stock");
             }
 
+            else
+            {
+                foreach (var item in shoppingCartList)
+                {
+                    if (item.ProductId == id)
+                    {
+                        productsDetails.ExistsInCart = true;
+                    }
+                }
 
 
-            return View(productsDetails);
+
+                return View(productsDetails);
+            }
         }
 
         [HttpPost, ActionName("Details")]

@@ -81,14 +81,28 @@ namespace Barbershop.Controllers
 
             public IActionResult Details(int id)
             {
-                OrderVM = new OrderVM()
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            var user = _db.Users.FirstOrDefault(u => u.Id == claim.Value);
+
+            OrderVM = new OrderVM()
                 {
                     OrderHeader = _db.OrderHeader.FirstOrDefault(o => o.Id == id),
                     OrderDetail = _db.OrderDetail.Where(d => d.OrderHeaderId == id).Include("Product").ToList()
                 };
-                return View(OrderVM);
-            }
+                
+                if(!(User.IsInRole(WC.AdminRole)) && OrderVM.OrderHeader.CreatedByUserId != user.Id)
+                {
+                TempData[WC.Warning] = "У Вашому списку замовлень, замовлення з таким номером не знайдено";
+                return RedirectToAction("Index", "Order");
+                }
+                    else
+                {
+                    return View(OrderVM);
+                }
 
+            }
 
 
         [HttpPost]
