@@ -197,18 +197,24 @@ namespace Barbershop.Controllers
 
         public IActionResult Details(int id)
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            var user = _db.Users.FirstOrDefault(u => u.Id == claim.Value);
+
             AppointmentVM = new AppointmentDetailsVM()
             {
                 Appointment = _db.Appointments.Include(a => a.Barber).Include(a => a.User).Include(a => a.Barber.WorkPosition).Include(a => a.Services).FirstOrDefault(a => a.Id == id),
             };
-            if(AppointmentVM.Appointment == null)
+            if ((!(User.IsInRole(WC.AdminRole)) && AppointmentVM.Appointment.UserId != user.Id) || (AppointmentVM.Appointment == null))
             {
-                return RedirectToAction(nameof(Index));
+                TempData[WC.Warning] = "У Вашому списку замовлень, запис з таким номером не знайдено";
+                return RedirectToAction("Index");
             }
             else
             {
                 return View(AppointmentVM.Appointment);
-            }
+            }            
         }
 
         private void SetUserAppCount(string userId)

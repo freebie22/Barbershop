@@ -515,6 +515,10 @@ namespace Barbershop.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
+                    b.Property<int?>("SpecializationId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<double>("barberPrice")
                         .HasColumnType("float");
 
@@ -529,6 +533,8 @@ namespace Barbershop.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SpecializationId");
 
                     b.ToTable("Services");
                 });
@@ -993,6 +999,17 @@ namespace Barbershop.Migrations
                     b.Navigation("Barber");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Barbershop.Models.Services", b =>
+                {
+                    b.HasOne("Barbershop.Models.Specializations", "Specialization")
+                        .WithMany()
+                        .HasForeignKey("SpecializationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Specialization");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

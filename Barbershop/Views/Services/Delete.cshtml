@@ -1,10 +1,10 @@
-﻿@model Barbershop.Models.Services
+﻿@model Barbershop.Models.ViewModels.ServicesVM
 
-<form method="post" asp-action="DeletePost">
-    <input asp-for="Id" hidden />
+<form method="post">
+    <input asp-for="@Model.Service.Id" hidden />
     <div class="p-3" style="border:1px solid #FFEBA7; background-color: #1F2029; margin-bottom: 30px">
         <div class="form-group row">
-            <h2 class="text-center pl-3" style="color: #FFEBA7">Видалення послуги</h2>
+            <h2 class="text-center pl-3" style="color: #FFEBA7">Змінити інформацію про послуги</h2>
         </div>
         <div class="row">
             <div class="col-8">
@@ -13,48 +13,71 @@
                         <label style="color: #FFEBA7">Назва послуги</label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="serviceName" disabled class="form-control" />
+                        <input disabled asp-for="@Model.Service.serviceName" class="form-control" />
+                        <span asp-validation-for="@Model.Service.serviceName" class="text-danger"></span>
                     </div>
 
                 </div>
                 <div class="form-group row pt-2">
                     <div class="col-4">
-                        <label style="color: #FFEBA7" asp-for="traineePrice"></label>
+                        <label style="color: #FFEBA7" asp-for="@Model.Service.traineePrice"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="traineePrice" disabled class="form-control" />
+                        <input disabled asp-for="@Model.Service.traineePrice" class="form-control" />
+                        <span asp-validation-for="@Model.Service.traineePrice" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row pt-2">
                     <div class="col-4">
-                        <label style="color: #FFEBA7" asp-for="barberPrice"></label>
+                        <label style="color: #FFEBA7" asp-for="@Model.Service.barberPrice"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="barberPrice" disabled class="form-control" />
+                        <input disabled asp-for="@Model.Service.barberPrice" class="form-control" />
+                        <span asp-validation-for="@Model.Service.barberPrice" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row pt-2">
                     <div class="col-4">
-                        <label style="color: #FFEBA7" asp-for="seniorPrice"></label>
+                        <label style="color: #FFEBA7" asp-for="@Model.Service.seniorPrice"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="seniorPrice" disabled class="form-control" />
+                        <input disabled asp-for="@Model.Service.seniorPrice" class="form-control" />
+                        <span asp-validation-for="@Model.Service.seniorPrice" class="text-danger"></span>
                     </div>
-                </div>                
+                </div>
+                <div class="form-group row pt-2">
+                    <div class="col-4">
+                        <label style="color: #FFEBA7" asp-for="@Model.Service.Duration"></label>
+                    </div>
+                    <div class="col-8">
+                        <input disabled asp-for="@Model.Service.Duration" type="time" step="300" class="form-control" />
+                        <span asp-validation-for="@Model.Service.Duration" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row pt-2">
+                <div class="col-4">
+                    <label style="color: #FFEBA7" asp-for="@Model.Service.SpecializationId"></label>
+                </div>
+                <div class="col-8">
+                    <select disabled asp-for="@Model.Service.SpecializationId" asp-items="@Model.Specializaions" class="form-select">
+                    </select>
+                    <span asp-validation-for="@Model.Service.SpecializationId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row pt-3">
+                <div class="row">
+                    <div class="col">
+                        <input type="submit" class="btn btn-info w-100" value="Видалити" />
+                    </div>
+                    <div class="col">
+                        <a asp-action="Index" class="btn btn-success w-100">
+                            <i class="fas fa-sign-out-alt"></i> До послуг
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="form-group row pt-3">
-                    <div class="row">
-                        <div class="col">
-                            <input type="submit" class="btn btn-danger w-100" value="Видалити" />
-                        </div>
-                <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100">
-                                Повернутись до послуг
-                            </a>
-                        </div>
-                    </div>
-                </div>
     </div>
 </form>
 @section Scripts{

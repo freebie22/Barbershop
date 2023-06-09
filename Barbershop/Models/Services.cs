@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Barbershop.Models
 {
@@ -17,6 +18,10 @@ namespace Barbershop.Models
         public double seniorPrice { get; set; }
         [Required, Display(Name = "Тривалість")]
         public TimeSpan Duration { get; set; } = TimeSpan.Zero;
+        [Required, Display(Name = "Необхідна спеціалізація")]
+        public int? SpecializationId { get; set; }
+        [ForeignKey("SpecializationId")]
+        public virtual Specializations Specialization { get; set; }
         [Required]
         public ICollection<Appointment> Appointments { get; set; }
     }

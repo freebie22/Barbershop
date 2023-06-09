@@ -195,13 +195,6 @@
                 </div>
                 <div class="modal-body">
                     <ul id="servicesList" class="list-group">
-                        @foreach (var service in Model.Services)
-                        {
-                            <li name="listService" class="list-group-item my-2" style="border-color: #FFEBA7; border-top-width: 1px; border-top-left-radius: inherit; border-top-right-radius: inherit;  border-bottom-left-radius: inherit;  border-bottom-right-radius: inherit;">
-                                <input style="display: none" type="checkbox" class="m-3" name="selectedServices" value="@service.Id" />
-                                <span class="service-name">@service.serviceName у <span class="specName" data-trainee-name="стажера" data-barber-name="барбера" data-senior-name="топ-барбера"></span></span> - <span class="service-price"></span> - <span class="service-duration"></span>
-                            </li>
-                        }
                     </ul>
                 </div>
                 <div class="modal-footer" style="border-top-color: #FFEBA7">
@@ -229,7 +222,6 @@
     <script>
         $(document).ready(function () {
 
-
             let testReview = $('#testReview').val();
 
             $('#testButtonReview').click(function() {
@@ -246,6 +238,8 @@
                     }
                 });
             });
+
+
 
 
             if($('#dateSelect').val().toString() === '0001-01-01')
@@ -517,13 +511,7 @@
             $('.list-group-item').each(function (){
                 $(this).addClass('notSelectedItem');
             });
-
-            $('li[name=listService]').click(function()    {
-                var checkbox = $(this).find('input[name=selectedServices]');
-                checkbox.prop('checked', !checkbox.prop('checked'));
-
-                checkbox.trigger('change');
-            });
+         
 
             var totalPrice = 0;
             var totalDuration = 0;
@@ -573,7 +561,7 @@
                 var totalPriceElement = $('#totalPrice');
                 var totalDurationElement = $('#totalDuration');
 
-                $('input[name="selectedServices"]').change(function () {
+            $(document).on('change', 'input[name="selectedServices"]', function () {
                     var isChecked = $(this).is(':checked');
                     var serviceItem = $(this).closest('.list-group-item');
                     var serviceId = $(this).val();
@@ -718,26 +706,26 @@
 
             
             $('#selectServicesButton').click(function() {
-                if ($('#selectedBarber').val().toString() === 'Оберіть барбера') {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Не обрано барбера!',
-                    text: 'Будь-ласка, оберіть барбера'
-                });
-                }
+                //if ($('#selectedBarber').val().toString() === 'Оберіть барбера') {
+                //Swal.fire({
+                //    icon: 'error',
+                //    title: 'Не обрано барбера!',
+                //    text: 'Будь-ласка, оберіть барбера'
+                //});
+                //}
 
-                else if ($('#selectedTime').val().toString() === 'Оберіть час') {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Не обрано час для запису!',
-                    text: 'Будь-ласка, оберіть час для запису до барбера'
-                })
-                }
+                //else if ($('#selectedTime').val().toString() === 'Оберіть час') {
+                //Swal.fire({
+                //    icon: 'error',
+                //    title: 'Не обрано час для запису!',
+                //    text: 'Будь-ласка, оберіть час для запису до барбера'
+                //})
+                //}
 
-                else
-                {
+                //else
+                //{
                    $('#servicesModal').modal('show');
-                }
+                //}
 
           
             });
@@ -938,7 +926,36 @@
     <script>
         function setServiceInfo(barberId)
         {
-            $('.specName').each(function () {
+            var servicesList = $('#servicesList');
+            servicesList.empty();
+            $.ajax({
+                url: '/Appointment/GetServices',
+                type: 'GET',
+                data: { "barberId": barberId },
+                success: function (response) {
+                    if (response.success) {
+                        
+                        var servicesIds = response.servicesIds;
+                        var servicesNames = response.servicesNames;
+
+                        var list = '';
+
+                        for(let i = 0; i < servicesIds.length; i++)
+                        {
+                            let serviceId = servicesIds[i];
+                            let serviceName = servicesNames[i];
+
+                            var listService = ' <li name="listService" class="list-group-item my-2 notSelectedItem" style="border-color: #FFEBA7; border-top-width: 1px; border-top-left-radius: inherit; border-top-right-radius: inherit;  border-bottom-left-radius: inherit;  border-bottom-right-radius: inherit;">' +
+                            '<input style="display: none" type="checkbox" class="m-3" name="selectedServices" value="'+ serviceId +'" />' +
+                            '<span class="service-name">'+ serviceName +' у <span class="specName" data-trainee-name="стажера" data-barber-name="барбера" data-senior-name="топ-барбера"></span></span> - <span class="service-price"></span> - <span class="service-duration"></span>' +
+                            '</li>';
+
+                            list += listService;
+                        }
+
+                        servicesList.append(list);
+
+                        $('.specName').each(function () {
                 var specName = $(this);
 
                 var traineeName = $(specName).data('trainee-name');
@@ -1017,7 +1034,44 @@
                     }
                 );
             });
+                    }
+                    else {
+
+                    }
+                }
+            });
         }
+
+        $(document).on('click', 'li[name=listService]', function () {
+            var checkbox = $(this).find('input[name=selectedServices]');
+            checkbox.prop('checked', !checkbox.prop('checked'));
+
+            checkbox.trigger('change');
+        });
+
+         $(document).on('change', 'input[name="selectedServices"]', function () {
+                    var isChecked = $(this).is(':checked');
+                    var serviceItem = $(this).closest('.list-group-item');
+                    var serviceId = $(this).val();
+                    var servicePriceElement = serviceItem.find('.service-price');
+                    var serviceDurationElement = serviceItem.find('.service-duration');
+                    var servicePrice = parseInt(servicePriceElement.data('price'));
+                    var serviceTime = parseInt(serviceDurationElement.data('service-duration'));
+
+                    if (isChecked) {
+                        selectedServices.push(serviceId);
+                        serviceItem.addClass('selectedItem');
+                        serviceItem.removeClass('notSelectedItem');
+                    } else {
+                        var index = selectedServices.indexOf(serviceId);
+                        if(index !== -1)
+                        {
+                            selectedServices.splice(index, 1);
+                        }
+                        serviceItem.removeClass('selectedItem');
+                        serviceItem.addClass('notSelectedItem');
+                    }
+                });
     </script>
     <script>
         function validateInput() {

@@ -1,5 +1,6 @@
 ﻿using Barbershop.Data;
 using Barbershop.Models;
+using Barbershop.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,6 @@ namespace Barbershop.Controllers
     public class ServicesController : Controller
     {
         private readonly ApplicationDbContext _db;
-        private readonly UserManager<BarbershopUser> _userManager;
 
         public ServicesController(ApplicationDbContext db)
         {
@@ -39,81 +39,99 @@ namespace Barbershop.Controllers
         //GET - Create
         public IActionResult Create()
         {
-            return View();
+            ServicesVM serviceVM = new ServicesVM() {
+                Service = new Services(),
+                Specializaions = _db.Specializations.Select(s => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem()
+                {
+                    Text = s.SpecName,
+                    Value = s.Id.ToString()
+                })
+            };
+            return View(serviceVM);
         }
 
         //POST - Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Services obj)
+        public async Task<IActionResult> Create(ServicesVM serviceVM)
         {
-            var durationInMinutes = obj.Duration.Hours * 60 + obj.Duration.Minutes;
+            var durationInMinutes = serviceVM.Service.Duration.Hours * 60 + serviceVM.Service.Duration.Minutes;
             if (ModelState.IsValid)
             {
                 await Task.Run(() =>
                 {
-                    obj.Duration = TimeSpan.FromMinutes(durationInMinutes);
-                    _db.Services.AddAsync(obj);
+                    serviceVM.Service.Duration = TimeSpan.FromMinutes(durationInMinutes);
+                    _db.Services.AddAsync(serviceVM.Service);
                     _db.SaveChangesAsync();
 
                 });
                 return RedirectToAction("Index");
             }
-            return View(obj);
+            return View(serviceVM);
         }
 
         //GET - Edit
         public IActionResult Edit(int? id)
         {
-            if (id == null || id == 0)
+            ServicesVM serviceVM = new ServicesVM()
             {
-                return NotFound();
+                Service = _db.Services.FirstOrDefault(s => s.Id == id),
+                Specializaions = _db.Specializations.Select(s => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem()
+                {
+                    Text = s.SpecName,
+                    Value = s.Id.ToString()
+                })
+            };
+
+            if(serviceVM.Service == null)
+            {
+                return RedirectToAction("Index");
             }
 
-            var obj = _db.Services.Find(id);
-
-            if (obj == null)
+            else
             {
-                return NotFound();
+                return View(serviceVM);
             }
-            return View(obj);
+
+
         }
 
         //POST - Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Services obj)
+        public IActionResult Edit(ServicesVM serviceVM)
         {
-            var durationInMinutes = obj.Duration.Hours * 60 + obj.Duration.Minutes;
-            if (ModelState.IsValid)
-            {
-                await Task.Run(() =>
-                {
-                    obj.Duration = TimeSpan.FromMinutes(durationInMinutes);
-                    _db.Services.Update(obj);
-                    _db.SaveChanges();
+            var durationInMinutes = serviceVM.Service.Duration.Hours * 60 + serviceVM.Service.Duration.Minutes;
 
-                });
-                return RedirectToAction("Index");
-            }
-            return View(obj);
+            serviceVM.Service.Duration = TimeSpan.FromMinutes(durationInMinutes);
+            _db.Services.Update(serviceVM.Service);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         //GET - Delete
         public IActionResult Delete(int? id)
         {
-            if (id == null || id == 0)
+            ServicesVM serviceVM = new ServicesVM()
             {
-                return NotFound();
+                Service = _db.Services.FirstOrDefault(s => s.Id == id),
+                Specializaions = _db.Specializations.Select(s => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem()
+                {
+                    Text = s.SpecName,
+                    Value = s.Id.ToString()
+                })
+            };
+
+            if(serviceVM.Service == null)
+            {
+                return RedirectToAction("Index");
             }
 
-            var obj = _db.Services.Find(id);
-
-            if (obj == null)
+            else
             {
-                return NotFound();
+                return View(serviceVM);
             }
-            return View(obj);
         }
 
         //POST - Delete

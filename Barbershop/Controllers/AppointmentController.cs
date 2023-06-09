@@ -651,6 +651,35 @@ namespace Barbershop.Controllers
 
         }
 
+        public JsonResult GetServices(int barberId)
+        {
+            var barberSpecializations = _db.Barbers.Where(b => b.Id == barberId).SelectMany(b => b.Specializations).ToList();
+
+            var specializationIds = new List<int?>();
+
+            for(int i=0; i < barberSpecializations.Count(); i++)
+            {
+                var specialization = barberSpecializations[i];
+                specializationIds.Add(specialization.Id);
+            }
+
+            var services = _db.Services.Where(s => specializationIds.Contains(s.SpecializationId));
+
+            List<int> servicesIds = new List<int>();
+            List<string> servicesNames = new List<string>();
+
+            foreach (var service in services)
+            {
+                var serviceId = service.Id;
+                var servicesName = service.serviceName;
+
+                servicesIds.Add(serviceId);
+                servicesNames.Add(servicesName);
+            }
+
+            return Json(new { success = true, servicesIds, servicesNames });
+        }
+
         public JsonResult GetBarberReviews(int barberId)
         {
             var reviews = _db.Reviews.Include(r => r.User).Include(r => r.Barber).Where(r => r.BarberId == barberId).OrderByDescending(r => r.CreatedAt).ToList();
