@@ -32,32 +32,56 @@
                             <div class="row my-1">
                                 <div style="color: #FFEBA7" class="col-3">Тел.</div>
                                 <div class="col-9">
-
-                                    <input asp-for="OrderHeader.PhoneNumber" readonly type="text" class="form-control" />
+                                    @if(User.IsInRole(WC.AdminRole))
+                                    {
+                                        <input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.PhoneNumber" readonly type="text" class="form-control" />
+                                    }
                                     <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row my-1">
                                 <div style="color: #FFEBA7" class="col-3">Обл.</div>
                                 <div class="col-9">
-
-                                    <input asp-for="OrderHeader.Region" type="text" readonly class="form-control" />
+                                    @if (User.IsInRole(WC.AdminRole))
+                                    {
+                                        <input asp-for="OrderHeader.Region" type="text" class="form-control" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.Region" readonly type="text" class="form-control" />
+                                    }
                                     <span asp-validation-for="OrderHeader.Region" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row my-1">
                                 <div style="color: #FFEBA7" class="col-3">Місто</div>
                                 <div class="col-9">
-
-                                    <input asp-for="OrderHeader.City" type="text" readonly class="form-control" />
+                                    @if (User.IsInRole(WC.AdminRole))
+                                    {
+                                        <input asp-for="OrderHeader.City" type="text" class="form-control" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.City" readonly type="text" class="form-control" />
+                                    }
                                     <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row my-1">
                                 <div style="color: #FFEBA7" class="col-3">Відділ</div>
                                 <div class="col-9">
-
-                                    <input asp-for="OrderHeader.PostOffice" type="text" readonly class="form-control" />
+                                    @if (User.IsInRole(WC.AdminRole))
+                                    {
+                                        <input asp-for="OrderHeader.PostOffice"  type="text" class="form-control" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.PostOffice" readonly type="text" class="form-control" />
+                                    }
                                     <span asp-validation-for="OrderHeader.PostOffice" class="text-danger"></span>
                                 </div>
                             </div>
@@ -66,7 +90,6 @@
                                 <div class="col-9">
                                     <input asp-for="OrderHeader.Email" type="text" readonly class="form-control" />
                                     <span asp-validation-for="OrderHeader.Email" class="text-danger"></span>
-
                                 </div>
                             </div>
                             <div class="row my-1">
@@ -90,12 +113,15 @@
                                     <input value="@Model.OrderHeader.ReceivingDate.ToShortDateString()" id="receivingDate" type="text" readonly class="form-control" />
                                 </div>
                             </div>
-                            <div id="transactionDiv" class="row my-1 d-none">
-                                <div style="color: #FFEBA7" class="col-3">Транзакція</div>
-                                <div class="col-9">
-                                    <input asp-for="OrderHeader.TransactionId" id="transaction" type="text" readonly class="form-control" />
+                            @if(User.IsInRole(WC.AdminRole))
+                            {
+                                <div id="transactionDiv" class="row my-1 d-none">
+                                    <div style="color: #FFEBA7" class="col-3">Транзакція</div>
+                                    <div class="col-9">
+                                        <input asp-for="OrderHeader.TransactionId" id="transaction" type="text" readonly class="form-control" />
+                                    </div>
                                 </div>
-                            </div>
+                            }
                             <div class="row my-1">
                                 <div style="color: #FFEBA7" class="col-3">Стат.зам.</div>
                                 <div class="col-9">
@@ -135,30 +161,44 @@
                                 </li>
 
                             </ul>
-
-
                           <br />
-
-                            @if (Model.OrderHeader.OrderStatus == Barbershop.WC.StatusApproved)
+                            
+                            @if(User.IsInRole(WC.AdminRole))
                             {
-                                <input type="submit" value="В обробку"
+                                @if (Model.OrderHeader.OrderStatus == Barbershop.WC.StatusApproved)
+                                {
+                                    <input type="submit" value="В обробку"
                                    formmethod="post" asp-action="StartProcessing"
                                    class="btn btn-info form-control" />
-                            }
-                            @if (Model.OrderHeader.OrderStatus == Barbershop.WC.StatusInProcess)
-                            {
-                                <input type="submit" value="Замовлення прибуло"
+                                }
+                                @if (Model.OrderHeader.OrderStatus == Barbershop.WC.StatusInProcess)
+                                {
+                                    <input type="submit" value="Замовлення прибуло"
                                    formmethod="post" asp-action="ShipOrder"
                                    class="btn btn-primary form-control" />
-                            }
-                            @if (Model.OrderHeader.OrderStatus == Barbershop.WC.StatusArrived)
-                            {
-                                <input type="submit" value="Замовлення отримане"
+                                }
+                                @if (Model.OrderHeader.OrderStatus == Barbershop.WC.StatusArrived)
+                                {
+                                    <input type="submit" value="Замовлення отримане"
                                    formmethod="post" asp-action="ReceiveOrder"
                                    class="btn btn-primary form-control" />
+                                }
+                                @if (Model.OrderHeader.OrderStatus != Barbershop.WC.StatusReturned
+                               && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusCancelled && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusReceived)
+                                {
+                                    <div class="pt-2">
+                                        <button type="submit"
+                                        class="btn btn-danger form-control"
+                                        asp-action="CancelOrder"
+                                        formmethod="post">
+                                            Відмінити замовлення
+                                        </button>
+                                    </div>
+                                }
                             }
-                            @if (Model.OrderHeader.OrderStatus != Barbershop.WC.StatusReturned
-                            && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusCancelled && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusReceived)
+
+                            @if ((User.IsInRole(WC.ClientRole) || User.IsInRole(WC.BarberRole)) && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusReturned
+                            && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusCancelled && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusReceived && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusInProcess)
                             {
                                 <div class="pt-2">
                                     <button type="submit"
@@ -166,6 +206,19 @@
                                         asp-action="CancelOrder"
                                         formmethod="post">
                                         Відмінити замовлення
+                                    </button>
+                                </div>
+                            }
+                            
+                            @if (User.IsInRole(WC.AdminRole) && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusReturned
+                            && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusCancelled && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusReceived && Model.OrderHeader.OrderStatus != Barbershop.WC.StatusInProcess)
+                            {
+                                <div class="pt-2">
+                                    <button type="submit"
+                                        class="btn btn-danger form-control"
+                                        asp-action="UpdateOrderDetails"
+                                        formmethod="post">
+                                        Оновити замовлення
                                     </button>
                                 </div>
                             }

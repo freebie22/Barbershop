@@ -34,6 +34,17 @@
             padding-bottom: 0px;
             line-height: 40px;
         }
+
+    /*    .navbar{
+            opacity: 0;
+            transform: translate3d(-50px, 0, 0);
+            transition: 0.5s all ease-in-out;
+        }
+
+        .show{
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }*/
     </style>
     <div id="preloader"></div>
     <header>
@@ -72,9 +83,9 @@
                                 <a style="color:white" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Керування записами та замовленнями
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="AppointmentList" asp-action="Index">Записи</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Замовлення</a>
+                                <div class="dropdown-menu" style="background-color:#1F2029" aria-labelledby="navbarDropdown">
+                                    <a class="nav-link" style="color: #FFEBA7" asp-area="" asp-controller="AppointmentList" asp-action="Index">Записи</a>
+                                    <a class="nav-link" style="color: #FFEBA7" asp-area="" asp-controller="Order" asp-action="Index">Замовлення</a>
                                 </div>
                             </li>
                         }
@@ -178,7 +189,22 @@
         //    loader.style.display = "none";
         //})
     </script>
-    
+    <script>
+        // Add slideDown animation to Bootstrap dropdown when expanding.
+        $('.dropdown').on('show.bs.dropdown', function () {
+            $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+        });
+
+        // Add slideUp animation to Bootstrap dropdown when collapsing.
+        $('.dropdown').on('hide.bs.dropdown', function () {
+            $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+        });
+    </script>
+@*    <script>
+        $(document).ready(function(){
+            $('.navbar').addClass('show');
+        });*@
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
     <ejs-scripts></ejs-scripts>
 </body>

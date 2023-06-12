@@ -19,21 +19,14 @@ namespace Barbershop.Controllers
 
         public IActionResult Index(string? searchName)
         {
-            if(User.IsInRole(WC.AdminRole))
-            {
+
                 IEnumerable<Services> objList = _db.Services;
                 if (!string.IsNullOrEmpty(searchName))
                 {
                     objList = _db.Services.Where(o => o.serviceName.ToLower().Contains(searchName));
                 }
 
-                return View(objList);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            
+                return View(objList);          
         }
 
         //GET - Create
@@ -137,6 +130,7 @@ namespace Barbershop.Controllers
         //POST - Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
             var obj = _db.Services.Find(id);

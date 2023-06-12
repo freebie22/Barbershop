@@ -65,9 +65,6 @@ namespace Barbershop.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Номер телефону")]
             public string PhoneNumber { get; set; }
-            [Display(Name = "Вказана дата народження")]
-            [DataType(DataType.Date)]
-            public DateTime DateOfBirth { get; set; }
         }
 
         private async Task LoadAsync(BarbershopUser user)
@@ -82,7 +79,6 @@ namespace Barbershop.Areas.Identity.Pages.Account.Manage
                 UserName = userName,
                 PhoneNumber = phoneNumber,
                 FullName = fullName,
-                DateOfBirth = dateofbirth
             };
         }
 

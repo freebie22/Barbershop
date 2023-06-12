@@ -206,15 +206,27 @@ namespace Barbershop.Controllers
             {
                 Appointment = _db.Appointments.Include(a => a.Barber).Include(a => a.User).Include(a => a.Barber.WorkPosition).Include(a => a.Services).FirstOrDefault(a => a.Id == id),
             };
-            if ((!(User.IsInRole(WC.AdminRole)) && AppointmentVM.Appointment.UserId != user.Id) || (AppointmentVM.Appointment == null))
+
+            if(AppointmentVM.Appointment != null)
             {
-                TempData[WC.Warning] = "У Вашому списку замовлень, запис з таким номером не знайдено";
-                return RedirectToAction("Index");
+                if (User.IsInRole(WC.AdminRole))
+                {
+                    return View(AppointmentVM.Appointment);
+                }
+
+                if ((User.IsInRole(WC.BarberRole)) && AppointmentVM.Appointment.Barber.BarbershopUserId == claim.Value)
+                {
+                    return View(AppointmentVM.Appointment);
+                }
+
+                if ((User.IsInRole(WC.ClientRole) && AppointmentVM.Appointment.Email == user.Email))
+                {
+                    return View(AppointmentVM.Appointment);
+                }
             }
-            else
-            {
-                return View(AppointmentVM.Appointment);
-            }            
+           
+                return RedirectToAction("Index");   
+          
         }
 
         private void SetUserAppCount(string userId)

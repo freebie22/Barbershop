@@ -41,12 +41,16 @@
 <form method="get">
     <div class="container p-5" style="background-color: #1F2029; margin-bottom: 30px">
         <h2 class="text-center" style="color: #ffeBA7">Ціни на послуги</h2>
-        <div class="col-4 d-lfex justify-content-center align-items-center">
-            @Html.Editor("searchName", new { htmlAttributes = new {@class ="form-control", placeholder="Введіть назву послуги для пошуку"}})
-            <button type="submit" class="btn btn-info mt-1 mb-1 form-control">
-                <i class="fa fa-search"></i>Пошук
-            </button>
-        </div>
+        
+        @if (User.IsInRole(WC.AdminRole))
+        {
+            <div class="col-4 d-lfex justify-content-center align-items-center">
+                @Html.Editor("searchName", new { htmlAttributes = new {@class ="form-control", placeholder="Введіть назву послуги для пошуку"}})
+                <button type="submit" class="btn btn-info mt-1 mb-1 form-control">
+                    <i class="fa fa-search"></i>Пошук
+                </button>
+            </div>
+        }
         <div class="row pt-4">
             @if (User.Identity.IsAuthenticated)
             {

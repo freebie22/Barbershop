@@ -4,77 +4,115 @@
     ViewData["Title"] = "Реєстрація нового барбера";
 }
 
-<h1>@ViewData["Title"]</h1>
+<link rel="stylesheet" type="text/css" href="~/css/login_register.css" />
 
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Створення нового барбера.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FullName" class="form-control" autocomplete="username" oninput="this.value = this.value.replace(/[^а-яА-ЯіІїЇєЄґҐ\s]/g, '')" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.FullName">Ім'я та прізвище</label>
-                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+
+<form method="post">
+    <section class="gradient-custom">
+        <div class="container py-5">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+
+                            <div class="mb-md-5 mt-md-4 pb-1">
+
+                                <h2 class="fw-bold mb-2" style="color:#FFEBA7">Реєстрація барбера</h2>
+                                <p class="mb-2" style="color:#FFEBA7">Введіть Ваше ім'я та прізвище</p>
+
+                                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Input.FullName" class="form-control" title="Ім'я та прізвище необіхдно вводити кирилицею" oninput="this.value = this.value.replace(/[^а-яА-ЯіІїЇєЄґҐ\s]/g, '')" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                                    <label style="color: black" asp-for="Input.FullName">Ім'я та прізвище(напр. Іван Іванченко)</label>
+                                    <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                                </div>
+
+                                <p class="mb-2" style="color:#FFEBA7">Введіть Ваш псевдонім</p>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Input.UserName" class="form-control" oninput="this.value = this.value.replace(/[^A-Za-z\s_\d]/g, '')" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                                    <label style="color: black" asp-for="Input.UserName">Логін</label>
+                                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                                </div>
+
+                                <p class="mb-2" style="color:#FFEBA7">Введіть Вашу електронну пошту</p>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" title="Адреса E-Mail повинна містити лише латинські літери, цифри, знаки @@, крапки та _" oninput="this.value = this.value.replace(/[^A-Za-z0-9.@@_]/g, '')" />
+                                    <label style="color: black" asp-for="Input.Email">Електронна пошта</label>
+                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                </div>
+
+                                <p class="mb-2" style="color:#FFEBA7">Введіть Ваш номер телефону</p>
+
+                                <div class="form-floating mb-3">
+                                    <input minlength="16" maxlength="16" asp-for="Input.PhoneNumber" oninput="formatPhoneNumber(this)" data-val="true" data-val-length="Номер телефону має містити 16 символів" data-val-length-min="16" class="form-control" autocomplete="username" aria-required="true" value="+380" placeholder="Номер телефону" />
+                                    <label style="color: black" asp-for="Input.PhoneNumber">Номер телефону</label>
+                                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                                </div>
+
+                                <p class="mb-2" style="color:#FFEBA7">Введіть пароль</p>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Input.Password" title="Пароль повинен містити принаймні одну цифру, одну малу літеру, одну велику літеру та бути не менше ніж 8 символів" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                    <label style="color: black" asp-for="Input.Password">Пароль</label>
+                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                </div>
+
+                                <p class="mb-2" style="color:#FFEBA7">Підтвердіть пароль</p>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                    <label style="color: black" asp-for="Input.ConfirmPassword">Підтверджений пароль</label>
+                                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                </div>
+
+                                <button id="login-submit" class="btn btn-outline-light btn-lg px-5" type="submit">Зареєструватись</button>
+
+                                <p class="mt-2 pb-lg-2" style="color: #FFEBA7">Сторонні сервіси для реєстрації</p>
+
+                                <div class="d-flex justify-content-center text-center mt-2 pt-1">
+                                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                        <div>
+                                            <p>
+                                                @foreach (var provider in Model.ExternalLogins!)
+                                                {
+                                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Увійдіть за допомогою Вашого @provider.DisplayName аккаунту">@provider.DisplayName</button>
+                                                }
+                                            </p>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.UserName">Логін</label>
-                <span asp-validation-for="Input.UserName" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Електронна пошта</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="text" id="phone" asp-for="Input.PhoneNumber" class="form-control" aria-required="true" oninput="this.value = this.value.replace(/[^\d-+]/g, '')" />
-                <label asp-for="Input.PhoneNumber">Номер телефону(формат: +380-63-999-99-99)</label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.DateOfBirth" class="form-control" type="date" autocomplete="date-of-birth" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.DateOfBirth">Дата народження</label>
-                <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Пароль</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Підтверджений пароль</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-           
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-danger">Зареєструвати барбера</button>
-        </form>
-    </div>
-    
-</div>
+        </div>
+    </section>
+</form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        function formatPhoneNumber() {
-            let phoneInput = document.getElementById("phone");
-            let phone = phoneInput.value;
+        function formatPhoneNumber(input) {
+            var phoneNumber = input.value.replace(/[^\d+]/g, '');
 
-            // Видалити будь-які нецифрові символи
-            phone = phone.replace(/[^\d]/g, "");
-
-            // Вставити дефіси в номер телефону
-            if (phone.length > 2 && phone.length <= 5) {
-                phone = phone.substring(0, 2) + "-" + phone.substring(2);
-            } else if (phone.length > 5 && phone.length <= 8) {
-                phone = phone.substring(0, 2) + "-" + phone.substring(2, 5) + "-" + phone.substring(5);
-            } else if (phone.length > 8 && phone.length <= 10) {
-                phone = phone.substring(0, 2) + "-" + phone.substring(2, 5) + "-" + phone.substring(5, 8) + "-" + phone.substring(8);
+            if (phoneNumber.length > 6) {
+                phoneNumber = phoneNumber.slice(0, 6) + '-' + phoneNumber.slice(6);
             }
-
-            //// Вставити префікс +38
-            //phoneInput.value = "+38 " + phone;
+            if (phoneNumber.length > 10) {
+                phoneNumber = phoneNumber.slice(0, 10) + '-' + phoneNumber.slice(10);
+            }
+            if (phoneNumber.length > 13) {
+                phoneNumber = phoneNumber.slice(0, 13) + '-' + phoneNumber.slice(13);
+            }
+            input.value = phoneNumber;
         }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.container').addClass('show');
+        });
     </script>
 }

@@ -28,11 +28,11 @@ namespace Barbershop.Controllers
         {
             if(User.IsInRole(WC.AdminRole))
             {
-                List<Barbers> objList = _db.Barbers.Include(o => o.Specializations).ToList();
+                List<Barbers> objList = _db.Barbers.Include(o => o.Specializations).OrderByDescending(o => o.IsActive).ToList();
 
                 if(!string.IsNullOrEmpty(searchName))
                 {
-                    objList = _db.Barbers.Include(o => o.Specializations).Where(o => o.FullName.Contains(searchName)).ToList();
+                    objList = _db.Barbers.Include(o => o.Specializations).Where(o => o.FullName.Contains(searchName)).OrderByDescending(o => o.IsActive).ToList();
                 }
 
                 return View(objList);
@@ -199,6 +199,13 @@ namespace Barbershop.Controllers
             string upload = _webHostEnvironment.WebRootPath + WC.BarberPath;
 
             var oldFile = Path.Combine(upload, obj.BarberImage);
+
+            var relatedAppointments = _db.Appointments.Where(r => r.BarberId == id);
+            if (relatedAppointments.Count() > 0) 
+            {
+                TempData[WC.Error] = "Даного барбера видалити неможливо, так як є записи клієнтів пов'язані з ним. Якщо Ви хочете зробити його неактивним, поставте відмітку у чекбоксі.";
+                return RedirectToAction("Index");
+            }
 
             if (System.IO.File.Exists(oldFile))
             {

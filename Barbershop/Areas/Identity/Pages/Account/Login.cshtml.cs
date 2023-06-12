@@ -36,14 +36,14 @@ namespace Barbershop.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Будь-ласка, введіть Ваш логін або E-Mail")]
             public string UserName { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Будь-ласка, введіть Ваш пароль")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -118,13 +118,12 @@ namespace Barbershop.Areas.Identity.Pages.Account
                 }
 
                 
-
                 if (user != null)
                 {
-                    // Sign in the user with their username
-                    var result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, true,  lockoutOnFailure: true);
+                    var result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe,  lockoutOnFailure: true);
                     if (result.Succeeded)
                     {
+                        TempData[WC.Success] = $"Вітаємо користувача {user.UserName} з успішною авторизацією!";
                         _logger.LogInformation("User logged in.");
                         return LocalRedirect(returnUrl);
                     }
@@ -144,10 +143,13 @@ namespace Barbershop.Areas.Identity.Pages.Account
                     }
                     // handle other login result cases
                 }
+                else
+                {
+                    TempData[WC.Error] = "Логін чи пароль вказано не правильно. Будь-ласка, перевірте вказані Вами дані, та спробуйте ще раз.";
+                    return Page();
+                }
 
             }
-
-            // If we got this far, something failed, redisplay form
             return Page();
         }
     }

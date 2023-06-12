@@ -25,12 +25,7 @@
                 <input asp-for="Input.PhoneNumber" oninput="this.value = this.value.replace(/[^\d-+]/g, '')" class="form-control" placeholder="Ваш номер телефону." />
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.DateOfBirth" class="form-control" placeholder="Вказана дата народження." disabled />
-                <label asp-for="Input.DateOfBirth" class="form-label"></label>
-                <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
-            </div>
+            </div>            
             <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary mb-3">Зберегти зміни</button>
             <br/>
         </form>

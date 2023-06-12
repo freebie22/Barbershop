@@ -706,26 +706,26 @@
 
             
             $('#selectServicesButton').click(function() {
-                //if ($('#selectedBarber').val().toString() === 'Оберіть барбера') {
-                //Swal.fire({
-                //    icon: 'error',
-                //    title: 'Не обрано барбера!',
-                //    text: 'Будь-ласка, оберіть барбера'
-                //});
-                //}
+                if ($('#selectedBarber').val().toString() === 'Оберіть барбера') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Не обрано барбера!',
+                    text: 'Будь-ласка, оберіть барбера'
+                });
+                }
 
-                //else if ($('#selectedTime').val().toString() === 'Оберіть час') {
-                //Swal.fire({
-                //    icon: 'error',
-                //    title: 'Не обрано час для запису!',
-                //    text: 'Будь-ласка, оберіть час для запису до барбера'
-                //})
-                //}
+                else if ($('#selectedTime').val().toString() === 'Оберіть час') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Не обрано час для запису!',
+                    text: 'Будь-ласка, оберіть час для запису до барбера'
+                })
+                }
 
-                //else
-                //{
+                else
+                {
                    $('#servicesModal').modal('show');
-                //}
+                }
 
           
             });

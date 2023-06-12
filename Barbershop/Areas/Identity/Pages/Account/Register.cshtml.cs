@@ -80,11 +80,11 @@ namespace Barbershop.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Введіть Ваш E-Mail")]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Введіть Ваш псевдонім")]
             [Display(Name = "User Name")]
             public string UserName { get; set; }
 
@@ -107,8 +107,9 @@ namespace Barbershop.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "Паролі не співпадають. Введіть їх заново.")]
             public string ConfirmPassword { get; set; }
 
+            [Required(ErrorMessage = "Введіть Ваше ім'я та прізвище")]
             public string FullName { get; set; }
-
+            [Required(ErrorMessage = "Введіть Ваш номер телефону")]
             public string PhoneNumber { get; set; }
 
             public DateTime DateOfBirth { get; set; }
@@ -135,7 +136,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
 
-                var user = new BarbershopUser { UserName = Input.UserName, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FullName = Input.FullName, DateOfBirth = Input.DateOfBirth };
+                var user = new BarbershopUser { UserName = Input.UserName, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FullName = Input.FullName, DateOfBirth = DateTime.Now.Date };
 
                 var existUser = await _userManager.FindByEmailAsync(user.Email);
 

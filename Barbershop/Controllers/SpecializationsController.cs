@@ -155,8 +155,15 @@ namespace Barbershop.Controllers
             {
                 return NotFound();
             }
-            string upload = _webHostEnvironment.WebRootPath + WC.SpecPath;
 
+            var relatedServices = _db.Services.Where(s => s.SpecializationId == id).ToList();
+            if (relatedServices.Count > 0)
+            {
+                TempData[WC.Error] = "Не можна видалити спеціалізацію, оскільки існують послуги, що потребують дану спеціалізацію.";
+                return RedirectToAction("Index");
+            }
+
+            string upload = _webHostEnvironment.WebRootPath + WC.SpecPath;
             var oldFile = Path.Combine(upload, obj.SpecImage);
 
             if (System.IO.File.Exists(oldFile))

@@ -113,6 +113,13 @@ namespace Barbershop.Controllers
             {
                 return NotFound();
             }
+
+            var relatedBarbers = _db.Barbers.Where(b => b.WorkPositionId == id);
+            if(relatedBarbers.Count() > 0) {
+                TempData[WC.Error] = "Посаду видалити неможливо, так як є барбери які мають цю посаду.";
+                return RedirectToAction("Index");
+            }
+
             _db.WorkPositions.Remove(obj);
             _db.SaveChanges();
 

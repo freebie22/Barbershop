@@ -48,6 +48,19 @@ namespace Barbershop.Controllers
             List<Barbers> barbers = _db.Barbers.Include(b => b.WorkPosition).OrderBy(b => b.WorkPosition.PositionName == "Топ-барбер" ? 0 :
                                                                                             b.WorkPosition.PositionName == "Барбер" ? 1 :
                                                                                             b.WorkPosition.PositionName == "Стажер" ? 2 : 3).ToList();
+            var barber = new Barbers();
+
+
+            if(barberId > 0)
+            {
+                barber = _db.Barbers.FirstOrDefault(b => b.Id == barberId);
+                if (!(barber.IsActive))
+                {
+                    barberId = 0;
+                }
+            }
+
+
             AppointmentVM appointmentVM = new AppointmentVM()
             {
                 Barbers = barbers.Select(i => new SelectListItem
@@ -104,12 +117,12 @@ namespace Barbershop.Controllers
 
             if (User.IsInRole(WC.BarberRole))
             {
-                barbers = _db.Barbers.Include(b => b.WorkPosition).Where(b => b.BarbershopUserId == claim.Value).ToList();
+                barbers = _db.Barbers.Include(b => b.WorkPosition).Where(b => b.BarbershopUserId == claim.Value && b.IsActive == true).ToList();
             }
 
             else
             {
-                barbers = _db.Barbers.Include(b => b.WorkPosition).OrderBy(b => b.WorkPosition.PositionName == "Топ-барбер" ? 0 :
+                barbers = _db.Barbers.Include(b => b.WorkPosition).Where(b => b.IsActive == true).OrderBy(b => b.WorkPosition.PositionName == "Топ-барбер" ? 0 :
                                                                                 b.WorkPosition.PositionName == "Барбер" ? 1 :
                                                                                 b.WorkPosition.PositionName == "Стажер" ? 2 : 3).ToList();
             }
@@ -166,21 +179,32 @@ namespace Barbershop.Controllers
             if(User.IsInRole(WC.ClientRole))
             {
                 appointmentVM.Appointment.AppointmentType = WC.AppointmentClient;
+                SetUserAppCount(claim.Value);
             }
 
             if (User.IsInRole(WC.BarberRole))
             {
+                var user = _db.Users.FirstOrDefault(u => u.Email == appointmentVM.Appointment.Email);
+                if (user != null)
+                {
+                    SetUserAppCount(user.Id);
+                }
                 appointmentVM.Appointment.AppointmentType = WC.AppointmentBarber;
             }
 
             if (User.IsInRole(WC.AdminRole))
             {
+                var user = _db.Users.FirstOrDefault(u => u.Email == appointmentVM.Appointment.Email);
+                if (user != null)
+                {
+                    SetUserAppCount(user.Id);
+                }
                 appointmentVM.Appointment.AppointmentType = WC.AppointmentAdmin;
             }
 
             appointmentVM.Appointment.AppointmentDateAndTime = DateTime.Now;
 
-            SetUserAppCount(claim.Value);
+            
 
             if (appointmentVM.ServicesIds == null)
             {

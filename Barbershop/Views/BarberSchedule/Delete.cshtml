@@ -1,0 +1,82 @@
+﻿@model Barbershop.Models.ViewModels.BarberScheduleVM
+
+<form method="post">
+    <input type="hidden" asp-for="BarberSchedule.Id" />
+    <div class="p-3" style="background-color: #1f2029;border: solid 1px #FFEBA7; margin-bottom: 30px">
+        <div class="form-group row">
+            <h2 class="text-center pl-3" style="color:#FFEba7">Видалити розклад для барбера</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label style="color:#FFEba7" asp-for="BarberSchedule.Date"></label>
+                    </div>
+                    <div class="col-8">
+                        <input disabled type="date" id="datePicker" asp-for="BarberSchedule.Date" class="form-control mb-2" />
+                        <span asp-validation-for="BarberSchedule.Date" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label style="color:#FFEba7" asp-for="BarberSchedule.StartTime"></label>
+                    </div>
+                    <div class="col-8">
+                        <input disabled type="time" asp-for="BarberSchedule.StartTime" class="form-control mb-2" />
+                        <span asp-validation-for="BarberSchedule.StartTime" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label style="color:#FFEba7" asp-for="BarberSchedule.EndTime"></label>
+                    </div>
+                    <div class="col-8">
+                        <input disabled type="time" asp-for="BarberSchedule.EndTime" class="form-control mb-2" />
+                        <span asp-validation-for="BarberSchedule.EndTime" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label style="color:#FFEba7">Для барбера:</label>
+                </div>
+                <div class="col-8">
+                    <select disabled asp-for="BarberSchedule.BarberId" asp-items="@Model.BarbershopUserSelectList" class="form-select mb-2">
+                    </select>
+                    <span asp-validation-for="BarberSchedule.BarberId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="row">
+                <div class="col">
+                    <input type="submit" class="btn btn-primary w-100" value="Видалити" />
+                </div>
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-success w-100">До розкладу</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        const datePicker = $('#datePicker');
+        const todayDay = new Date();
+
+        let day = todayDay.getDate();
+        let month = todayDay.getMonth() + 1;
+        let year = todayDay.getFullYear();
+
+        if (day < 10) {
+            day = '0' + day;
+        }
+        if (month < 10) {
+            month = '0' + month;
+        }
+
+        const todayString = year + '-' + month + '-' + day;
+
+        datePicker.prop('min', todayString);
+    });
+</script>
+
+

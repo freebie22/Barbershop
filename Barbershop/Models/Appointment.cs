@@ -39,5 +39,6 @@ namespace Barbershop.Models
         public string? Comment { get; set; }
         public DateTime AppointmentDateAndTime { get; set; }
 
+
     }
 }

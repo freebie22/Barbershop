@@ -4,9 +4,16 @@
 @inject UserManager<IdentityUser> userManager
 <div>
     <form method="get">
-        <div class="container p-4 my-3" style="margin-bottom: 30px">
-            <h2 class="text-center" style="color:#FFEBA7">Керування замовленнями</h2>
-            <div class="border bg-white p-3" style="border-radius:15px">
+        <div class="container p-4 my-3" style="margin-bottom: 30px; background-color: #1f2029">
+            @if (User.IsInRole(WC.ClientRole) || User.IsInRole(WC.BarberRole))
+            {
+                <h2 class="text-center" style="color:#FFEBA7;  background-color: #1f2029">Мої замовлення</h2>
+            }
+            else
+            {
+                <h2 class="text-center" style="color:#FFEBA7; background-color: #1f2029">Керування замовленнями</h2>
+            }
+            <div class="p-3" style="background-color: #1f2029">
                 <div class="col-12">
                     <div class="row" style="padding-top:10px">
                         <div class="col-4">
@@ -35,19 +42,22 @@
     </form>
 </div>
 
-<div class="p-3">
-    <ejs-grid id="Grid" dataSource="@Model.OrderHList" allowFiltering="true" allowSorting="true" allowPaging="true">
-        <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
-        <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
-        <e-grid-pagesettings pageSize="5"></e-grid-pagesettings>
-        <e-grid-columns>
 
-            <e-grid-column field="Id" headerText="ID" isPrimaryKey="true" textAlign="Right" width="100"></e-grid-column>
-            <e-grid-column field="FullName" headerText="Замовник" textAlign="Right"></e-grid-column>
-            <e-grid-column field="Email" headerText="E-Mail" textAlign="Right"></e-grid-column>
-            <e-grid-column field="PhoneNumber" headerText="Номер телефону" textAlign="Right"></e-grid-column>
-            <e-grid-column field="OrderStatus" headerText="Статус замовлення" textAlign="Right"></e-grid-column>
-            <e-grid-column field="OrderDate" headerText="Дата замовлення" customFormat="@(new {type="date", format="dd/MM/yyyy"})" textAlign="Right"></e-grid-column>
+<div class="p-3 mt-2" style="background-color: #1F2029;">
+    <ejs-grid id="adaptivebrowser" dataSource="@Model.OrderHList" enableAdaptiveUI="true" allowFiltering="true" allowSorting="true" allowPaging="true">
+        <e-grid-editSettings allowAdding="true" allowDeleting="true" allowEditing="true" mode="Dialog"></e-grid-editSettings>
+        <e-grid-pagesettings pageSize="5"></e-grid-pagesettings>
+        <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
+        <e-grid-columns>
+            <e-grid-column field="Id" headerText="Ідентифікатор замовлення" textAlign="Center" isPrimaryKey="true" width="180"></e-grid-column>
+            @if (User.IsInRole(WC.AdminRole))
+            {
+                <e-grid-column field="CreatedByUserId" headerText="Ідентифікатор користувача" width="250"></e-grid-column>
+            }
+            <e-grid-column field="Email" headerText="E-Mail" width="180"></e-grid-column>
+            <e-grid-column field="PhoneNumber" headerText="Номер телефону" width="180"></e-grid-column>
+            <e-grid-column field="OrderStatus" headerText="Статус замовлення" width="180"></e-grid-column>
+            <e-grid-column field="OrderDate" headerText="Дата замовлення" width="180" customFormat="@(new {type="date", format="dd/MM/yyyy"})"></e-grid-column>
             <e-grid-column field="Id" headerText="" width="70" template="<a rel='nofollow' href='Order/Details/${Id}' class='btn btn-primary'> <i class='fas fa-list'></i></a>"></e-grid-column>
         </e-grid-columns>
     </ejs-grid>

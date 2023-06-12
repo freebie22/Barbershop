@@ -37,6 +37,12 @@ namespace Barbershop.Controllers
                 return RedirectToAction("Index");
             }
 
+            if (DetailsVM.Barbers.IsActive == false)
+            {
+                TempData[WC.Info] = "Цей барбер на даний момент не працює.";
+                return RedirectToAction("Index");
+            }
+
             else
             {
                 return View(DetailsVM);
