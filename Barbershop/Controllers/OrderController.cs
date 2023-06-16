@@ -81,26 +81,31 @@ namespace Barbershop.Controllers
 
             public IActionResult Details(int id)
             {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            var user = _db.Users.FirstOrDefault(u => u.Id == claim.Value);
+                var user = _db.Users.FirstOrDefault(u => u.Id == claim.Value);
 
-            OrderVM = new OrderVM()
-                {
-                    OrderHeader = _db.OrderHeader.FirstOrDefault(o => o.Id == id),
-                    OrderDetail = _db.OrderDetail.Where(d => d.OrderHeaderId == id).Include("Product").ToList()
-                };
+                    OrderVM = new OrderVM()
+                    {
+                        OrderHeader = _db.OrderHeader.FirstOrDefault(o => o.Id == id),
+                        OrderDetail = _db.OrderDetail.Where(d => d.OrderHeaderId == id).Include("Product").ToList()
+                    };
                 
-                if(!(User.IsInRole(WC.AdminRole)) && OrderVM.OrderHeader.CreatedByUserId != user.Id)
-                {
-                TempData[WC.Warning] = "У Вашому списку замовлень, замовлення з таким номером не знайдено";
-                return RedirectToAction("Index", "Order");
-                }
+                    if(!(User.IsInRole(WC.AdminRole)) && OrderVM.OrderHeader.CreatedByUserId != user.Id)
+                    {
+                    TempData[WC.Warning] = "У Вашому списку замовлень, замовлення з таким номером не знайдено";
+                    return RedirectToAction("Index", "Order");
+                    }
                     else
-                {
-                    return View(OrderVM);
-                }
+                    {
+                        if(OrderVM.OrderHeader == null)
+                        {
+                        TempData[WC.Error] = "Такого замовлення не знайдено";
+                        return RedirectToAction("Index", "Order");
+                        }
+                        return View(OrderVM);
+                    }
 
             }
 

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Barbershop.Controllers
 {
-    [Authorize]
+
     public class ServicesController : Controller
     {
         private readonly ApplicationDbContext _db;

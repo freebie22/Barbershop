@@ -130,13 +130,14 @@ namespace Barbershop.Controllers
 
                 newsVM.News = _db.News.Include(o => o.NewsImages).Include(o => o.User).FirstOrDefault(p => p.Id == id);
 
-                newsVM.NewsImages = newsVM.News.NewsImages.ToList();
-
-
                 if (newsVM.News == null)
                 {
+                    TempData[WC.Error] = "Такої публікації не знайдено.";
                     return RedirectToAction("Index");
                 }
+
+                newsVM.NewsImages = newsVM.News.NewsImages.ToList();
+
 
                 return View(newsVM);
             }
@@ -237,13 +238,15 @@ namespace Barbershop.Controllers
 
                 newsVM.News = _db.News.Include(o => o.NewsImages).Include(o => o.User).FirstOrDefault(p => p.Id == id);
 
+                if (newsVM.News == null)
+                {
+                    TempData[WC.Error] = "Такої публікації не знайдено.";
+                    return RedirectToAction("Index");
+                }
+
                 newsVM.NewsImages = newsVM.News.NewsImages.ToList();
 
 
-                if (newsVM.News == null)
-                {
-                    return RedirectToAction("Index");
-                }
 
                 return View(newsVM);
             }

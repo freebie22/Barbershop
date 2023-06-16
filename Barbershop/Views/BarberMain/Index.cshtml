@@ -49,9 +49,9 @@
                         {
                             <tr>
                                 <td class="text-center" width="35%"><strong style="color: #FFEBA7;">@obj.BarbershopUserId</strong></td>
-                                <td class="text-center" width="10%"><strong style="color: #FFEBA7;">@obj.FullName</strong></td>
-                                <td class="text-center" width="10%"><strong style="color: #FFEBA7;">@obj.PhoneNumber</strong></td>
-                                <td class="text-center" width="10%"><strong style="color: #FFEBA7;">@obj.Email</strong></td>
+                                <td class="text-center" width="10%"><strong style="color: #FFEBA7;">@obj.BarbershopUser.FullName</strong></td>
+                                <td class="text-center" width="10%"><strong style="color: #FFEBA7;">@obj.BarbershopUser.PhoneNumber</strong></td>
+                                <td class="text-center" width="10%"><strong style="color: #FFEBA7;">@obj.BarbershopUser.Email</strong></td>
                                 @if (obj.IsActive == true)
                                 {
                                     <td class="text-center" width="10%"><strong style="color: #FFEBA7;">Так</strong></td>

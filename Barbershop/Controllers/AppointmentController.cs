@@ -17,7 +17,6 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Barbershop.Controllers
 {
-    [Authorize]
     public class AppointmentController : Controller
     {
         private readonly ApplicationDbContext _db;

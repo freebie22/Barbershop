@@ -138,18 +138,18 @@ namespace Barbershop.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(ProductsVM productVM, int id)
         {
-            var files1 = HttpContext.Request.Form.Files.GetFiles("files1");
+            var files1 = HttpContext.Request.Form.Files.GetFile("files1");
             var files2 = HttpContext.Request.Form.Files.GetFiles("files2");
 
             string webRootPath = webHostEnvironment.WebRootPath;
 
             var objFromDb = db.Products.AsNoTracking().FirstOrDefault(u => u.Id == productVM.Product.Id);
 
-            if (files1.Count > 0)
+            if (files1 != null)
             {
-                string upload = webRootPath + WC.BarberPath;
+                string upload = webRootPath + WC.ProductPath;
                 string fileName = Guid.NewGuid().ToString();
-                string extension = Path.GetExtension(files1[0].FileName);
+                string extension = Path.GetExtension(files1.FileName);
 
                 var oldFile = Path.Combine(upload, objFromDb.ProductImage);
 
@@ -160,7 +160,7 @@ namespace Barbershop.Controllers
 
                 using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
                 {
-                    files1[0].CopyTo(fileStream);
+                    files1.CopyTo(fileStream);
                 }
 
                 productVM.Product.ProductImage = fileName + extension;
@@ -197,8 +197,6 @@ namespace Barbershop.Controllers
             {
                 productVM.Product.ProductImages = objFromDb.ProductImages;
             }
-
-
 
 
             db.Products.Update(productVM.Product);

@@ -33,7 +33,7 @@ namespace Barbershop.Controllers
 
             if(DetailsVM.Barbers == null)
             {
-                TempData[WC.Error] = "Такого барбера не існує";
+                TempData[WC.Error] = "Такого барбера не існує!";
                 return RedirectToAction("Index");
             }
 

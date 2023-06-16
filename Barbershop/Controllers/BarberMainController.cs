@@ -28,7 +28,7 @@ namespace Barbershop.Controllers
         {
             if(User.IsInRole(WC.AdminRole))
             {
-                List<Barbers> objList = _db.Barbers.Include(o => o.Specializations).OrderByDescending(o => o.IsActive).ToList();
+                List<Barbers> objList = _db.Barbers.Include(o => o.Specializations).Include(o => o.BarbershopUser).OrderByDescending(o => o.IsActive).ToList();
 
                 if(!string.IsNullOrEmpty(searchName))
                 {

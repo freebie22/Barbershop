@@ -36,7 +36,14 @@ namespace Barbershop.Controllers
         
         public IActionResult Create() 
         {
-            return View();
+            if (User.IsInRole(WC.AdminRole))
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -56,18 +63,28 @@ namespace Barbershop.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if(id == null || id == 0)
+            if(User.IsInRole(WC.AdminRole))
             {
-                return NotFound();
+                if (id == null || id == 0)
+                {
+                    TempData[WC.Error] = "Категорію не знайдено";
+                    return RedirectToAction("Index");
+                }
+
+                var obj = _db.ProductCategory.Find(id);
+
+                if (obj == null)
+                {
+                    TempData[WC.Error] = "Категорію не знайдено";
+                    return RedirectToAction("Index");
+                }
+
+                return View(obj);
             }
-
-            var obj = _db.ProductCategory.Find(id);
-
-            if(obj == null) {
-                return NotFound();
+            else
+            {
+                return RedirectToAction("Index", "Home");
             }
-
-            return View(obj);
         }
 
         [HttpPost]
@@ -88,19 +105,28 @@ namespace Barbershop.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if(id == null || id == 0)
+            if (User.IsInRole(WC.AdminRole))
             {
-                return NotFound();
+                if (id == null || id == 0)
+                {
+                    TempData[WC.Error] = "Категорію не знайдено";
+                    return RedirectToAction("Index");
+                }
+
+                var obj = _db.ProductCategory.Find(id);
+
+                if (obj == null)
+                {
+                    TempData[WC.Error] = "Категорію не знайдено";
+                    return RedirectToAction("Index");
+                }
+
+                return View(obj);
             }
-
-            var obj = _db.ProductCategory.Find(id);
-
-            if(obj == null)
+            else
             {
-                return NotFound();
+                return RedirectToAction("Index", "Home");
             }
-
-            return View(obj);
 
         }
 

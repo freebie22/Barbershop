@@ -64,23 +64,32 @@ namespace Barbershop.Controllers
 
         public IActionResult Create()
         {
-
-            var barbers = _db.Barbers.OrderBy(b => b.FullName).ToList();
-
-            BarberScheduleVM scheduleVM = new BarberScheduleVM()
+            if(User.IsInRole(WC.AdminRole))
             {
-                BarberSchedule = new BarberSchedule()
-                {
-                    Date = DateTime.Now,
-                },
-                BarbershopUserSelectList = barbers.Select(i => new SelectListItem
-                {
-                    Text = i.FullName,
-                    Value = i.Id.ToString(),
-                })
-            };
+                var barbers = _db.Barbers.OrderBy(b => b.FullName).ToList();
 
-            return View(scheduleVM);
+                BarberScheduleVM scheduleVM = new BarberScheduleVM()
+                {
+                    BarberSchedule = new BarberSchedule()
+                    {
+                        Date = DateTime.Now,
+                    },
+                    BarbershopUserSelectList = barbers.Select(i => new SelectListItem
+                    {
+                        Text = i.FullName,
+                        Value = i.Id.ToString(),
+                    })
+                };
+
+                return View(scheduleVM);
+            }
+
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            
         }
 
         [HttpPost]
@@ -96,24 +105,42 @@ namespace Barbershop.Controllers
 
         public IActionResult Edit(int? id)
         {
-            var barbers = _db.Barbers.OrderBy(b => b.FullName).ToList();
-
-            BarberScheduleVM scheduleVM = new BarberScheduleVM()
+            if (User.IsInRole(WC.AdminRole))
             {
-                BarberSchedule = new BarberSchedule()
+                if(id == 0 || id == null)
                 {
-                    Date = DateTime.Now,
-                },
-                BarbershopUserSelectList = barbers.Select(i => new SelectListItem
+                    TempData[WC.Error] = "Такого розкладу немає";
+                    return RedirectToAction("Index");
+                }
+                var barbers = _db.Barbers.OrderBy(b => b.FullName).ToList();
+
+                BarberScheduleVM scheduleVM = new BarberScheduleVM()
                 {
-                    Text = i.FullName,
-                    Value = i.Id.ToString(),
-                })
-            };
+                    BarberSchedule = new BarberSchedule()
+                    {
+                        Date = DateTime.Now,
+                    },
+                    BarbershopUserSelectList = barbers.Select(i => new SelectListItem
+                    {
+                        Text = i.FullName,
+                        Value = i.Id.ToString(),
+                    })
+                };
 
-            scheduleVM.BarberSchedule = _db.BarberSchedule.FirstOrDefault(b => b.Id == id);
+                scheduleVM.BarberSchedule = _db.BarberSchedule.FirstOrDefault(b => b.Id == id);
 
-            return View(scheduleVM);
+                if(scheduleVM.BarberSchedule == null)
+                {
+                    TempData[WC.Error] = "Такого розкладу немає";
+                    return RedirectToAction("Index");
+                }
+
+                return View(scheduleVM);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
@@ -138,24 +165,42 @@ namespace Barbershop.Controllers
 
         public IActionResult Delete(int? id)
         {
-            var barbers = _db.Barbers.OrderBy(b => b.FullName).ToList();
-
-            BarberScheduleVM scheduleVM = new BarberScheduleVM()
+            if (User.IsInRole(WC.AdminRole))
             {
-                BarberSchedule = new BarberSchedule()
+                if (id == 0 || id == null)
                 {
-                    Date = DateTime.Now,
-                },
-                BarbershopUserSelectList = barbers.Select(i => new SelectListItem
+                    TempData[WC.Error] = "Такого розкладу немає";
+                    return RedirectToAction("Index");
+                }
+                var barbers = _db.Barbers.OrderBy(b => b.FullName).ToList();
+
+                BarberScheduleVM scheduleVM = new BarberScheduleVM()
                 {
-                    Text = i.FullName,
-                    Value = i.Id.ToString(),
-                })
-            };
+                    BarberSchedule = new BarberSchedule()
+                    {
+                        Date = DateTime.Now,
+                    },
+                    BarbershopUserSelectList = barbers.Select(i => new SelectListItem
+                    {
+                        Text = i.FullName,
+                        Value = i.Id.ToString(),
+                    })
+                };
 
-            scheduleVM.BarberSchedule = _db.BarberSchedule.FirstOrDefault(b => b.Id == id);
+                scheduleVM.BarberSchedule = _db.BarberSchedule.FirstOrDefault(b => b.Id == id);
 
-            return View(scheduleVM);
+                if (scheduleVM.BarberSchedule == null)
+                {
+                    TempData[WC.Error] = "Такого розкладу немає";
+                    return RedirectToAction("Index");
+                }
+
+                return View(scheduleVM);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
 using Barbershop.Data;
+using Barbershop.Initializer;
 using Barbershop.Models;
 using Barbershop.Utility;
 using Barbershop.Utility.BrainTreeSettings;
@@ -11,14 +12,7 @@ using Newtonsoft.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
-{
-    options.SerializerSettings.ContractResolver = new DefaultContractResolver
-    {
-        NamingStrategy = new CamelCaseNamingStrategy()
-    };
-}
-);
+builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders().AddDefaultUI().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
@@ -45,6 +39,7 @@ builder.Services.AddSession(Options =>
     Options.Cookie.IsEssential = true;
 });
 
+
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Lockout settings
@@ -53,7 +48,13 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.MaxFailedAccessAttempts = 3;
 });
 
+builder.Services.AddScoped<IDbInitializer, DbInitiazlizer>();
+
 var app = builder.Build();
+
+var dbInitializerServiceProvider = app.Services.CreateScope().ServiceProvider;
+var dbInitializer = dbInitializerServiceProvider.GetRequiredService<IDbInitializer>();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -71,7 +72,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+dbInitializer.Initialize();
 app.UseSession();
 
 
