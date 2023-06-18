@@ -161,7 +161,6 @@
                     </div>
                 </div>
             </nav>
-        
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -189,11 +188,13 @@
             $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
         });
     </script>
-@*    <script>
-        $(document).ready(function(){
-            $('.navbar').addClass('show');
-        });*@
-    </script>
+<script>
+    $(document).ready(function () {
+        $('.navbar-toggler').click(function () {
+            $('#navbarSupportedContent').toggleClass('show');
+        });
+    });
+</script>
     @await RenderSectionAsync("Scripts", required: false)
     <ejs-scripts></ejs-scripts>
 </body>

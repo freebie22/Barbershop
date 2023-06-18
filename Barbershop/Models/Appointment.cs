@@ -26,8 +26,6 @@ namespace Barbershop.Models
         public decimal TotalPrice { get; set; }
         public decimal TotalPriceWithDiscount { get; set; }
         public string? UsedPromo { get; set; }
-        [Required]
-        public virtual ICollection<Services> Services { get; set; }
         [Required(ErrorMessage = "Вкажіть свій номер телефону")]
         public string PhoneNumber { get; set; }
         [Required(ErrorMessage = "Вкажіть свою електронну пошту")]

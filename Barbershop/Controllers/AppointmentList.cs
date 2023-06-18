@@ -204,28 +204,29 @@ namespace Barbershop.Controllers
 
             AppointmentVM = new AppointmentDetailsVM()
             {
-                Appointment = _db.Appointments.Include(a => a.Barber).Include(a => a.User).Include(a => a.Barber.WorkPosition).Include(a => a.Services).FirstOrDefault(a => a.Id == id),
+                Appointment = _db.Appointments.Include(a => a.Barber).Include(a => a.User).Include(a => a.Barber.WorkPosition).FirstOrDefault(a => a.Id == id),
+                AppointmentDetails = _db.AppointmentDetails.Where(a => a.AppointmentId == id).Include(a => a.Services).ToList()
             };
 
-            if(AppointmentVM.Appointment != null)
+            if (AppointmentVM.Appointment != null)
             {
                 if (User.IsInRole(WC.AdminRole))
                 {
-                    return View(AppointmentVM.Appointment);
+                    return View(AppointmentVM);
                 }
 
                 if ((User.IsInRole(WC.BarberRole)) && AppointmentVM.Appointment.Barber.BarbershopUserId == claim.Value)
                 {
-                    return View(AppointmentVM.Appointment);
+                    return View(AppointmentVM);
                 }
 
                 if ((User.IsInRole(WC.ClientRole) && AppointmentVM.Appointment.Email == user.Email))
                 {
-                    return View(AppointmentVM.Appointment);
+                    return View(AppointmentVM);
                 }
             }
-           
-                return RedirectToAction("Index");   
+
+            return RedirectToAction("Index");   
           
         }
 

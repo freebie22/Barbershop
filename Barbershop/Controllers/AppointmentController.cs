@@ -203,24 +203,8 @@ namespace Barbershop.Controllers
 
             appointmentVM.Appointment.AppointmentDateAndTime = DateTime.Now;
 
-            
 
-            if (appointmentVM.ServicesIds == null)
-            {
-                _db.Entry(appointmentVM.Appointment).Collection(b => b.Services).Load();
-            }
 
-            if (appointmentVM.ServicesIds != null)
-            {
-                var selectedServices = _db.Services.Where(s => appointmentVM.ServicesIds.Contains(s.Id));
-
-                appointmentVM.Appointment.Services = new List<Services>();
-
-                foreach (var services in selectedServices)
-                {
-                    appointmentVM.Appointment.Services.Add(services);
-                }
-            }
 
             var promo = _db.PromoCodes.FirstOrDefault(p => p.UserId == claim.Value && p.Code == appointmentVM.Appointment.UsedPromo);
             if (promo != null)
@@ -237,6 +221,7 @@ namespace Barbershop.Controllers
             }
 
             _db.Appointments.Add(appointmentVM.Appointment);
+            _db.SaveChanges();
 
             string priceWithDiscount = "";
 
@@ -250,17 +235,65 @@ namespace Barbershop.Controllers
                 priceWithDiscount = "";
             }
 
+            
+
             var selectedBarber = _db.Barbers.Include(b => b.WorkPosition).FirstOrDefault(b => b.Id == appointmentVM.Appointment.BarberId);
+            var selectedServices = _db.Services.Where(s => appointmentVM.ServicesIds.Contains(s.Id));
+
+            if (appointmentVM.ServicesIds != null)
+            {
+                if (selectedBarber.WorkPosition.PositionName == "Стажер")
+                {
+                    foreach (var services in selectedServices)
+                    {
+                        AppointmentDetail appointmentDetail = new AppointmentDetail()
+                        {
+                            AppointmentId = appointmentVM.Appointment.Id,
+                            ServiceId = services.Id,
+                            ServicePrice = (decimal)services.traineePrice
+                        };
+                        _db.AppointmentDetails.Add(appointmentDetail);
+                    }
+                }
+                if (selectedBarber.WorkPosition.PositionName == "Барбер")
+                {
+                    foreach (var services in selectedServices)
+                    {
+                        AppointmentDetail appointmentDetail = new AppointmentDetail()
+                        {
+                            AppointmentId = appointmentVM.Appointment.Id,
+                            ServiceId = services.Id,
+                            ServicePrice = (decimal)services.barberPrice
+                        };
+                        _db.AppointmentDetails.Add(appointmentDetail);
+                    }
+                }
+                if (selectedBarber.WorkPosition.PositionName == "Топ-барбер")
+                {
+                    foreach (var services in selectedServices)
+                    {
+                        AppointmentDetail appointmentDetail = new AppointmentDetail()
+                        {
+                            AppointmentId = appointmentVM.Appointment.Id,
+                            ServiceId = services.Id,
+                            ServicePrice = (decimal)services.seniorPrice
+                        };
+                        _db.AppointmentDetails.Add(appointmentDetail);
+                    }
+                }
+            }
+
+            
 
             string subject = $"Запис до барбера {selectedBarber.FullName}";
 
-            var servicesEmail = appointmentVM.Appointment.Services;
+            var servicesEmail = selectedServices;
 
             string servicesHtml = string.Empty;
 
             if (selectedBarber.WorkPosition.PositionName == "Стажер")
             {
-                foreach (var service in appointmentVM.Appointment.Services)
+                foreach (var service in selectedServices)
                 {
                     servicesHtml += $"{service.serviceName} у стажера - {service.traineePrice} грн. <br />";
                 }
@@ -268,7 +301,7 @@ namespace Barbershop.Controllers
 
             if (selectedBarber.WorkPosition.PositionName == "Барбер")
             {
-                foreach (var service in appointmentVM.Appointment.Services)
+                foreach (var service in selectedServices)
                 {
                     servicesHtml += $"{service.serviceName} у барбера - {service.barberPrice} грн. <br />";
                 }
@@ -276,7 +309,7 @@ namespace Barbershop.Controllers
 
             if (selectedBarber.WorkPosition.PositionName == "Топ-барбеер")
             {
-                foreach (var service in appointmentVM.Appointment.Services)
+                foreach (var service in selectedServices)
                 {
                     servicesHtml += $"{service.serviceName} у топ-барбера - {service.seniorPrice} грн. <br />";
                 }
