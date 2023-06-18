@@ -161,7 +161,7 @@ namespace Barbershop.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    TempData[WC.Success] = "Вітаємо з реєстрацією на нашому веб-сервісі. Перейдіть до вашого E-Mail, щоб підтвердити його";
+                    TempData[WC.Success] = "Вітаємо з реєстрацією на нашому веб-сервісі. Перейдіть до вказаного при реєстрації E-Mail, щоб підтвердити його.";
                     if (User.IsInRole(WC.AdminRole))
                     {
                         await _userManager.AddToRoleAsync(user, WC.AdminRole);

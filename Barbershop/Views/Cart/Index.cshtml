@@ -4,7 +4,7 @@
 <style>
     .container {
         opacity: 0;
-        transform: translate3d(0, -50px, 0); /* ADDED - start x position as -50px */
+        transform: translate3d(0, -50px, 0);
         transition: 0.7s all ease-in-out;
     }
 
@@ -18,16 +18,15 @@
 {
     <form method="post">
         <br />
-        <div class="container row" style="margin-bottom: 30px">
+        <div class="container row" style="margin-bottom: 30px;">
                 <div class="col-12">
-                    <div class="card mt-4">
+                <div class="card mt-4" style="border-color:#FFEBA7">
                         <div class="card-header ml-0" style="overflow: hidden; background-color: #1f2029">
-                            <div class="row text-end">
+                            <div class="row">
                                 <div class="col-6">
-                                <i class="fa fa-shopping-cart"></i> &nbsp;
-                                Кошик
+                                <h5 style="color:#FFEBA7"><i class="fa fa-shopping-cart"></i>&nbsp; Кошик</h5>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6  text-end">
                                 <a asp-action="Index" asp-controller="Stock" class="btn btn-outline-info btn-sm">Продовжити покупки</a>
                                     <a asp-action="Clear" class="btn btn-outline-info btn-sm">Очистити кошик</a>
                             </div>
@@ -36,19 +35,19 @@
                     <div class="card-body" style="background-color: #1f2029">
                             <div class=" d-none d-lg-block">
                                 <div class="row" style="color:#FFEBA7">
-                                    <div class="col-lg-2">
+                                    <div class="col-lg-2 text-center">
                                         Фото товару
                                     </div>
-                                    <div class="col-12 col-lg-3">
+                                <div class="col-12 col-lg-3 text-center">
                                         Інформація про товар
                                     </div>
-                                    <div class="col-12 col-lg-2">
+                                <div class="col-12 col-lg-2 text-center">
                                         Ціна за шт.
                                     </div>
-                                    <div class="col-6 col-lg-2">
+                                <div class="col-6 col-lg-2 text-center">
                                         К-ть од. товару
                                     </div>
-                                    <div class="col-6 col-lg-2">
+                                <div class="col-6 col-lg-2 text-center">
                                         Загальна ціна
                                     </div>
                                     <div class="col-6 col-sm-4 col-lg-1">
@@ -60,23 +59,23 @@
                             @{                        
                                 var orderTotal = 0.0m;
                             }
-                            @for(int i =0; i < Model.Count(); i++)
+                            @for(int i = 0; i < Model.Count(); i++)
                             {
                                 <input type="hidden" asp-for="@Model[i].Id"/>
                                 <div class="row h-100">
                                     <div class="col-4 col-md-2 text-center py-2">
                                         <img src="@WC.ProductPath@Model[i].ProductImage" class="rounded" width="100%" />
                                     </div>
-                                    <div class="col-8 col-lg-3">
+                                    <div class="col-8 col-lg-3 text-center">
                                     <a asp-controller="Stock" asp-action="Details" asp-route-id="@Model[i].Id" style="text-decoration: none"><h5 style="color: #FFEBA7">@Model[i].ProductName</h5></a>
                                     </div>
-                                    <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
+                                <div class="col-3 col-lg-2 pt-lg-4 text-center" style="font-size:11px;">
                                         <span style="font-size:17px;"> @Model[i].Price грн</span>/ за од.
                                     </div>
-                                    <div class="col-4 col-lg-2 pt-lg-4" style="font-size:11px;">
+                                <div class="col-4 col-lg-2 pt-lg-4 text-center" style="font-size:11px;">
                                         <input type="text" asp-for="@Model[i].TempCount" class="form-control" />
                                     </div>
-                                    <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
+                                <div class="col-3 col-lg-2 pt-lg-4 text-center" style="font-size:11px;">
                                         <span style="font-size:17px;"> @(Model[i].Price * Model[i].TempCount) грн</span>
                                     </div>
                                     <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
