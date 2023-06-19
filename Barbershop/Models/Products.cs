@@ -30,7 +30,6 @@ namespace Barbershop.Models
         public virtual ProductCategory ProductCategory { get; set; }
         [Required, Display(Name = "Галерея")]
         public virtual ICollection<ProductImages> ProductImages { get; set; }
-
         [NotMapped, Range(1,20)]
         public int TempCount { get; set; }
     }

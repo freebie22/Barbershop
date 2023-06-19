@@ -9,9 +9,7 @@ namespace Barbershop.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        public string UserId { get; set; } = "Гість";
-        [ForeignKey("UserId")]
-        public virtual BarbershopUser User { get; set; }
+        public string UserId { get; set; }
         [Required]
         public int BarberId { get; set; } 
         [ForeignKey("BarberId")]

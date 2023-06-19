@@ -236,6 +236,13 @@ namespace Barbershop.Controllers
         [ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
+            var relatedOrders = db.OrderDetail.Where(r => r.ProductId == id);
+            if (relatedOrders.Count() > 0)
+            {
+                TempData[WC.Error] = "Даний товар видалити неможливо, так як є замовлення пов'язані з ним.";
+                return RedirectToAction("Index");
+            }
+
             var obj = db.Products.Find(id);
             if (obj == null)
             {

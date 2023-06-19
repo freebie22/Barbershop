@@ -169,13 +169,33 @@ namespace Barbershop.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
+            if (claim == null)
+            {
+                var user = _db.Users.FirstOrDefault(u => u.Email == appointmentVM.Appointment.Email);
+                if (user != null)
+                {
+                    appointmentVM.Appointment.UserId = user.Id;
+                    appointmentVM.Appointment.AppointmentType = WC.AppointmentClient;
+                    SetUserAppCount(user.Id);
+                }
+                else
+                {
+                    appointmentVM.Appointment.UserId = "Гість";
+                    appointmentVM.Appointment.AppointmentType = WC.AppointmentClient;
+                }
+            }
 
-            appointmentVM.Appointment.UserId = claim.Value;
+            else
+            {
+                appointmentVM.Appointment.UserId = claim.Value;
+            }
+
 
             appointmentVM.Appointment.AppointmentStatus = WC.AppointmentReceived;
 
             var email = appointmentVM.Appointment.Email;
-            if(User.IsInRole(WC.ClientRole))
+
+            if (User.IsInRole(WC.ClientRole))
             {
                 appointmentVM.Appointment.AppointmentType = WC.AppointmentClient;
                 SetUserAppCount(claim.Value);
@@ -204,14 +224,21 @@ namespace Barbershop.Controllers
             appointmentVM.Appointment.AppointmentDateAndTime = DateTime.Now;
 
 
-
-
-            var promo = _db.PromoCodes.FirstOrDefault(p => p.UserId == claim.Value && p.Code == appointmentVM.Appointment.UsedPromo);
-            if (promo != null)
+            if (claim != null)
             {
-                appointmentVM.Appointment.TotalPriceWithDiscount = appointmentVM.Appointment.TotalPrice - (appointmentVM.Appointment.TotalPrice * (decimal)(promo.Discount / 100));
-                appointmentVM.Appointment.UsedPromo = promo.Code;
-                _db.PromoCodes.Remove(promo);
+                var promo = _db.PromoCodes.FirstOrDefault(p => p.UserId == claim.Value && p.Code == appointmentVM.Appointment.UsedPromo);
+                if (promo != null)
+                {
+                    appointmentVM.Appointment.TotalPriceWithDiscount = appointmentVM.Appointment.TotalPrice - (appointmentVM.Appointment.TotalPrice * (decimal)(promo.Discount / 100));
+                    appointmentVM.Appointment.UsedPromo = promo.Code;
+                    _db.PromoCodes.Remove(promo);
+                }
+
+                else
+                {
+                    appointmentVM.Appointment.TotalPriceWithDiscount = appointmentVM.Appointment.TotalPrice;
+                    appointmentVM.Appointment.UsedPromo = "Не вказано";
+                }
             }
 
             else
@@ -219,6 +246,8 @@ namespace Barbershop.Controllers
                 appointmentVM.Appointment.TotalPriceWithDiscount = appointmentVM.Appointment.TotalPrice;
                 appointmentVM.Appointment.UsedPromo = "Не вказано";
             }
+
+            
 
             _db.Appointments.Add(appointmentVM.Appointment);
             _db.SaveChanges();

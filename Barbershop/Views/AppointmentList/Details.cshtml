@@ -29,16 +29,26 @@
                                     <span class="" style="color: #FFEBA7">Деталі запису</span>
                                 </h4>
                             </div>
-                            @if (User.IsInRole(WC.AdminRole))
+                            @if (User.IsInRole(WC.AdminRole) && Model.User != null)
                             {
                                 <div class="row my-1">
                                     <div class="col-3" style="color: #FFEBA7">Записано користувачем</div>
                                     <div class="col-9">
-                                        <input asp-for="@Model.Appointment.User.FullName" readonly type="text" class="form-control" />
-                                        <span asp-validation-for="@Model.Appointment.User.FullName" class="text-danger"></span>
+                                        <input asp-for="@Model.User.FullName" readonly type="text" class="form-control" />
+                                        <span asp-validation-for="@Model.User.FullName" class="text-danger"></span>
                                     </div>
                                 </div>
-                            }                            
+                            }     
+                            @if (User.IsInRole(WC.AdminRole) && Model.User == null)
+                            {
+                                <div class="row my-1">
+                                    <div class="col-3" style="color: #FFEBA7">Записано користувачем</div>
+                                    <div class="col-9">
+                                        <input asp-for="@Model.Guest" readonly type="text" class="form-control" />
+                                        <span asp-validation-for="@Model.Guest" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            }
                             <div class="row my-1">
                                 <div class="col-3" style="color: #FFEBA7">Тел.</div>
                                 <div class="col-9">

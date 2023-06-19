@@ -32,6 +32,8 @@ namespace Barbershop.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
+            var user = _db.Users.FirstOrDefault(u => u.Id == claim.Value);
+
             if (User.IsInRole(WC.AdminRole))
             {
                 orderListVM = new OrderListVM()

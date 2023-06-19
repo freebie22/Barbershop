@@ -80,9 +80,9 @@
                 <h5>@appCount</h5>
             </div>
             <div class="col text-center" style="color:#FFEBA7">
-                <h4>Кількість завершених записів</h4>
+                <h4>Кількість завершених записів(необхідно бути авторизованим при записі)</h4>
                 <h5>@appSuccessCount</h5>
-                @if(appPoints >= 3)
+                @if(appPoints >= 3 && !(User.IsInRole(WC.AdminRole)))
                 {
                     <form method="post">
                         <button asp-action="ConvertToPromo" type="submit" class="btn" id="promocodeButton">Створити промокод</button>
@@ -123,10 +123,6 @@
         <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
         <e-grid-columns>
             <e-grid-column field="Id" headerText="Ідентифікатор запису" isPrimaryKey="true" width="180"></e-grid-column>
-            @if(User.IsInRole(WC.AdminRole))
-            {
-                <e-grid-column field="UserId" headerText="Ідентифікатор користувача" width="250"></e-grid-column>
-            }
             <e-grid-column field="PhoneNumber" headerText="Номер телефону" width="180"></e-grid-column>
             <e-grid-column field="Email" headerText="E-Mail" width="180"></e-grid-column>
             <e-grid-column field="Barber.FullName" headerText="Барбер" width="180"></e-grid-column>

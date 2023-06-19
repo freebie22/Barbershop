@@ -202,16 +202,23 @@ namespace Barbershop.Controllers
 
             var user = _db.Users.FirstOrDefault(u => u.Id == claim.Value);
 
+
             AppointmentVM = new AppointmentDetailsVM()
             {
-                Appointment = _db.Appointments.Include(a => a.Barber).Include(a => a.User).Include(a => a.Barber.WorkPosition).FirstOrDefault(a => a.Id == id),
-                AppointmentDetails = _db.AppointmentDetails.Where(a => a.AppointmentId == id).Include(a => a.Services).ToList()
+                Appointment = _db.Appointments.Include(a => a.Barber).Include(a => a.Barber.WorkPosition).FirstOrDefault(a => a.Id == id),
+                AppointmentDetails = _db.AppointmentDetails.Where(a => a.AppointmentId == id).Include(a => a.Services).ToList(),
             };
+
 
             if (AppointmentVM.Appointment != null)
             {
                 if (User.IsInRole(WC.AdminRole))
                 {
+                    AppointmentVM.User = (BarbershopUser)_db.Users.FirstOrDefault(u => u.Id == AppointmentVM.Appointment.UserId);
+                    if(AppointmentVM.User == null) 
+                    {
+                        AppointmentVM.Guest = "Гість";
+                    }
                     return View(AppointmentVM);
                 }
 
@@ -220,7 +227,7 @@ namespace Barbershop.Controllers
                     return View(AppointmentVM);
                 }
 
-                if ((User.IsInRole(WC.ClientRole) && AppointmentVM.Appointment.Email == user.Email))
+                if ((User.IsInRole(WC.ClientRole) && AppointmentVM.Appointment.Email == user.Email && user.EmailConfirmed))
                 {
                     return View(AppointmentVM);
                 }
@@ -246,7 +253,14 @@ namespace Barbershop.Controllers
         {
             Appointment appointment = _db.Appointments.FirstOrDefault(u => u.Id == id);
             appointment.AppointmentStatus = WC.AppointmentDone;
-            SetUserAppCount(appointment.UserId);
+
+
+            var userEmail = _db.Users.Where(u => u.Email == appointment.Email).Select(u => u.Id).FirstOrDefault();
+
+            if(appointment.UserId != "Гість" && userEmail != null)
+            {
+                SetUserAppCount(userEmail);
+            }
             _db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }

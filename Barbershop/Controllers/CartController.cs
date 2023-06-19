@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Barbershop.Controllers
 {
-    [Authorize]
+
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -76,7 +76,7 @@ namespace Barbershop.Controllers
             return RedirectToAction(nameof(Summary));
         }
 
-
+        [Authorize]
         public IActionResult Summary()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -130,7 +130,7 @@ namespace Barbershop.Controllers
 
             var region = ProductUserVM.BarbershopUser.Region;
 
-            if (region == "" || region == null)
+            if (region == "" || region == null || region == "--Оберіть область--")
             {
                 region = "Житомирська область";
             }
@@ -464,8 +464,9 @@ namespace Barbershop.Controllers
 
             await _emailSender.SendEmailAsync(ProductUserVM.BarbershopUser.Email, subject, messageBody);
 
-
-            return RedirectToAction(nameof(InquiryConfirmation), new { id = orderHeader.Id });
+            TempData[WC.Success] = "Дякуємо за замовлення! Інформацію по замовленню Ви зможете знайти у Вашій електронній скрині, або в особистому кабінеті!";
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult InquiryConfirmation(int id=0)

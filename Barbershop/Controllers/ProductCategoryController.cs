@@ -121,6 +121,8 @@ namespace Barbershop.Controllers
                     return RedirectToAction("Index");
                 }
 
+                
+
                 return View(obj);
             }
             else
@@ -141,7 +143,15 @@ namespace Barbershop.Controllers
             {
                 return NotFound();
             }
-            if(ModelState.IsValid)
+
+            var relatedProducts = _db.Products.Where(r => r.ProductCategoryId == id);
+            if (relatedProducts.Count() > 0)
+            {
+                TempData[WC.Error] = "Дану категорію видалити неможливо, так як є товари пов'язані з нею.";
+                return RedirectToAction("Index");
+            }
+
+            if (ModelState.IsValid)
             {
                 await Task.Run(() =>
                 {
