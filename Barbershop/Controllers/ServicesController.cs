@@ -26,6 +26,11 @@ namespace Barbershop.Controllers
                     objList = _db.Services.Where(o => o.serviceName.ToLower().Contains(searchName));
                 }
 
+                if(!User.IsInRole(WC.AdminRole))
+                {
+                objList = _db.Services.Where(o => o.IsActive == true);
+                }
+
                 return View(objList);          
         }
 
@@ -133,6 +138,13 @@ namespace Barbershop.Controllers
         [ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
+            var relatedAppointments = _db.AppointmentDetails.Where(r => r.ServiceId == id);
+            if (relatedAppointments.Count() > 0)
+            {
+                TempData[WC.Error] = "Дану послуги видалити неможливо, так як є записи пов'язані з нею.";
+                return RedirectToAction("Index");
+            }
+
             var obj = _db.Services.Find(id);
             if (obj == null)
             {

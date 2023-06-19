@@ -22,5 +22,7 @@ namespace Barbershop.Models
         public int? SpecializationId { get; set; }
         [ForeignKey("SpecializationId")]
         public virtual Specializations Specialization { get; set; }
+        [Required]
+        public bool IsActive { get; set; }
     }
 }

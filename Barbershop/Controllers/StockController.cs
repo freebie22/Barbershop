@@ -22,7 +22,7 @@ namespace Barbershop.Controllers
         {
             StockVM stock = new StockVM() 
             {
-                Products = _db.Products.Include(p => p.ProductCategory),
+                Products = _db.Products.Include(p => p.ProductCategory).Where(p => p.IsActive == true),
                 Categories = _db.ProductCategory
             };
             return View(stock); 
@@ -42,9 +42,9 @@ namespace Barbershop.Controllers
                 Product = _db.Products.Include(p => p.ProductCategory).Include(p => p.ProductImages).Where(p => p.Id == id).FirstOrDefault(),
             };
 
-            if(productsDetails.Product == null)
+            if(productsDetails.Product == null || productsDetails.Product.IsActive == false)
             {
-                    TempData[WC.Error] = "Такого товару не існує.";
+                    TempData[WC.Error] = "Такого товару не існує або він не активний.";
                     return RedirectToAction("Index", "Stock");
             }
 

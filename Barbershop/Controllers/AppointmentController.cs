@@ -748,7 +748,7 @@ namespace Barbershop.Controllers
                 specializationIds.Add(specialization.Id);
             }
 
-            var services = _db.Services.Where(s => specializationIds.Contains(s.SpecializationId));
+            var services = _db.Services.Where(s => specializationIds.Contains(s.SpecializationId) && s.IsActive == true);
 
             List<int> servicesIds = new List<int>();
             List<string> servicesNames = new List<string>();

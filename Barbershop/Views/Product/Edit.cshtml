@@ -70,7 +70,15 @@
                         <input asp-for="Product.Usage" class="form-control " />
                         <span asp-validation-for="Product.Usage" class="text-danger"></span>
                     </div>
-                </div>                                              
+                </div>     
+                <div class="form-group row pt-2">
+                    <div class="col-4">
+                        <label style="color:#FFEBA7">Товар активний ?</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Product.IsActive" type="checkbox" />
+                    </div>
+                </div>
                 <div class="form-group row">
                     <div class="col-4">
                         <label style="color: #FFEBA7" asp-for="Product.ProductCategoryId"></label>
